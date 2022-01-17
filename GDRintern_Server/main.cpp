@@ -14,6 +14,7 @@ HANDLE hRecv;
 HANDLE hMutex;
 DWORD WINAPI SendThread(LPVOID socket)//생성된 소켓 넘겨주기
 {
+	cout << "SendThread\n";
 	int retval = 0;
 	while (true)
 	{
@@ -25,6 +26,7 @@ DWORD WINAPI SendThread(LPVOID socket)//생성된 소켓 넘겨주기
 			cout << "send error\n";
 			break;
 		}
+		cout << "Send check\n" << endl;
 
 		ReleaseMutex(hMutex);
 	}
@@ -34,6 +36,7 @@ DWORD WINAPI SendThread(LPVOID socket)//생성된 소켓 넘겨주기
 
 DWORD WINAPI RecvThread(LPVOID socket)
 {
+	cout << "RecvThread\n";
 	int retval = 0;
 	while (true)
 	{
@@ -50,6 +53,8 @@ DWORD WINAPI RecvThread(LPVOID socket)
 			cout << "recv error\n";
 			break;
 		}
+
+		cout << "Recv check\n" << endl;
 
 		ReleaseMutex(hMutex);
 	}
@@ -88,27 +93,21 @@ int main()
 		DWORD dwSendThreadID, dwRecvThreadID;
 
 		hSend = CreateThread(0, 0, RecvThread, (LPVOID)hClient, 0, &dwSendThreadID);
+
 		hRecv = CreateThread(0, 0, SendThread, (LPVOID)hClient, 0, &dwRecvThreadID);
 
-		DWORD retvalRecv = WaitForSingleObject(hRecv, INFINITE);
-		if (retvalRecv == WAIT_OBJECT_0)
-		{
-			cout << "Send 스레드 종료\n";
-		}
-		else if (retvalRecv == WAIT_TIMEOUT)	//무제한이라 안걸림
-		{
-			cout << "타임아웃\n";
-		}
-		else
-		{
-			cout << "에러 발생\n";
-		}
+
+
+
+
+
+		DWORD retvalSend = WaitForSingleObject(hSend, INFINITE);
 		cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << endl;
 		closesocket(hClient);
 	}
 
 	closesocket(hListen);
-
+	CloseHandle(hMutex);
 	WSACleanup();
 
 	return 0;

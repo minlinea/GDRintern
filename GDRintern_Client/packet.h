@@ -1,5 +1,5 @@
 #pragma once
-#pragma pack(1)
+//#pragma pack(1)
 enum TEE {
 	T30,
 	T35,

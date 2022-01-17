@@ -16,23 +16,45 @@ using namespace std;
 HANDLE hSend;
 HANDLE hRecv;
 HANDLE hMutex;
+char cBuffer[PACKET_SIZE] = {};
+
+void err_quit(const char* msg)
+{
+	LPVOID lpMsgBuf;
+
+
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER
+		| FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, WSAGetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf, 0, NULL);
+	MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
+	LocalFree(lpMsgBuf);
+	exit(1);
+
+}
 
 DWORD WINAPI SendThread(LPVOID socket)//积己等 家南 逞败林扁
 {
+	string sinput;
 	int retval = 0;
 	while (true)
 	{
 		WaitForSingleObject(hMutex, INFINITE);
 		int type;
-		string sinput;
+		ZeroMemory(&sinput, sinput.size());
+		ZeroMemory(&cBuffer, PACKET_SIZE);
 		cout << "input : ";
 		getline(cin, sinput);
-		retval = send((SOCKET)socket, sinput.c_str(), PACKET_SIZE, 0);
+		strcpy(cBuffer, sinput.c_str());
+		retval = send((SOCKET)socket, cBuffer, PACKET_SIZE, 0);
 		cout << "retval size = " << retval << "\n";
 		if (retval == SOCKET_ERROR)
 		{
 			cout << "send error\n";
-			break;
+			err_quit("send()");
+			//break;
 		}
 		cout << sinput << " send\n";
 		ReleaseMutex(hMutex);
@@ -48,7 +70,7 @@ DWORD WINAPI RecvThread(LPVOID socket)
 	{
 		WaitForSingleObject(hMutex, INFINITE);
 
-		char cBuffer[PACKET_SIZE] = {};
+
 		retval = recv((SOCKET)socket, cBuffer, PACKET_SIZE, 0);
 
 		cout << "Recv Msg : " << cBuffer << "\n";
@@ -101,6 +123,7 @@ int main()
 	
 	closesocket(hSocket);
 
+	CloseHandle(hMutex);
 	WSACleanup();
 	return 0;
 }
