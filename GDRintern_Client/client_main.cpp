@@ -5,8 +5,9 @@
 #include "stdio.h"
 #include <WinSock2.h>
 #include "windows.h"
-using namespace std;
+#include "../packet.h"
 
+using namespace std;
 #pragma comment(lib, "ws2_32")
 
 #define PORT 4578
@@ -34,6 +35,9 @@ void err_quit(const char* msg)
 	exit(1);
 
 }
+void Client_Send(const SOCKET& sock, const void* buf, int len);
+void Client_Recv(const SOCKET& sock, void* buf, int len);
+void Set_Packet(const SOCKET& sock, unsigned int type);
 
 DWORD WINAPI SendThread(LPVOID socket)
 {
@@ -41,7 +45,6 @@ DWORD WINAPI SendThread(LPVOID socket)
 	int retval = 0;
 	while (true)
 	{
-		//WaitForSingleObject(hMutex, INFINITE);
 		lock_guard<mutex> lock(m);
 		int type;
 		ZeroMemory(&sinput, sinput.size());
@@ -50,16 +53,10 @@ DWORD WINAPI SendThread(LPVOID socket)
 		cout << "input : ";
 		getline(cin, sinput);
 		strcpy(cBuffer, sinput.c_str());
-		retval = send((SOCKET)socket, cBuffer, PACKET_SIZE, 0);
-		if (retval == SOCKET_ERROR)
-		{
-			cout << "send error\n";
-			err_quit("send()");
-			break;
-		}
-		cout << sinput << " send\n";
 
-		ReleaseMutex(hMutex);
+		Set_Packet((SOCKET)socket, PT_Connect);
+
+		//ReleaseMutex(hMutex);
 	}
 	
 	return NULL;
@@ -72,16 +69,12 @@ DWORD WINAPI RecvThread(LPVOID socket)
 	{
 		//WaitForSingleObject(hMutex, INFINITE);
 		lock_guard<mutex> lock(m);
-		retval = recv((SOCKET)socket, cBuffer, PACKET_SIZE, 0);
-		if (retval == SOCKET_ERROR)
-		{
-			cout << "recv error\n";
-			err_quit("recv()");
-			break;
-		}
-		cout << "Recv Msg : " << cBuffer << "\n";
 
-		ReleaseMutex(hMutex);
+		Packet pt;
+		ZeroMemory(&pt, sizeof(pt));
+		Client_Recv((SOCKET)socket, &pt, sizeof(pt));
+
+		cout << "Recv check\n";
 	}
 	return NULL;
 }
@@ -126,4 +119,73 @@ int main()
 	CloseHandle(hMutex);
 	WSACleanup();
 	return 0;
+}
+
+void Client_Send(const SOCKET& sock, const void* buf, int len)
+{
+	if (SOCKET_ERROR == send(sock, (const char*)buf, len, 0))
+	{
+		cout << "Client_Send error\n";
+		err_quit("Client_Send()");
+		return;
+	}
+	else
+	{
+
+	}
+	return;
+}
+
+void Client_Recv(const SOCKET& sock, void* buf, int len)
+{
+	if (SOCKET_ERROR == recv(sock, (char*)buf, len, 0))
+	{
+		cout << "Client_Recv error\n";
+		err_quit("Client_Recv()");
+		return;
+	}
+	else
+	{
+
+	}
+	return;
+}
+
+void Set_Packet(const SOCKET& sock, unsigned int type)
+{
+	Packet pt;
+
+	if (type == PT_Connect)
+	{
+		pt.type = PT_Connect;
+	}
+	else if (type == PT_Active)
+	{
+		pt.type = PT_Active;
+	}
+	else if (type == PT_Setting)
+	{
+		pt.type = PT_Setting;
+	}
+	else if (type == PT_ConnectCheck)
+	{
+		pt.type = PT_ConnectCheck;
+	}
+	else if (type == PT_Disconnect)
+	{
+		pt.type = PT_Disconnect;
+	}
+	else if (type == PT_None)
+	{
+		pt.type = PT_Disconnect;
+	}
+	else
+	{
+		cout << "Set_packet error : error type\n";
+		return;
+	}
+
+	Client_Send(sock, &pt, sizeof pt);
+
+	return;
 }

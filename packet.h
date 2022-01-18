@@ -1,5 +1,5 @@
 #pragma once
-//#pragma pack(1)
+#pragma pack(1)
 enum TEE {
 	T30,
 	T35,
@@ -22,7 +22,8 @@ enum PACKETTYPE {
 	PT_Setting,
 	PT_ShotData,
 	PT_ConnectCheck,
-	PT_Disconnect
+	PT_Disconnect,
+	PT_None
 };
 
 ;
@@ -52,4 +53,27 @@ typedef struct _POS
 typedef struct _ACTIVESTATE
 {
 	bool state;
-};
+}ACTIVESTATE;
+
+
+
+
+typedef struct _Packet
+{
+	unsigned int type;
+
+	_Packet()
+	{
+		this->type = PT_None;
+	}
+	
+	_Packet(unsigned int type)
+	{
+		this->type = type;
+	}
+
+
+
+
+
+}Packet;
