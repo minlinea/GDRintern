@@ -26,7 +26,7 @@ DWORD WINAPI SendThread(LPVOID socket)//积己等 家南 逞败林扁
 			cout << "send error\n";
 			break;
 		}
-		cout << "Send check\n" << endl;
+		cout << "Send check\n";
 
 		ReleaseMutex(hMutex);
 	}
@@ -54,7 +54,7 @@ DWORD WINAPI RecvThread(LPVOID socket)
 			break;
 		}
 
-		cout << "Recv check\n" << endl;
+		cout << "Recv check\n";
 
 		ReleaseMutex(hMutex);
 	}
