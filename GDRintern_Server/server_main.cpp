@@ -30,22 +30,25 @@ void err_quit(const char* msg)
 	LocalFree(lpMsgBuf);
 	exit(1);
 }
-void Server_Send(const SOCKET& sock, const void* buf, int len);
-void Server_Recv(const SOCKET& sock, void* buf, int len);
-void Set_Packet(const SOCKET& sock, unsigned int type);
+int Server_Send(const SOCKET& sock, const void* buf, int len);
+int Server_Recv(const SOCKET& sock, void* buf, int len);
+int Set_Packet(const SOCKET& sock, unsigned int type);
 
 DWORD WINAPI SendThread(LPVOID socket)//积己等 家南 逞败林扁
 {
 	while (true)
 	{
-		//WaitForSingleObject(hMutex, INFINITE);
 		lock_guard<mutex> lock(m);
 
-		Set_Packet((SOCKET)socket, PT_Connect);	//Set_Packet->Server_Send
+		if (SOCKET_ERROR == Set_Packet((SOCKET)socket, PT_Connect))
+		{
+			cout << "Set_Packet error\n";
+			//err_quit("send()");
+			break;
+		}//Set_Packet->Server_Send
 
-		cout << "Send check\n";
+		cout << "Send OK\n";
 
-		//ReleaseMutex(hMutex);
 	}
 	return NULL;
 }
@@ -54,19 +57,29 @@ DWORD WINAPI RecvThread(LPVOID socket)
 {
 	while (true)
 	{
-		//WaitForSingleObject(hMutex, INFINITE);
 		lock_guard<mutex> lock(m);
 
 		Packet pt;
 		ZeroMemory(&pt, sizeof(pt));
-		Server_Recv((SOCKET)socket, &pt, sizeof(Packet));
+		if (SOCKET_ERROR == Server_Recv((SOCKET)socket, &pt, sizeof(Packet)))
+		{
+			cout << "Server_Recv error\n";
+			//err_quit("recv()");
+			break;
+		}
+		cout << "Recv Ok\n";
 
-		Set_Packet((SOCKET)socket, PT_Connect);	//Set_Packet->Server_Send
-																//俊内侩
 
-		cout << "Recv check\n";
-
-		//ReleaseMutex(hMutex);
+		//俊内侩
+		if (SOCKET_ERROR == Set_Packet((SOCKET)socket, PT_Connect))
+		{
+			cout << "Set_Packet error\n";
+			//err_quit("send()");
+			break;
+		}
+		cout << "Send OK\n";
+		//俊内侩 Set_Packet->Server_Send
+		 
 	}
 	return NULL;
 }
@@ -122,39 +135,17 @@ int main()
 
 
 
-void Server_Send(const SOCKET& sock, const void* buf, int len)
+int Server_Send(const SOCKET& sock, const void* buf, int len)
 {
-	if (SOCKET_ERROR == send(sock, (const char*)buf, len, 0))
-	{
-		cout << "Server_Send error\n";
-		err_quit("Server_Send()");
-		return;
-	}
-	else
-	{
-
-	}
-
-	return;
+	return send(sock, (const char*)buf, len, 0);
 }
 
-void Server_Recv(const SOCKET& sock, void* buf, int len)
+int Server_Recv(const SOCKET& sock, void* buf, int len)
 {
-	if (SOCKET_ERROR == recv(sock, (char*)buf, len, 0))
-	{
-		cout << "Server_Recv error\n";
-		err_quit("Server_Recv()");
-		return;
-	}
-	else
-	{
-
-	}
-
-	return;
+	return recv(sock, (char*)buf, len, 0);
 }
 
-void Set_Packet(const SOCKET& sock, unsigned int type)
+int Set_Packet(const SOCKET& sock, unsigned int type)
 {
 	Packet pt;
 
@@ -185,10 +176,10 @@ void Set_Packet(const SOCKET& sock, unsigned int type)
 	else
 	{
 		cout << "Set_packet error : error type\n";
-		return;
+		return -1;
 	}
 
-	Server_Send(sock, &pt, sizeof pt);
 	cout << "Server Send\n";
-	return;
+
+	return Server_Send(sock, &pt, sizeof pt);
 }
