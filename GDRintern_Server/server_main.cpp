@@ -1,21 +1,4 @@
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include "windows.h"
-#include "../packet.h"
-
-using namespace std;
-
-#pragma comment(lib, "ws2_32")
-
-#define PORT 4578
-#define PACKET_SIZE 1024
-
-char cBuffer[PACKET_SIZE] = {};
-HANDLE hSend;
-HANDLE hRecv;
-HANDLE hMutex;
-mutex m;
+#include "CServer.h"
 
 void err_quit(const char* msg)
 {
@@ -30,6 +13,7 @@ void err_quit(const char* msg)
 	LocalFree(lpMsgBuf);
 	exit(1);
 }
+/*
 int Server_Send(const SOCKET& sock, const void* buf, int len);
 int Server_Recv(const SOCKET& sock, void* buf, int len);
 int Set_Packet(const SOCKET& sock, unsigned int type);
@@ -83,11 +67,15 @@ DWORD WINAPI RecvThread(LPVOID socket)
 	}
 	return NULL;
 }
-
+*/
 
 
 int main()
 {
+	CServer cServer;
+
+	cServer.ServerInit();
+	/*
 	hMutex = (HANDLE)CreateMutex(NULL, FALSE, NULL);
 
 	WSADATA wsaData;
@@ -100,10 +88,14 @@ int main()
 	tListenAddr.sin_family = AF_INET;
 	tListenAddr.sin_port = htons(PORT);
 	tListenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
+	
 	bind(hListen, (SOCKADDR*)&tListenAddr, sizeof(tListenAddr));
 	listen(hListen, SOMAXCONN);
-
+	*/
+	
+	cServer.ServerAccept();
+	
+	/*
 	SOCKET hClient;
 	while (true)
 	{
@@ -123,18 +115,20 @@ int main()
 		cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << endl;
 		closesocket(hClient);
 	}
+	*/
 
-	closesocket(hListen);
-	CloseHandle(hMutex);
+
+	//cServer->~cServer();
+	//closesocket(hListen);
+	//CloseHandle(hMutex);
 	
-	WSACleanup();
+	
 
 	return 0;
 }
 
 
-
-
+/*
 int Server_Send(const SOCKET& sock, const void* buf, int len)
 {
 	return send(sock, (const char*)buf, len, 0);
@@ -183,3 +177,4 @@ int Set_Packet(const SOCKET& sock, unsigned int type)
 
 	return Server_Send(sock, &pt, sizeof pt);
 }
+*/

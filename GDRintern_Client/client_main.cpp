@@ -10,7 +10,6 @@
 using namespace std;
 #pragma comment(lib, "ws2_32")
 
-#define PORT 4578
 #define PACKET_SIZE 1024
 #define SERVER_IP "127.0.0.1"
 
@@ -169,7 +168,7 @@ int Set_Packet(const SOCKET& sock, unsigned int type)
 	else
 	{
 		cout << "Set_packet error : error type\n";
-		return;
+		return -1;
 	}
 
 	return Client_Send(sock, &pt, sizeof pt);

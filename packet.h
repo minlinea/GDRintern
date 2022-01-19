@@ -1,5 +1,8 @@
 #pragma once
 #pragma pack(1)
+
+#define PORT 4567
+
 enum TEE {
 	T30,
 	T35,
@@ -41,7 +44,7 @@ typedef struct _ShotData {
 typedef struct _TCsetting {
 	TEE tee;
 	CLUB club;
-};
+}TCsetting;
 
 typedef struct _POS
 {
