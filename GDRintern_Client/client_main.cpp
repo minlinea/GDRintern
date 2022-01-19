@@ -35,9 +35,9 @@ void err_quit(const char* msg)
 	exit(1);
 
 }
-void Client_Send(const SOCKET& sock, const void* buf, int len);
-void Client_Recv(const SOCKET& sock, void* buf, int len);
-void Set_Packet(const SOCKET& sock, unsigned int type);
+int Client_Send(const SOCKET& sock, const void* buf, int len);
+int Client_Recv(const SOCKET& sock, void* buf, int len);
+int Set_Packet(const SOCKET& sock, unsigned int type);
 
 DWORD WINAPI SendThread(LPVOID socket)
 {
@@ -54,9 +54,13 @@ DWORD WINAPI SendThread(LPVOID socket)
 		getline(cin, sinput);
 		strcpy(cBuffer, sinput.c_str());
 
-		Set_Packet((SOCKET)socket, PT_Connect);
-
-		//ReleaseMutex(hMutex);
+		if (SOCKET_ERROR == Set_Packet((SOCKET)socket, PT_Connect))
+		{
+			cout << "Set_Packet error\n";
+			err_quit("send()");
+			break;
+		}
+		//cout << "Send check\n";
 	}
 	
 	return NULL;
@@ -67,14 +71,17 @@ DWORD WINAPI RecvThread(LPVOID socket)
 	int retval = 0;
 	while (true)
 	{
-		//WaitForSingleObject(hMutex, INFINITE);
 		lock_guard<mutex> lock(m);
 
 		Packet pt;
 		ZeroMemory(&pt, sizeof(pt));
-		Client_Recv((SOCKET)socket, &pt, sizeof(pt));
-
-		cout << "Recv check\n";
+		if(SOCKET_ERROR == Client_Recv((SOCKET)socket, &pt, sizeof(pt)))
+		{
+			cout << "Client_Recv error\n";
+			err_quit("recv()");
+			break;
+		}
+		//cout << "Recv check\n";
 	}
 	return NULL;
 }
@@ -121,37 +128,17 @@ int main()
 	return 0;
 }
 
-void Client_Send(const SOCKET& sock, const void* buf, int len)
+int Client_Send(const SOCKET& sock, const void* buf, int len)
 {
-	if (SOCKET_ERROR == send(sock, (const char*)buf, len, 0))
-	{
-		cout << "Client_Send error\n";
-		err_quit("Client_Send()");
-		return;
-	}
-	else
-	{
-
-	}
-	return;
+	return send(sock, (const char*)buf, len, 0);
 }
 
-void Client_Recv(const SOCKET& sock, void* buf, int len)
+int Client_Recv(const SOCKET& sock, void* buf, int len)
 {
-	if (SOCKET_ERROR == recv(sock, (char*)buf, len, 0))
-	{
-		cout << "Client_Recv error\n";
-		err_quit("Client_Recv()");
-		return;
-	}
-	else
-	{
-
-	}
-	return;
+	return recv(sock, (char*)buf, len, 0);
 }
 
-void Set_Packet(const SOCKET& sock, unsigned int type)
+int Set_Packet(const SOCKET& sock, unsigned int type)
 {
 	Packet pt;
 
@@ -185,7 +172,5 @@ void Set_Packet(const SOCKET& sock, unsigned int type)
 		return;
 	}
 
-	Client_Send(sock, &pt, sizeof pt);
-
-	return;
+	return Client_Send(sock, &pt, sizeof pt);
 }
