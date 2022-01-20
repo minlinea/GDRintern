@@ -22,8 +22,11 @@ public:
 
 	void err_quit(const char* msg);
 
+	void DataInit();
 	bool ServerInit();
 	bool ServerAccept();
+	void ConnectInit();	//클라이언트 최초 연결 후 초기화 관련 Send
+
 
 	int Server_Send(const SOCKET& sock, const void* buf, int len);
 	int Server_Recv(const SOCKET& sock, void* buf, int len);
@@ -45,5 +48,24 @@ private:
 	HANDLE m_hRecv;
 	HANDLE m_hListen;
 	SOCKET m_hClient;
+	
+
+	//데이터 관련
+	TEE m_eTee;
+	CLUB m_eClub;
+
+	float m_fX;
+	float m_fY;
+	float m_fZ;
+
+	bool m_bState;
+
+	int m_iPhase;
+	float m_fBallSpeed;
+	float m_fLaunchAngle;
+	float m_fLaunchDirection;
+	float m_fHeadSpeed;
+	int m_iBackSpin;
+	int m_iSideSpin;
 };
 

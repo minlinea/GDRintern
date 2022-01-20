@@ -3,7 +3,7 @@
 
 CServer::CServer()
 {
-
+	DataInit();
 }
 
 CServer::~CServer()
@@ -16,32 +16,53 @@ CServer::~CServer()
 	WSACleanup();
 }
 
+void CServer::DataInit()
+{
+	m_eTee = T40;
+	m_eClub = DRIVER;
+
+	m_fX = -1;
+	m_fY = -1;
+	m_fZ = -1;
+
+	m_bState = false;
+
+	m_iPhase = 0;
+	m_fBallSpeed = 0.f;
+	m_fLaunchAngle = 0.f;
+	m_fLaunchDirection = 0.f;
+	m_fHeadSpeed = 0.f;
+	m_iBackSpin = 0;
+	m_iSideSpin = 0;
+}
+
 bool CServer::ServerInit()
 {
-	if (0 != WSAStartup(MAKEWORD(2, 2), &Instance().m_wsaData))
+	CServer& server = CServer::Instance();
+	if (0 != WSAStartup(MAKEWORD(2, 2), &server.m_wsaData))
 	{
 		std::cout << "ServerInit WSAStartup fail\n";
 		return false;
 	}
 
-	Instance().m_hListenSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (INVALID_SOCKET == Instance().m_hListenSock)
+	server.m_hListenSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (INVALID_SOCKET == server.m_hListenSock)
 	{
 		std::cout << "ServerInit ListenSocket fail\n";
 		return false;
 	}
 
-	Instance().m_tListenAddr.sin_family = AF_INET;
-	Instance().m_tListenAddr.sin_port = htons(PORT);
-	Instance().m_tListenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	server.m_tListenAddr.sin_family = AF_INET;
+	server.m_tListenAddr.sin_port = htons(PORT);
+	server.m_tListenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	if (SOCKET_ERROR == bind(Instance().m_hListenSock, (SOCKADDR*)&Instance().m_tListenAddr, sizeof(Instance().m_tListenAddr)))
+	if (SOCKET_ERROR == bind(server.m_hListenSock, (SOCKADDR*)&server.m_tListenAddr, sizeof(server.m_tListenAddr)))
 	{
 		std::cout << "ServerInit bind fail\n";
 		return false;
 	}
 
-	if (SOCKET_ERROR == listen(Instance().m_hListenSock, SOMAXCONN))
+	if (SOCKET_ERROR == listen(server.m_hListenSock, SOMAXCONN))
 	{
 		std::cout << "ServerInit listen fail\n";
 		return false;
@@ -64,35 +85,44 @@ void CServer::err_quit(const char* msg)
 	exit(1);
 }
 
+void CServer::ConnectInit()	
+{
+	CServer& server = CServer::Instance();
+	Packet pt;
+	char* data = new char[sizeof(float) * 3];
+}
+
 DWORD WINAPI CServer::ListenThread(LPVOID socket)
 {
+	CServer& server = CServer::Instance();
 	while (true)
 	{
 		SOCKADDR_IN tCIntAddr = {};
 		int iCIntSize = sizeof(tCIntAddr);
-		Instance().m_hClient = accept(Instance().m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
+		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
 		
 		
 		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
 
 		DWORD dwSendThreadID, dwRecvThreadID;
-		Instance().m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CServer::Instance().RecvThread, (LPVOID)Instance().m_hClient, 0, &dwRecvThreadID);
-		Instance().m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CServer::Instance().SendThread, (LPVOID)Instance().m_hClient, 0, &dwSendThreadID);
+		server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.RecvThread, (LPVOID)server.m_hClient, 0, &dwRecvThreadID);
+		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
 
-		DWORD retvalSend = WaitForSingleObject(Instance().m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
+		DWORD retvalSend = WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
 		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
-		closesocket(Instance().m_hClient);
+		closesocket(server.m_hClient);
 	}
 	return NULL;
 }
 
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
+	CServer& server = CServer::Instance();
 	while (true)
 	{
-		std::lock_guard<std::mutex> lock(Instance().m_hMutex);
+		std::lock_guard<std::mutex> lock(server.m_hMutex);
 
-		if (SOCKET_ERROR == Instance().Set_Packet((SOCKET)socket, PT_Connect))
+		if (SOCKET_ERROR == server.Set_Packet((SOCKET)socket, PT_Connect))
 		{
 			std::cout << "Set_Packet error\n";
 			//err_quit("send()");
@@ -107,13 +137,14 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
+	CServer& server = CServer::Instance();
 	while (true)
 	{
-		std::lock_guard<std::mutex> lock(Instance().m_hMutex);
+		std::lock_guard<std::mutex> lock(server.m_hMutex);
 
 		Packet pt;
 		ZeroMemory(&pt, sizeof(pt));
-		if (SOCKET_ERROR == Instance().Server_Recv((SOCKET)socket, &pt, sizeof(Packet)))
+		if (SOCKET_ERROR == server.Server_Recv((SOCKET)socket, &pt, sizeof(Packet)))
 		{
 			std::cout << "Server_Recv error\n";
 			//err_quit("recv()");
@@ -123,7 +154,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 
 		
 		//에코용
-		if (SOCKET_ERROR == Instance().Set_Packet((SOCKET)socket, PT_Connect))
+		if (SOCKET_ERROR == server.Set_Packet((SOCKET)socket, PT_Connect))
 		{
 			std::cout << "Set_Packet error\n";
 			//err_quit("send()");
@@ -138,11 +169,12 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 
 bool CServer::ServerAccept()
 {
+	CServer& server = CServer::Instance();
 	DWORD dwListenThreadID;
-	Instance().m_hListen = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CServer::ListenThread,
-										(LPVOID)Instance().m_hClient, 0, &dwListenThreadID);
+	server.m_hListen = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.ListenThread,
+										(LPVOID)server.m_hClient, 0, &dwListenThreadID);
 
-	if (NULL == Instance().m_hListen)
+	if (NULL == server.m_hListen)
 	{
 		std::cout << "ServerAccept m_hListen CreateThread fail\n";
 		return false;

@@ -19,6 +19,7 @@ public:
 
 	void err_quit(const char* msg);
 
+	void DataInit();
 	bool ClientInit();
 	void ClientConnect();
 
@@ -39,4 +40,22 @@ private:
 
 	HANDLE m_hSend;
 	HANDLE m_hRecv;
+
+	//데이터 관련
+	TEE m_eTee;
+	CLUB m_eClub;
+
+	float m_fX;
+	float m_fY;
+	float m_fZ;
+
+	bool m_bState;
+
+	int m_iPhase;
+	float m_fBallSpeed;
+	float m_fLaunchAngle;
+	float m_fLaunchDirection;
+	float m_fHeadSpeed;
+	int m_iBackSpin;
+	int m_iSideSpin;
 };
