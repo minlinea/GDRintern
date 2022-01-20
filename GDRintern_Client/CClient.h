@@ -4,46 +4,39 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 #include "../packet.h"
-
-class CServer
+class CClient
 {
-
-
 public:
 
-	static CServer& Instance()
+	static CClient& Instance()
 	{
-		static CServer Instance;
+		static CClient Instance;
 		return Instance;
 	}
 
-	CServer();
-	~CServer();
+	CClient();
+	~CClient();
 
 	void err_quit(const char* msg);
 
-	bool ServerInit();
-	bool ServerAccept();
+	bool ClientInit();
+	void ClientConnect();
 
-	int Server_Send(const SOCKET& sock, const void* buf, int len);
-	int Server_Recv(const SOCKET& sock, void* buf, int len);
+	int Client_Send(const SOCKET& sock, const void* buf, int len);
+	int Client_Recv(const SOCKET& sock, void* buf, int len);
 	int Set_Packet(const SOCKET& sock, unsigned int type);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
-	static DWORD WINAPI ListenThread(LPVOID socket);
 
 private:
 
 	WSADATA m_wsaData;
-	SOCKET m_hListenSock;
-	SOCKADDR_IN m_tListenAddr;
+	SOCKET m_hSock;
+	SOCKADDR_IN m_tAddr;
 
 	std::mutex m_hMutex;
 
 	HANDLE m_hSend;
 	HANDLE m_hRecv;
-	HANDLE m_hListen;
-	SOCKET m_hClient;
 };
-

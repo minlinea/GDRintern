@@ -5,7 +5,12 @@ int main()
 {
 	CServer cServer;
 	//cServer.Instance();
-	cServer.ServerInit();
-	cServer.ServerAccept();
-	while (true);
+	if (true == cServer.ServerInit())
+	{
+		if (true == cServer.ServerAccept())
+		{
+			
+			while (true);
+		}
+	}
 }

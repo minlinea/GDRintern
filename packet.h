@@ -1,6 +1,7 @@
 #pragma once
 #pragma pack(1)
 
+#define SERVER_IP "127.0.0.1"
 #define PORT 4567
 
 enum TEE {
