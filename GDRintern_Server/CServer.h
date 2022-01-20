@@ -11,8 +11,16 @@ class CServer
 
 public:
 
+	static CServer& Instance()
+	{
+		static CServer Instance;
+		return Instance;
+	}
+
 	CServer();
 	~CServer();
+
+	void err_quit(const char* msg);
 
 	void ServerInit();
 	void ServerAccept();
@@ -21,12 +29,6 @@ public:
 	int Server_Recv(const SOCKET& sock, void* buf, int len);
 	int Set_Packet(const SOCKET& sock, unsigned int type);
 
-	static CServer& Instance()
-	{
-		static CServer Instance;
-		return Instance;
-	}
-
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
 	static DWORD WINAPI ListenThread(LPVOID socket);
@@ -34,14 +36,14 @@ public:
 private:
 
 	WSADATA m_wsaData;
-	SOCKET m_hListen;
+	SOCKET m_hListenSock;
 	SOCKADDR_IN m_tListenAddr;
 
 	std::mutex m_hMutex;
 
 	HANDLE m_hSend;
 	HANDLE m_hRecv;
-
+	HANDLE m_hListen;
 	SOCKET m_hClient;
 };
 
