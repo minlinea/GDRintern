@@ -88,9 +88,16 @@ void CServer::err_quit(const char* msg)
 void CServer::ConnectInit()	
 {
 	CServer& server = CServer::Instance();
-	Packet pt;
-	char* data = new char[sizeof(float) * 3];
+	
+	Packet* pt;
+	POS pos = { -1,-1,-1 };
+	pt->SetVariableData(sizeof(POS), &pos);
+	pt->SetSize(sizeof(POS));
+	pt->SetType(PT_Pos);
+
 }
+
+
 
 DWORD WINAPI CServer::ListenThread(LPVOID socket)
 {
@@ -196,7 +203,7 @@ int CServer::Server_Recv(const SOCKET& sock, void* buf, int len)
 	return recv(sock, (char*)buf, len, 0);
 }
 
-int CServer::Set_Packet(const SOCKET& sock, unsigned int type)
+int CServer::Set_Packet(const SOCKET& sock, unsigned int type, void* buf)
 {
 	Packet pt;
 

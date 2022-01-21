@@ -65,7 +65,7 @@ typedef struct _ACTIVESTATE
 typedef struct _Packet
 {
 	unsigned int type;
-
+	unsigned int size;
 	_Packet()
 	{
 		this->type = PT_None;
@@ -74,10 +74,32 @@ typedef struct _Packet
 	_Packet(unsigned int type)
 	{
 		this->type = type;
+		this->size = 0;
+	}
+
+	_Packet(unsigned int type, unsigned int size)
+	{
+		this->type = type;
+		this->size = size;
+	}
+
+	void SetType(unsigned int type)
+	{
+		this->type = type;
+	}
+
+	void SetSize(unsigned int size)
+	{
+		this->size = size;
 	}
 
 
+	Packet* SetVariableData(unsigned int size, void* data)
+	{
+		Packet* pt = (Packet*)malloc(sizeof(Packet) + size);
 
+		memcpy_s(pt + sizeof(Packet), size, data, size);
 
-
+		return pt;
+	}
 }Packet;
