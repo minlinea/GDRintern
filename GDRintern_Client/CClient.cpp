@@ -79,13 +79,13 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	int retval = 0;
 	while (true)
 	{
-		std::lock_guard<std::mutex> lock(client.m_hMutex);
+		//std::lock_guard<std::mutex> lock(client.m_hMutex);
 		ZeroMemory(&sinput, sinput.size());
 
 		std::cout << "input : ";
 		std::getline(std::cin, sinput);
 
-		if (SOCKET_ERROR == client.Set_Packet((SOCKET)socket, PT_Connect))
+		if (SOCKET_ERROR == client.SetPacket((SOCKET)socket, PT_Connect))
 		{
 			std::cout << "Set_Packet error\n";
 			//err_quit("send()");
@@ -102,15 +102,27 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 	int retval = 0;
 	while (true)
 	{
-		std::lock_guard<std::mutex> lock(client.m_hMutex);
-
+		//std::cout << "RecvThread Client\n";
+		//std::lock_guard<std::mutex> lock(client.m_hMutex);
+		//std::cout << "RecvThread\n";
 		Packet pt;
 		ZeroMemory(&pt, sizeof(pt));
-		if (SOCKET_ERROR == client.Client_Recv((SOCKET)socket, &pt, sizeof(Packet)))
+		if (SOCKET_ERROR == client.ClientRecv((SOCKET)client.m_hSock, &pt, sizeof(Packet)))
 		{
 			std::cout << "Server_Recv error\n";
 			//err_quit("recv()");
 			break;
+		}
+		std::cout << "size : " << pt.size << "\n";
+		if (pt.size != sizeof(Packet))
+		{
+			POS pos;
+			ZeroMemory(&pos, sizeof(pos));
+			client.ClientRecv((SOCKET)client.m_hSock, &pos, sizeof(pos));
+			
+			std::cout << pos.x << std::endl;
+			std::cout << pos.y << std::endl;
+			std::cout << pos.z << std::endl;
 		}
 		std::cout << "Recv Ok\n";
 	}
@@ -142,17 +154,17 @@ void CClient::ClientConnect()
 	return;
 }
 
-int CClient::Client_Send(const SOCKET& sock, const void* buf, int len)
+int CClient::ClientSend(const SOCKET& sock, const void* buf, int len)
 {
 	return send(sock, (const char*)buf, len, 0);
 }
 
-int CClient::Client_Recv(const SOCKET& sock, void* buf, int len)
+int CClient::ClientRecv(const SOCKET& sock, void* buf, int len)
 {
 	return recv(sock, (char*)buf, len, 0);
 }
 
-int CClient::Set_Packet(const SOCKET& sock, unsigned int type)
+int CClient::SetPacket(const SOCKET& sock, unsigned int type)
 {
 	Packet pt;
 
@@ -186,6 +198,29 @@ int CClient::Set_Packet(const SOCKET& sock, unsigned int type)
 		return -1;
 	}
 
-	return Client_Send(sock, &pt, sizeof pt);
+	return ClientSend(sock, &pt, sizeof pt);
 }
 
+int CClient::recvn(SOCKET s, char* buf, int len, int flags)
+
+{
+	CClient& client = CClient::Instance();
+	int received;
+	char* ptr = buf;
+	int left = len;
+	while (left > 0)
+	{
+		received = recv(client.m_hSock, ptr, left, flags);
+		if (received == SOCKET_ERROR)
+		{
+			return SOCKET_ERROR;
+		}
+		else if (received == 0)
+		{
+			break;
+		}
+		left -= received;
+		ptr += received;
+	}
+	return (len - left);
+}

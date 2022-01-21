@@ -69,12 +69,13 @@ typedef struct _Packet
 	_Packet()
 	{
 		this->type = PT_None;
+		this->size = 8;
 	}
 	
 	_Packet(unsigned int type)
 	{
 		this->type = type;
-		this->size = 0;
+		this->size = 8;
 	}
 
 	_Packet(unsigned int type, unsigned int size)
@@ -94,12 +95,12 @@ typedef struct _Packet
 	}
 
 
-	//Packet* SetVariableData(unsigned int size, void* data)
-	//{
-	//	Packet* pt = (Packet*)malloc(sizeof(Packet) + size);
+	_Packet* SetVariableData(unsigned int size, void* data)
+	{
+		_Packet* pt = (_Packet*)malloc(sizeof(_Packet) + size);
 
-	//	memcpy_s(pt + sizeof(Packet), size, data, size);
+		memcpy_s(pt + sizeof(_Packet), size, &data, size);
 
-	//	return pt;
-	//}
+		return pt;
+	}
 }Packet;

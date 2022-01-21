@@ -24,16 +24,15 @@ public:
 
 	void DataInit();
 	bool ServerInit();
-	bool ServerAccept();
+	void ServerAccept();
 	void ConnectInit();	//클라이언트 최초 연결 후 초기화 관련 Send
 
-	int Server_Send(const SOCKET& sock, const void* buf, int len);
-	int Server_Recv(const SOCKET& sock, void* buf, int len);
-	int Set_Packet(const SOCKET& sock, unsigned int type);
+	int ServerSend(const SOCKET& sock, const void* buf, int len);
+	int ServerRecv(const SOCKET& sock, void* buf, int len);
+	int SetPacket(const SOCKET& sock, unsigned int type);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
-	static DWORD WINAPI ListenThread(LPVOID socket);
 
 private:
 

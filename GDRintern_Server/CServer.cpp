@@ -87,51 +87,35 @@ void CServer::err_quit(const char* msg)
 
 void CServer::ConnectInit()	
 {
-	//CServer& server = CServer::Instance();
-	//
-	//Packet* pt;
-	//POS pos = { -1,-1,-1 };
-	//pt->SetVariableData(sizeof(POS), &pos);
-	//pt->SetSize(sizeof(POS));
-	//pt->SetType(PT_Pos);
-
-	//Server_Send(server.m_hClient, pt, pt->size);
-
-}
-
-
-
-DWORD WINAPI CServer::ListenThread(LPVOID socket)
-{
 	CServer& server = CServer::Instance();
-	while (true)
-	{
-		SOCKADDR_IN tCIntAddr = {};
-		int iCIntSize = sizeof(tCIntAddr);
-		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
-		
-		
-		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
+	
+	Packet pt(PT_Pos, sizeof(POS) + sizeof(Packet));
+	POS pos = { -1,-2,-3 };
+	ServerSend(server.m_hClient, &pt, sizeof(Packet));
+	ServerSend(server.m_hClient, &pos, sizeof(pos));
+	
 
-		DWORD dwSendThreadID, dwRecvThreadID;
-		server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.RecvThread, (LPVOID)server.m_hClient, 0, &dwRecvThreadID);
-		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
 
-		DWORD retvalSend = WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
-		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
-		closesocket(server.m_hClient);
-	}
-	return NULL;
+
+	//Packet* pt = (Packet*)malloc(sizeof(Packet) + sizeof(POS));
+	//pt->SetSize(sizeof(Packet) + sizeof(POS));
+	//pt->SetType(PT_Pos);
+	//pt->SetVariableData(sizeof(POS), &pos);
+	//ServerSend(server.m_hClient, pt, pt->size);
+	//std::cout << " ServerSend\n" << std::endl;
 }
 
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
 	CServer& server = CServer::Instance();
+
+
+	std::cout << "ConnectInit\n" << std::endl;
 	while (true)
 	{
 		std::lock_guard<std::mutex> lock(server.m_hMutex);
 
-		if (SOCKET_ERROR == server.Set_Packet((SOCKET)socket, PT_Connect))
+		if (SOCKET_ERROR == server.SetPacket((SOCKET)socket, PT_Connect))
 		{
 			std::cout << "Set_Packet error\n";
 			//err_quit("send()");
@@ -153,7 +137,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 
 		Packet pt;
 		ZeroMemory(&pt, sizeof(pt));
-		if (SOCKET_ERROR == server.Server_Recv((SOCKET)socket, &pt, sizeof(Packet)))
+		if (SOCKET_ERROR == server.ServerRecv((SOCKET)socket, &pt, sizeof(Packet)))
 		{
 			std::cout << "Server_Recv error\n";
 			//err_quit("recv()");
@@ -162,13 +146,19 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 		std::cout << "Recv Ok\n";
 
 		
-		//에코용
-		if (SOCKET_ERROR == server.Set_Packet((SOCKET)socket, PT_Connect))
+		if(SOCKET_ERROR == send((SOCKET)socket, (const char*)&pt, sizeof(Packet), 0))
 		{
 			std::cout << "Set_Packet error\n";
 			//err_quit("send()");
 			break;
 		}
+		//에코용
+		//if (SOCKET_ERROR == server.SetPacket((SOCKET)socket, PT_Connect))
+		//{
+		//	std::cout << "Set_Packet error\n";
+		//	//err_quit("send()");
+		//	break;
+		//}
 		std::cout << "Send OK\n";
 		//에코용 Set_Packet->Server_Send
 
@@ -176,36 +166,43 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 	return NULL;
 }
 
-bool CServer::ServerAccept()
+void CServer::ServerAccept()
 {
 	CServer& server = CServer::Instance();
-	DWORD dwListenThreadID;
-	server.m_hListen = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.ListenThread,
-										(LPVOID)server.m_hClient, 0, &dwListenThreadID);
+	while (true)
+	{
+		SOCKADDR_IN tCIntAddr = {};
+		int iCIntSize = sizeof(tCIntAddr);
+		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
 
-	if (NULL == server.m_hListen)
-	{
-		std::cout << "ServerAccept m_hListen CreateThread fail\n";
-		return false;
+
+
+		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
+
+		DWORD dwSendThreadID, dwRecvThreadID;
+		server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.RecvThread, (LPVOID)server.m_hClient, 0, &dwRecvThreadID);
+		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
+
+		server.ConnectInit();
+
+		DWORD retvalSend = WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
+		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
+		closesocket(server.m_hClient);
 	}
-	else
-	{
-		std::cout << "Server On\n";
-		return true;
-	}
+	return;
 }
 
-int CServer::Server_Send(const SOCKET& sock, const void* buf, int len)
+int CServer::ServerSend(const SOCKET& sock, const void* buf, int len)
 {
 	return send(sock, (const char*)buf, len, 0);
 }
 
-int CServer::Server_Recv(const SOCKET& sock, void* buf, int len)
+int CServer::ServerRecv(const SOCKET& sock, void* buf, int len)
 {
 	return recv(sock, (char*)buf, len, 0);
 }
 
-int CServer::Set_Packet(const SOCKET& sock, unsigned int type)
+int CServer::SetPacket(const SOCKET& sock, unsigned int type)
 {
 	Packet pt;
 
@@ -241,6 +238,6 @@ int CServer::Set_Packet(const SOCKET& sock, unsigned int type)
 
 	std::cout << "Server Send\n";
 
-	return Server_Send(sock, &pt, sizeof(pt));
+	return ServerSend(sock, &pt, sizeof(pt));
 }
 

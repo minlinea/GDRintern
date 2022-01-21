@@ -7,10 +7,6 @@ int main()
 	//cServer.Instance();
 	if (true == cServer.ServerInit())
 	{
-		if (true == cServer.ServerAccept())
-		{
-			
-			while (true);
-		}
+		cServer.ServerAccept();
 	}
 }

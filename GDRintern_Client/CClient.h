@@ -23,13 +23,13 @@ public:
 	bool ClientInit();
 	void ClientConnect();
 
-	int Client_Send(const SOCKET& sock, const void* buf, int len);
-	int Client_Recv(const SOCKET& sock, void* buf, int len);
-	int Set_Packet(const SOCKET& sock, unsigned int type);
+	int ClientSend(const SOCKET& sock, const void* buf, int len);
+	int ClientRecv(const SOCKET& sock, void* buf, int len);
+	int SetPacket(const SOCKET& sock, unsigned int type);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
-
+	int recvn(SOCKET s, char* buf, int len, int flags);
 private:
 
 	WSADATA m_wsaData;
