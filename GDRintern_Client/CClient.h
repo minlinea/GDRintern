@@ -23,6 +23,8 @@ public:
 	bool ClientInit();
 	void ClientConnect();
 
+	void ReadData(unsigned int type);
+
 	int ClientSend(const SOCKET& sock, const void* buf, int len);
 	int ClientRecv(const SOCKET& sock, void* buf, int len);
 	int SetPacket(const SOCKET& sock, unsigned int type);

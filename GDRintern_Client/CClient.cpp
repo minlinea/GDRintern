@@ -1,6 +1,7 @@
 #include "CClient.h"
 #include <string>
 #include <iostream>
+#include "windows.h"
 
 CClient::CClient()
 {
@@ -81,9 +82,9 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	{
 		//std::lock_guard<std::mutex> lock(client.m_hMutex);
 		ZeroMemory(&sinput, sinput.size());
+		
+		Sleep(5000);		//5초마다 통신(유휴상태 체크)
 
-		std::cout << "input : ";
-		std::getline(std::cin, sinput);
 
 		if (SOCKET_ERROR == client.SetPacket((SOCKET)socket, PT_Connect))
 		{
@@ -94,6 +95,30 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	}
 
 	return NULL;
+}
+
+void CClient::ReadData(unsigned int type)
+{
+	CClient& client = CClient::Instance();
+
+	if (type == PT_Pos)
+	{
+		POS pos;
+		ZeroMemory(&pos, sizeof(pos));
+		client.ClientRecv((SOCKET)client.m_hSock, &pos, sizeof(pos));
+
+		std::cout << pos.x << std::endl;
+		std::cout << pos.y << std::endl;
+		std::cout << pos.z << std::endl;
+	}
+	else if (type == PT_None)
+	{
+		std::cout << "PT_None\n";
+	}
+	else
+	{
+		std::cout << "recv ok\n";
+	}
 }
 
 DWORD WINAPI CClient::RecvThread(LPVOID socket)
@@ -113,18 +138,10 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 			//err_quit("recv()");
 			break;
 		}
-		std::cout << "size : " << pt.size << "\n";
-		if (pt.size != sizeof(Packet))
-		{
-			POS pos;
-			ZeroMemory(&pos, sizeof(pos));
-			client.ClientRecv((SOCKET)client.m_hSock, &pos, sizeof(pos));
-			
-			std::cout << pos.x << std::endl;
-			std::cout << pos.y << std::endl;
-			std::cout << pos.z << std::endl;
-		}
-		std::cout << "Recv Ok\n";
+		//패킷의 타입을 이용한 함수 추가
+		client.ReadData(pt.type);
+
+
 	}
 	return NULL;
 }

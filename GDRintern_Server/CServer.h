@@ -26,6 +26,7 @@ public:
 	bool ServerInit();
 	void ServerAccept();
 	void ConnectInit();	//클라이언트 최초 연결 후 초기화 관련 Send
+	void ReadData(unsigned int type);
 
 	int ServerSend(const SOCKET& sock, const void* buf, int len);
 	int ServerRecv(const SOCKET& sock, void* buf, int len);

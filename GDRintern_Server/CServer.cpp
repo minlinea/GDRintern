@@ -85,6 +85,23 @@ void CServer::err_quit(const char* msg)
 	exit(1);
 }
 
+void CServer::ReadData(unsigned int type)
+{
+	CServer& server = CServer::Instance();
+	Packet pt;
+	if (type == PT_Connect)
+	{
+		std::cout << "PT_Connect send\n";
+		pt.size = 8;
+		pt.type = PT_None;
+		send(server.m_hClient, (const char*)&pt, sizeof(pt), 0);
+	}
+	else
+	{
+		std::cout << "recv ok\n";
+	}
+}
+
 void CServer::ConnectInit()	
 {
 	CServer& server = CServer::Instance();
@@ -93,16 +110,6 @@ void CServer::ConnectInit()
 	POS pos = { -1,-2,-3 };
 	ServerSend(server.m_hClient, &pt, sizeof(Packet));
 	ServerSend(server.m_hClient, &pos, sizeof(pos));
-	
-
-
-
-	//Packet* pt = (Packet*)malloc(sizeof(Packet) + sizeof(POS));
-	//pt->SetSize(sizeof(Packet) + sizeof(POS));
-	//pt->SetType(PT_Pos);
-	//pt->SetVariableData(sizeof(POS), &pos);
-	//ServerSend(server.m_hClient, pt, pt->size);
-	//std::cout << " ServerSend\n" << std::endl;
 }
 
 DWORD WINAPI CServer::SendThread(LPVOID socket)
@@ -143,24 +150,9 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 			//err_quit("recv()");
 			break;
 		}
-		std::cout << "Recv Ok\n";
-
 		
-		if(SOCKET_ERROR == send((SOCKET)socket, (const char*)&pt, sizeof(Packet), 0))
-		{
-			std::cout << "Set_Packet error\n";
-			//err_quit("send()");
-			break;
-		}
-		//에코용
-		//if (SOCKET_ERROR == server.SetPacket((SOCKET)socket, PT_Connect))
-		//{
-		//	std::cout << "Set_Packet error\n";
-		//	//err_quit("send()");
-		//	break;
-		//}
-		std::cout << "Send OK\n";
-		//에코용 Set_Packet->Server_Send
+		server.ReadData(pt.type);
+
 
 	}
 	return NULL;
