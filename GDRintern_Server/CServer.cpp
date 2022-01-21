@@ -87,13 +87,15 @@ void CServer::err_quit(const char* msg)
 
 void CServer::ConnectInit()	
 {
-	CServer& server = CServer::Instance();
-	
-	Packet* pt;
-	POS pos = { -1,-1,-1 };
-	pt->SetVariableData(sizeof(POS), &pos);
-	pt->SetSize(sizeof(POS));
-	pt->SetType(PT_Pos);
+	//CServer& server = CServer::Instance();
+	//
+	//Packet* pt;
+	//POS pos = { -1,-1,-1 };
+	//pt->SetVariableData(sizeof(POS), &pos);
+	//pt->SetSize(sizeof(POS));
+	//pt->SetType(PT_Pos);
+
+	//Server_Send(server.m_hClient, pt, pt->size);
 
 }
 
@@ -203,7 +205,7 @@ int CServer::Server_Recv(const SOCKET& sock, void* buf, int len)
 	return recv(sock, (char*)buf, len, 0);
 }
 
-int CServer::Set_Packet(const SOCKET& sock, unsigned int type, void* buf)
+int CServer::Set_Packet(const SOCKET& sock, unsigned int type)
 {
 	Packet pt;
 
@@ -239,6 +241,6 @@ int CServer::Set_Packet(const SOCKET& sock, unsigned int type, void* buf)
 
 	std::cout << "Server Send\n";
 
-	return Server_Send(sock, &pt, sizeof pt);
+	return Server_Send(sock, &pt, sizeof(pt));
 }
 

@@ -94,12 +94,12 @@ typedef struct _Packet
 	}
 
 
-	Packet* SetVariableData(unsigned int size, void* data)
-	{
-		Packet* pt = (Packet*)malloc(sizeof(Packet) + size);
+	//Packet* SetVariableData(unsigned int size, void* data)
+	//{
+	//	Packet* pt = (Packet*)malloc(sizeof(Packet) + size);
 
-		memcpy_s(pt + sizeof(Packet), size, data, size);
+	//	memcpy_s(pt + sizeof(Packet), size, data, size);
 
-		return pt;
-	}
+	//	return pt;
+	//}
 }Packet;
