@@ -20,21 +20,24 @@ public:
 	CServer();
 	~CServer();
 
+	//에러 확인 함수
 	void err_quit(const char* msg);
 
+	//최초 생성에 따른 데이터, 소켓 설정, 연결 및 스레드 생성
 	void DataInit();
 	bool ServerInit();
 	void ServerAccept();
-	void ConnectInit();	//클라이언트 최초 연결 후 초기화 관련 Send
-	void ReadData(unsigned int type);
 
-	int ServerSend(const SOCKET& sock, const void* fixbuf, const void* varbuf, int varlen);
-	int ServerRecv(const SOCKET& sock, void* buf, int len);
+	//recv 후 패킷 type에 따른 정보 파악
+	void ReadData(const unsigned int type);
+
+	int ServerSend(const void* fixbuf, const void* varbuf, const int varlen);
+	int ServerRecv(void* buf, const int len);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
 
-	void SetShotData(ShotData& sd)
+	void SetShotData(const ShotData& sd)
 	{
 		this->m_iPhase = sd.phase;
 		this->m_fBallSpeed = sd.ballspeed;
@@ -44,16 +47,20 @@ public:
 		this->m_iBackSpin = sd.backspin;
 		this->m_iSideSpin = sd.sidespin;
 	}
-	void SetTCSetting(TCSetting& tcs)
+	void SetTCSetting(const TCSetting& tcs)
 	{
 		this->m_eTee = tcs.tee;
 		this->m_eClub = tcs.club;
 	}
-	void SetPos(POS& pos)
+	void SetPos(const POS& pos)
 	{
 		this->m_fX = pos.x;
 		this->m_fY = pos.y;
 		this->m_fZ = pos.z;
+	}
+	void SetState(const bool& state)
+	{
+		this->m_bState = state;
 	}
 
 	const TCSetting GetTCSetting()
@@ -69,6 +76,10 @@ public:
 	{
 		return POS{ this->m_fX, this->m_fY, this->m_fZ };
 	}
+	const bool GetState()
+	{
+		return m_bState;
+	}
 
 private:
 
@@ -83,17 +94,19 @@ private:
 	HANDLE m_hListen;
 	SOCKET m_hClient;
 	
-
-	//데이터 관련
+	//Tee, Club 데이터 관련
 	TEE m_eTee;
 	CLUB m_eClub;
 
+	//POS
 	float m_fX;
 	float m_fY;
 	float m_fZ;
 
+	//센서 상태 변경 (active, inactive)
 	bool m_bState;
 
+	//ShotData
 	int m_iPhase;
 	float m_fBallSpeed;
 	float m_fLaunchAngle;

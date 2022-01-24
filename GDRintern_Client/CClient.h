@@ -17,23 +17,31 @@ public:
 	CClient();
 	~CClient();
 
+	//에러 확인 함수
 	void err_quit(const char* msg);
 
+	//최초 생성에 따른 데이터, 소켓 설정, 연결 및 스레드 생성
 	void DataInit();
 	bool ClientInit();
 	void ClientConnect();
 
+	//recv 후 패킷 type에 따른 정보 파악
 	void ReadData(unsigned int type);
-	void InputKey(const char input);
 
-	int ClientSend(const SOCKET& sock, const void* fixbuf, const void* varbuf, int varlen);
-	int ClientRecv(const SOCKET& sock, void* buf, int len);
+	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신
+	//w(Tee, club 세팅) e(active 상태 전달) r(inactive 상태 전달), t(샷data 요청 *pc, pc한정)
+	int InputKey(const char input);
+
+	//고정데이터 send 후 가변데이터가 존재한다면 가변데이터도 send
+	int ClientSend(const void* fixbuf, const void* varbuf, const int varlen);
+
+	//서버로부터 오는 정보 recv
+	int ClientRecv(void* buf, int len);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
-	int recvn(SOCKET s, char* buf, int len, int flags);
 
-	void SetShotData(ShotData& sd)
+	void SetShotData(const ShotData& sd)
 	{
 		this->m_iPhase = sd.phase;
 		this->m_fBallSpeed = sd.ballspeed;
@@ -43,16 +51,20 @@ public:
 		this->m_iBackSpin = sd.backspin;
 		this->m_iSideSpin = sd.sidespin;
 	}
-	void SetTCSetting(TCSetting& tcs)
+	void SetTCSetting(const TCSetting& tcs)
 	{
 		this->m_eTee = tcs.tee;
 		this->m_eClub = tcs.club;
 	}
-	void SetPos(POS& pos)
+	void SetPos(const POS& pos)
 	{
 		this->m_fX = pos.x;
 		this->m_fY = pos.y;
 		this->m_fZ = pos.z;
+	}
+	void SetState(const bool& state)
+	{
+		this->m_bState = state;
 	}
 
 	const TCSetting GetTCSetting()
@@ -68,6 +80,10 @@ public:
 	{
 		return POS{ this->m_fX, this->m_fY, this->m_fZ };
 	}
+	const bool GetState()
+	{
+		return m_bState;
+	}
 
 private:
 
@@ -80,16 +96,19 @@ private:
 	HANDLE m_hSend;
 	HANDLE m_hRecv;
 
-	//데이터 관련
+	//Tee, Club 데이터 관련
 	TEE m_eTee;
 	CLUB m_eClub;
 
+	//POS
 	float m_fX;
 	float m_fY;
 	float m_fZ;
 
+	//센서 상태 변경 (active, inactive)
 	bool m_bState;
 
+	//ShotData
 	int m_iPhase;
 	float m_fBallSpeed;
 	float m_fLaunchAngle;
