@@ -27,10 +27,9 @@ enum PACKETTYPE {
 	PT_ShotData,
 	PT_ConnectCheck,
 	PT_Disconnect,
+	PT_Shot,
 	PT_None
 };
-
-;
 
 typedef struct _ShotData {
 	int phase;
@@ -42,10 +41,10 @@ typedef struct _ShotData {
 	int sidespin;
 }ShotData;
 
-typedef struct _TCsetting {
+typedef struct _TCSetting {
 	TEE tee;
 	CLUB club;
-}TCsetting;
+}TCSetting;
 
 typedef struct _POS
 {
@@ -60,8 +59,11 @@ typedef struct _ACTIVESTATE
 }ACTIVESTATE;
 
 
-
-
+/*
+Packet
+type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분
+size : 해당 타입 패킷의 사이즈
+*/
 typedef struct _Packet
 {
 	unsigned int type;
@@ -71,12 +73,6 @@ typedef struct _Packet
 		this->type = PT_None;
 		this->size = 8;
 	}
-	
-	_Packet(unsigned int type)
-	{
-		this->type = type;
-		this->size = 8;
-	}
 
 	_Packet(unsigned int type, unsigned int size)
 	{
@@ -84,23 +80,4 @@ typedef struct _Packet
 		this->size = size;
 	}
 
-	void SetType(unsigned int type)
-	{
-		this->type = type;
-	}
-
-	void SetSize(unsigned int size)
-	{
-		this->size = size;
-	}
-
-
-	_Packet* SetVariableData(unsigned int size, void* data)
-	{
-		_Packet* pt = (_Packet*)malloc(sizeof(_Packet) + size);
-
-		memcpy_s(pt + sizeof(_Packet), size, &data, size);
-
-		return pt;
-	}
 }Packet;

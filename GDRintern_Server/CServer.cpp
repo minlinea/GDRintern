@@ -88,13 +88,49 @@ void CServer::err_quit(const char* msg)
 void CServer::ReadData(unsigned int type)
 {
 	CServer& server = CServer::Instance();
-	Packet pt;
-	if (type == PT_Connect)
+
+	
+	if (type == PT_Connect)		//대기 시 통신
 	{
-		std::cout << "PT_Connect send\n";
-		pt.size = 8;
-		pt.type = PT_None;
-		send(server.m_hClient, (const char*)&pt, sizeof(pt), 0);
+		std::cout << "PT_Connect recv\n";
+	}
+	else if (type == PT_Setting)	//Tee, Club설정 변경
+	{
+		std::cout << "PT_Setting recv\n";
+		
+		TCSetting tcs;
+		ServerRecv(server.m_hClient, &tcs, sizeof(TCSetting));
+		server.SetTCSetting(tcs);
+
+		std::cout << server.m_eTee << "   " << server.m_eClub << "\n";
+		
+		Packet pt(sizeof(Packet), PT_None);
+		ServerSend(server.m_hClient, &pt, NULL, 0);
+		return;
+	}
+	else if (type == PT_Active)		//Active 상태 변경
+	{
+		std::cout << "PT_Active recv\n";
+
+		ACTIVESTATE activestate;		//가변데이터 state 상태 수신
+		ServerRecv(server.m_hClient, &activestate, sizeof(ACTIVESTATE));
+		server.m_bState = activestate.state;
+
+		Packet pt(PT_Pos, sizeof(POS) + sizeof(Packet));		//공 위치 정보 send
+		POS pos = {0,0,0};
+		ServerSend(server.m_hClient, &pt, &pos, sizeof(pos));
+		return;
+	}
+	else if (type == PT_Shot)		//샷을 진행했다는 알람(pc -> pc에만 적용사항)
+	{
+		std::cout << "PT_Shot recv\n";
+
+		Packet pt(PT_ShotData, sizeof(ShotData));
+		ShotData shotdata(server.GetShotData());		//샷 데이터 send
+		ServerSend(server.m_hClient, &pt, &shotdata, sizeof(ShotData));
+
+		server.m_bState = false;		//샷 후 inactive 상태 변경
+		return;							//유일하게 다른 동작이므로 아래 상태를 진행하지 않음
 	}
 	else
 	{
@@ -106,25 +142,26 @@ void CServer::ConnectInit()
 {
 	CServer& server = CServer::Instance();
 	
-	Packet pt(PT_Pos, sizeof(POS) + sizeof(Packet));
+	Packet pt(PT_Pos, sizeof(Packet));
 	POS pos = { -1,-2,-3 };
-	ServerSend(server.m_hClient, &pt, sizeof(Packet));
-	ServerSend(server.m_hClient, &pos, sizeof(pos));
+	ServerSend(server.m_hClient, &pt, &pos, sizeof(POS));
 }
 
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
 	CServer& server = CServer::Instance();
 
-
+	server.ConnectInit();
 	std::cout << "ConnectInit\n" << std::endl;
+
+	Packet pt{ PT_Connect, sizeof(Packet) };
 	while (true)
 	{
 		std::lock_guard<std::mutex> lock(server.m_hMutex);
 
-		if (SOCKET_ERROR == server.SetPacket((SOCKET)socket, PT_Connect))
+		if (SOCKET_ERROR == server.ServerSend((SOCKET)socket, &pt, NULL, 0))
 		{
-			std::cout << "Set_Packet error\n";
+			std::cout << "SendThread ServerSend error\n";
 			//err_quit("send()");
 			break;
 		}//Set_Packet->Server_Send
@@ -167,15 +204,11 @@ void CServer::ServerAccept()
 		int iCIntSize = sizeof(tCIntAddr);
 		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
 
-
-
 		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
 
 		DWORD dwSendThreadID, dwRecvThreadID;
 		server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.RecvThread, (LPVOID)server.m_hClient, 0, &dwRecvThreadID);
 		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
-
-		server.ConnectInit();
 
 		DWORD retvalSend = WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
 		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
@@ -184,52 +217,31 @@ void CServer::ServerAccept()
 	return;
 }
 
-int CServer::ServerSend(const SOCKET& sock, const void* buf, int len)
+int CServer::ServerSend(const SOCKET& sock, const void* fixbuf, const void* varbuf, int varlen)
 {
-	return send(sock, (const char*)buf, len, 0);
-}
+	int retval = 0;
 
+	retval = send(sock, (const char*)fixbuf, sizeof(Packet), 0);	//고정데이터 전송
+	if (SOCKET_ERROR == retval)
+	{
+		std::cout << "ServerSend error fixbuf send\n";
+	}
+	else
+	{
+		if (0 != varlen)		//가변 데이터에 무언가 있어 추가 전송
+		{
+			retval = send(sock, (const char*)varbuf, varlen, 0);
+			if (SOCKET_ERROR == retval)
+			{
+				std::cout << "ServerSend error varbuf send\n";
+			}
+		}
+	}
+	return retval;
+}
 int CServer::ServerRecv(const SOCKET& sock, void* buf, int len)
 {
 	return recv(sock, (char*)buf, len, 0);
 }
 
-int CServer::SetPacket(const SOCKET& sock, unsigned int type)
-{
-	Packet pt;
-
-	if (type == PT_Connect)
-	{
-		pt.type = PT_Connect;
-	}
-	else if (type == PT_Pos)
-	{
-		pt.type = PT_Pos;
-	}
-	else if (type == PT_ShotData)
-	{
-		pt.type = PT_ShotData;
-	}
-	else if (type == PT_ConnectCheck)
-	{
-		pt.type = PT_ConnectCheck;
-	}
-	else if (type == PT_Disconnect)
-	{
-		pt.type = PT_Disconnect;
-	}
-	else if (type == PT_None)
-	{
-		pt.type = PT_None;
-	}
-	else
-	{
-		std::cout << "Set_packet error : error type\n";
-		return -1;
-	}
-
-	std::cout << "Server Send\n";
-
-	return ServerSend(sock, &pt, sizeof(pt));
-}
 

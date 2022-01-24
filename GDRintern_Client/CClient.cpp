@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "windows.h"
+#include "conio.h"
 
 CClient::CClient()
 {
@@ -73,6 +74,59 @@ void CClient::err_quit(const char* msg)
 	exit(1);
 }
 
+void CClient::InputKey(const char input)
+{
+	CClient& client = CClient::Instance();
+	if ('q' == input)
+	{
+		
+	}
+	else if ('w' == input)		//Tee, Club 세팅 변경
+	{
+		Packet pt(PT_Setting, sizeof(Packet));
+		TCSetting setting = { m_eTee, m_eClub };
+		client.ClientSend(client.m_hSock, &pt, &setting, 0);
+
+		std::cout << "Send PT_Setting\n";
+	}
+	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
+	{
+		Packet pt(PT_Active, sizeof(PT_Active) + sizeof(Packet));
+		ACTIVESTATE activestate{ true };
+		client.ClientSend(client.m_hSock, &pt, &activestate, sizeof(ACTIVESTATE));
+
+		client.m_bState = true;
+		std::cout << "Send PT_Active(true)\n";
+	}
+	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
+	{
+		Packet pt(PT_Active, sizeof(PT_Active) + sizeof(Packet));
+		ACTIVESTATE activestate{ false };
+		client.ClientSend(client.m_hSock, &pt, &activestate, sizeof(ACTIVESTATE));
+
+		client.m_bState = false;
+		std::cout << "Send PT_Active(false)\n";
+	}
+	else if ('t' == input)		//ShotData 요청 (클라이언트 테스트 용, Shot 상황 가정)
+	{
+		if (true == client.m_bState)
+		{
+			Packet pt(PT_Shot, sizeof(Packet));
+			client.ClientSend(client.m_hSock, &pt, NULL, 0);
+
+			client.m_bState = false;
+			std::cout << "Send PT_Shot\n";
+		}
+		else
+		{
+			std::cout << "server is not active\n";
+		}
+	}
+	else
+	{
+	}
+}
+
 DWORD WINAPI CClient::SendThread(LPVOID socket)
 {
 	CClient& client = CClient::Instance();
@@ -83,15 +137,30 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 		//std::lock_guard<std::mutex> lock(client.m_hMutex);
 		ZeroMemory(&sinput, sinput.size());
 		
-		Sleep(5000);		//5초마다 통신(유휴상태 체크)
-
-
-		if (SOCKET_ERROR == client.SetPacket((SOCKET)socket, PT_Connect))
+		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
 		{
-			std::cout << "Set_Packet error\n";
-			//err_quit("send()");
-			break;
-		}//Set_Packet->Client_Send
+			client.InputKey(_getch());
+			//if (SOCKET_ERROR == )
+			//{
+			//	std::cout << "SendThread Set_Packet error\n";
+			//	//err_quit("send()");
+			//	break;
+			//}//Set_Packet->Client_Send
+
+		}
+		else
+		{
+			//Sleep(2000);		//5초마다 통신(유휴상태 체크)
+
+
+			//if (SOCKET_ERROR == client.SetPacket((SOCKET)socket, PT_Connect))
+			//{
+			//	std::cout << "SendThread Set_Packet error\n";
+			//	//err_quit("send()");
+			//	break;
+			//}//Set_Packet->Client_Send
+		}
+
 	}
 
 	return NULL;
@@ -107,9 +176,27 @@ void CClient::ReadData(unsigned int type)
 		ZeroMemory(&pos, sizeof(pos));
 		client.ClientRecv((SOCKET)client.m_hSock, &pos, sizeof(pos));
 
-		std::cout << pos.x << std::endl;
-		std::cout << pos.y << std::endl;
-		std::cout << pos.z << std::endl;
+		client.m_fX = pos.x;
+		client.m_fY = pos.y;
+		client.m_fZ = pos.z;
+
+		std::cout << client.m_fX << " " << client.m_fY << " " << client.m_fZ << "\n";
+	}
+	else if (type == PT_ShotData)
+	{
+		std::cout << "PT_ShotData recv\n";
+		ShotData shotdata;
+		client.ClientRecv(client.m_hSock, &shotdata, sizeof(ShotData));
+
+		client.m_fBallSpeed = shotdata.ballspeed;
+		client.m_fLaunchAngle = shotdata.launchangle;
+		client.m_fLaunchDirection = shotdata.launchdirection;
+		client.m_fHeadSpeed = shotdata.headspeed;
+		client.m_iBackSpin = shotdata.backspin;
+		client.m_iSideSpin = shotdata.sidespin;
+		std::cout << client.m_fBallSpeed << " " << client.m_fLaunchAngle << " " << client.m_fLaunchDirection
+			<< " " << client.m_fHeadSpeed << " " << client.m_iBackSpin << " " << client.m_iSideSpin << "\n";
+
 	}
 	else if (type == PT_None)
 	{
@@ -171,51 +258,32 @@ void CClient::ClientConnect()
 	return;
 }
 
-int CClient::ClientSend(const SOCKET& sock, const void* buf, int len)
+int CClient::ClientSend(const SOCKET& sock, const void* fixbuf, const void* varbuf, int varlen)
 {
-	return send(sock, (const char*)buf, len, 0);
+	int retval = 0;
+
+	retval = send(sock, (const char*)fixbuf, sizeof(Packet), 0);	//고정데이터 전송
+	if (SOCKET_ERROR == retval)
+	{
+		std::cout << "ClientSend error fixbuf send\n";
+	}
+	else
+	{
+		if (0 != varlen)		//가변 데이터에 무언가 있어 추가 전송
+		{
+			retval = send(sock, (const char*)varbuf, varlen, 0);
+			if (SOCKET_ERROR == retval)
+			{
+				std::cout << "ClientSend error varbuf send\n";
+			}
+		}
+	}
+	return retval;
 }
 
 int CClient::ClientRecv(const SOCKET& sock, void* buf, int len)
 {
 	return recv(sock, (char*)buf, len, 0);
-}
-
-int CClient::SetPacket(const SOCKET& sock, unsigned int type)
-{
-	Packet pt;
-
-	if (type == PT_Connect)
-	{
-		pt.type = PT_Connect;
-	}
-	else if (type == PT_Active)
-	{
-		pt.type = PT_Active;
-	}
-	else if (type == PT_Setting)
-	{
-		pt.type = PT_Setting;
-	}
-	else if (type == PT_ConnectCheck)
-	{
-		pt.type = PT_ConnectCheck;
-	}
-	else if (type == PT_Disconnect)
-	{
-		pt.type = PT_Disconnect;
-	}
-	else if (type == PT_None)
-	{
-		pt.type = PT_Disconnect;
-	}
-	else
-	{
-		std::cout << "Set_packet error : error type\n";
-		return -1;
-	}
-
-	return ClientSend(sock, &pt, sizeof pt);
 }
 
 int CClient::recvn(SOCKET s, char* buf, int len, int flags)
