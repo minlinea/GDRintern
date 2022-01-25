@@ -1,9 +1,12 @@
 #pragma once
 #include <mutex>
 #include <winsock2.h>
+#include <iostream>
 #pragma comment(lib, "Ws2_32.lib")
 
 #include "../packet.h"
+
+#define datalog 0
 
 class CServer
 {
@@ -50,22 +53,36 @@ public:
 		this->m_fHeadSpeed = sd.headspeed;
 		this->m_iBackSpin = sd.backspin;
 		this->m_iSideSpin = sd.sidespin;
+#ifdef datalog
+		std::cout << "ballspeed:" << this->m_fBallSpeed << "  launchangle:" << this->m_fLaunchAngle
+			<< "  launchdirection:" << this->m_fLaunchDirection << "  headspeed:" << this->m_fHeadSpeed
+			<< "  backspin:" << this->m_iBackSpin << "  sidespin:" << this->m_iSideSpin << "\n";
+#endif
 	}
-	void SetTCSetting(const TeeClubSetting& tcs)
+	void SetTeeClubSetting(const TeeClubSetting& tcs)
 	{
 		this->m_eTee = tcs.tee;
 		this->m_eClub = tcs.club;
+#ifdef datalog
+		std::cout << "Tee:" << (unsigned int)this->m_eTee << "  Club:" << (unsigned int)this->m_eClub << "\n";
+#endif
 	}
-	void SetPos(const BALLPLACE& place)
+	void SetPlace(const BALLPLACE& place)
 	{
 		this->m_ePlace = place;
+#ifdef datalog
+		std::cout << "Place:" << (unsigned int)this->m_ePlace << "\n";
+#endif
 	}
 	void SetState(const bool& state)
 	{
 		this->m_bState = state;
+#ifdef datalog
+		std::cout << "State:" << this->m_bState << "\n";
+#endif
 	}
 
-	const TeeClubSetting GetTCSetting()
+	const TeeClubSetting GetTeeClubSetting()
 	{
 		return TeeClubSetting{ this->m_eTee, this->m_eClub };
 	}

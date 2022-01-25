@@ -4,6 +4,8 @@
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
 
+#define datalog 0
+
 enum class TEE {
 	T30,
 	T35,
@@ -23,7 +25,7 @@ enum class PACKETTYPE {
 	PT_Connect,
 	PT_ConnectRecv,
 	PT_Active,
-	PT_Pos,
+	PT_Place,
 	PT_Setting,
 	PT_ShotData,
 	PT_ConnectCheck,

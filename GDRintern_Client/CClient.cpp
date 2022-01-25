@@ -1,6 +1,4 @@
 #include "CClient.h"
-#include <string>
-#include <iostream>
 #include "windows.h"
 #include "conio.h"
 
@@ -150,9 +148,9 @@ void CClient::ReadData(PACKETTYPE type)
 {
 	auto& client = CClient::Instance();
 
-	if (type == PACKETTYPE::PT_Pos)
+	if (type == PACKETTYPE::PT_Place)
 	{
-		std::cout << "PT_Pos Recv\n";
+		std::cout << "PT_Place Recv\n";
 		BALLPLACE place;
 		ZeroMemory(&place, sizeof(place));
 		client.ClientRecv(&place, sizeof(place));
@@ -160,8 +158,6 @@ void CClient::ReadData(PACKETTYPE type)
 		client.m_hMutex.lock();
 		client.SetPlace(place);
 		client.m_hMutex.unlock();
-
-		std::cout << "ball pos : " << (unsigned int)client.m_ePlace << "\n";
 	}
 	else if (type == PACKETTYPE::PT_ShotData)
 	{
@@ -172,10 +168,6 @@ void CClient::ReadData(PACKETTYPE type)
 		client.m_hMutex.lock();
 		client.SetShotData(shotdata);
 		client.m_hMutex.unlock();
-
-		std::cout << "shot data : " << client.m_fBallSpeed << " " << client.m_fLaunchAngle << " " << client.m_fLaunchDirection
-			<< " " << client.m_fHeadSpeed << " " << client.m_iBackSpin << " " << client.m_iSideSpin << "\n";
-
 	}
 	else if (type == PACKETTYPE::PT_ConnectRecv)
 	{

@@ -1,5 +1,4 @@
 #include "CServer.h"
-#include <iostream>
 #include "conio.h"
 
 CServer::CServer()
@@ -87,34 +86,38 @@ void CServer::err_quit(const char* msg)
 void CServer::ReadData(PACKETTYPE type)
 {
 	auto& server = CServer::Instance();
-
-	if (type == PACKETTYPE::PT_Connect)		//대기 시 통신
+	int retval{ 0 };
+	if (PACKETTYPE::PT_Connect == type)		//대기 시 통신
 	{
 		std::cout << "PT_Connect recv\n";
 	}
-	else if (type == PACKETTYPE::PT_Setting)	//Tee, Club설정 변경
+	else if (PACKETTYPE::PT_Setting == type)	//Tee, Club설정 변경
 	{
-		std::cout << "PT_Setting recv\n";
-		
 		TeeClubSetting tcs;
-		ServerRecv(&tcs, sizeof(TeeClubSetting));
+		retval = ServerRecv(&tcs, sizeof(TeeClubSetting));
+		if (SOCKET_ERROR == retval)
+		{
+			std::cout << "ReadData PT_Setting error\n";
+			return;
+		}
+		else
+		{
+			std::cout << "PT_Setting recv\n";
 
-		server.m_hMutex.lock();
-		server.SetTCSetting(tcs);
-		server.m_hMutex.unlock();
+			server.m_hMutex.lock();
+			server.SetTeeClubSetting(tcs);
+			server.m_hMutex.unlock();
 
-		std::cout << (unsigned int)server.m_eTee << "   " << (unsigned int)server.m_eClub << "\n";
-		
-		Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
-		ServerSend(&pt, nullptr, 0);
-		return;
+			Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
+			ServerSend(&pt, nullptr, 0);
+			return;
+		}
 	}
-	else if (type == PACKETTYPE::PT_Active)		//Active 상태 변경
+	else if (PACKETTYPE::PT_Active == type)		//Active 상태 변경
 	{
-		std::cout << "PT_Active recv\n";
-
 		ACTIVESTATE activestate;		//가변데이터 state 상태 수신
 		ServerRecv(&activestate, sizeof(ACTIVESTATE));
+		std::cout << "PT_Active recv\n";
 
 		server.m_hMutex.lock();
 		server.m_bState = activestate.state;
@@ -122,7 +125,7 @@ void CServer::ReadData(PACKETTYPE type)
 		
 		if (true == server.m_bState)
 		{
-			Packet pt(PACKETTYPE::PT_Pos, sizeof(Packet));		//공 위치 정보 send
+			Packet pt(PACKETTYPE::PT_Place, sizeof(Packet));		//공 위치 정보 send
 			BALLPLACE bp{ server.GetPlace() };
 			ServerSend(&pt, &bp, sizeof(bp));
 		}
