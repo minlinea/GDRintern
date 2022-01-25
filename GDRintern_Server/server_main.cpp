@@ -4,9 +4,8 @@
 int main()
 {
 	CServer cServer;
-	//cServer.Instance();
-	if (true == cServer.ServerInit())
+	if (true == cServer.ServerInit())		//정상적인 서버 진행 시
 	{
-		cServer.ServerAccept();
+		cServer.ServerAccept();				//클라이언트 접속 대기
 	}
 }

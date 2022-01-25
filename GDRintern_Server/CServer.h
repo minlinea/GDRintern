@@ -29,7 +29,7 @@ public:
 	void ServerAccept();
 
 	//recv 후 패킷 type에 따른 정보 파악
-	void ReadData(const unsigned int type);
+	void ReadData(PACKETTYPE type);
 
 	int ServerSend(const void* fixbuf, const void* varbuf, const int varlen);
 	int ServerRecv(void* buf, const int len);

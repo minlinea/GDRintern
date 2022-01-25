@@ -4,7 +4,7 @@
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
 
-enum TEE {
+enum class TEE {
 	T30,
 	T35,
 	T40,
@@ -12,14 +12,14 @@ enum TEE {
 	T50
 };
 
-enum CLUB {
+enum class CLUB {
 	DRIVER,
 	IRON,
 	WOOD
 };
 
 
-enum PACKETTYPE {
+enum class PACKETTYPE {
 	PT_Connect,
 	PT_Active,
 	PT_Pos,
@@ -66,15 +66,15 @@ size : 해당 타입 패킷의 사이즈
 */
 typedef struct _Packet
 {
-	unsigned int type;
+	PACKETTYPE type;
 	unsigned int size;
 	_Packet()
 	{
-		this->type = PT_None;
+		this->type = PACKETTYPE::PT_None;
 		this->size = 8;
 	}
 
-	_Packet(unsigned int type, unsigned int size)
+	_Packet(PACKETTYPE type, unsigned int size)
 	{
 		this->type = type;
 		this->size = size;

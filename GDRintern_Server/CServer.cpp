@@ -18,8 +18,8 @@ CServer::~CServer()
 
 void CServer::DataInit()
 {
-	m_eTee = T40;
-	m_eClub = DRIVER;
+	m_eTee = TEE::T40;
+	m_eClub = CLUB::DRIVER;
 
 	m_fX = 0;
 	m_fY = 0;
@@ -38,7 +38,7 @@ void CServer::DataInit()
 
 bool CServer::ServerInit()
 {
-	CServer& server = CServer::Instance();
+	auto& server = CServer::Instance();
 	if (0 != WSAStartup(MAKEWORD(2, 2), &server.m_wsaData))
 	{
 		std::cout << "ServerInit WSAStartup fail\n";
@@ -85,15 +85,15 @@ void CServer::err_quit(const char* msg)
 	exit(1);
 }
 
-void CServer::ReadData(const unsigned int type)
+void CServer::ReadData(PACKETTYPE type)
 {
-	CServer& server = CServer::Instance();
+	auto& server = CServer::Instance();
 
-	if (type == PT_Connect)		//대기 시 통신
+	if (type == PACKETTYPE::PT_Connect)		//대기 시 통신
 	{
 		std::cout << "PT_Connect recv\n";
 	}
-	else if (type == PT_Setting)	//Tee, Club설정 변경
+	else if (type == PACKETTYPE::PT_Setting)	//Tee, Club설정 변경
 	{
 		std::cout << "PT_Setting recv\n";
 		
@@ -104,13 +104,13 @@ void CServer::ReadData(const unsigned int type)
 		server.SetTCSetting(tcs);
 		server.m_hMutex.unlock();
 
-		std::cout << server.m_eTee << "   " << server.m_eClub << "\n";
+		std::cout << (unsigned int)server.m_eTee << "   " << (unsigned int)server.m_eClub << "\n";
 		
-		Packet pt(PT_None, sizeof(Packet));
-		ServerSend(&pt, NULL, 0);
+		Packet pt(PACKETTYPE::PT_None, sizeof(Packet));
+		ServerSend(&pt, nullptr, 0);
 		return;
 	}
-	else if (type == PT_Active)		//Active 상태 변경
+	else if (type == PACKETTYPE::PT_Active)		//Active 상태 변경
 	{
 		std::cout << "PT_Active recv\n";
 
@@ -121,16 +121,16 @@ void CServer::ReadData(const unsigned int type)
 		server.m_bState = activestate.state;
 		server.m_hMutex.unlock();
 		
-		Packet pt(PT_Pos, sizeof(Packet));		//공 위치 정보 send
+		Packet pt(PACKETTYPE::PT_Pos, sizeof(Packet));		//공 위치 정보 send
 		POS pos{0,0,0};
 		ServerSend(&pt, &pos, sizeof(pos));
 		return;
 	}
-	else if (type == PT_Shot)		//샷을 진행했다는 알람(pc -> pc에만 적용사항)
+	else if (type == PACKETTYPE::PT_Shot)		//샷을 진행했다는 알람(pc -> pc에만 적용사항)
 	{
 		std::cout << "PT_Shot recv\n";
 
-		Packet pt(PT_ShotData, sizeof(Packet));
+		Packet pt(PACKETTYPE::PT_ShotData, sizeof(Packet));
 		ShotData shotdata{ server.GetShotData() };		//샷 데이터 send
 		ServerSend(&pt, &shotdata, sizeof(ShotData));
 
@@ -147,14 +147,14 @@ void CServer::ReadData(const unsigned int type)
 
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
-	CServer& server = CServer::Instance();
+	auto& server = CServer::Instance();
 
 	std::cout << "ConnectInit\n" << std::endl;
 
-	Packet pt{ PT_Connect, sizeof(Packet) };
+	Packet pt{ PACKETTYPE::PT_Connect, sizeof(Packet) };
 	while (true)
 	{
-		//if (SOCKET_ERROR == server.ServerSend(&pt, NULL, 0))
+		//if (SOCKET_ERROR == server.ServerSend(&pt, nullptr, 0))
 		//{
 		//	std::cout << "SendThread ServerSend error\n";
 		//	//err_quit("send()");
@@ -169,7 +169,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
-	CServer& server = CServer::Instance();
+	auto& server = CServer::Instance();
 	Packet pt;
 	while (true)
 	{
@@ -181,7 +181,10 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 			//err_quit("recv()");
 			break;
 		}
-		server.ReadData(pt.type);
+		else
+		{
+			server.ReadData(pt.type);
+		}
 
 
 	}
@@ -190,7 +193,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 
 void CServer::ServerAccept()
 {
-	CServer& server = CServer::Instance();
+	auto& server = CServer::Instance();
 	while (true)
 	{
 		SOCKADDR_IN tCIntAddr = {};
@@ -199,7 +202,7 @@ void CServer::ServerAccept()
 
 		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
 
-		DWORD dwSendThreadID, dwRecvThreadID;
+		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
 		server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.RecvThread, (LPVOID)server.m_hClient, 0, &dwRecvThreadID);
 		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
 
@@ -212,7 +215,7 @@ void CServer::ServerAccept()
 
 int CServer::ServerSend(const void* fixbuf, const void* varbuf, const int varlen)
 {
-	CServer& server = CServer::Instance();
+	auto& server = CServer::Instance();
 	int retval{ 0 };
 
 	retval = send(server.m_hClient, (const char*)fixbuf, sizeof(Packet), 0);	//고정데이터 전송
@@ -235,7 +238,7 @@ int CServer::ServerSend(const void* fixbuf, const void* varbuf, const int varlen
 }
 int CServer::ServerRecv(void* buf, const int len)
 {
-	CServer& server = CServer::Instance();
+	auto& server = CServer::Instance();
 	return recv(server.m_hClient, (char*)buf, len, 0);
 }
 
