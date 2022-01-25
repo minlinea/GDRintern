@@ -52,11 +52,9 @@ public:
 		this->m_eTee = tcs.tee;
 		this->m_eClub = tcs.club;
 	}
-	void SetPos(const POS& pos)
+	void SetPos(const BALLPLACE& place)
 	{
-		this->m_fX = pos.x;
-		this->m_fY = pos.y;
-		this->m_fZ = pos.z;
+		this->m_ePlace = place;
 	}
 	void SetState(const bool& state)
 	{
@@ -72,9 +70,9 @@ public:
 		return ShotData{ this->m_iPhase, this->m_fBallSpeed, this->m_fLaunchAngle,
 			this->m_fLaunchDirection, this->m_fHeadSpeed, this->m_iBackSpin, this->m_iSideSpin };
 	}
-	const POS GetPos()
+	const BALLPLACE GetPlace()
 	{
-		return POS{ this->m_fX, this->m_fY, this->m_fZ };
+		return m_ePlace;
 	}
 	const bool GetState()
 	{
@@ -99,9 +97,7 @@ private:
 	CLUB m_eClub;
 
 	//POS
-	float m_fX;
-	float m_fY;
-	float m_fZ;
+	BALLPLACE m_ePlace;
 
 	//센서 상태 변경 (active, inactive)
 	bool m_bState;

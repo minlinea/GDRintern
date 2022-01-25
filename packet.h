@@ -31,6 +31,13 @@ enum class PACKETTYPE {
 	PT_None
 };
 
+enum class BALLPLACE
+{
+	PAIRWAY,
+	TEE,
+	OB
+};
+
 typedef struct _ShotData {
 	int phase;
 	float ballspeed;
@@ -45,13 +52,6 @@ typedef struct _TCSetting {
 	TEE tee;
 	CLUB club;
 }TCSetting;
-
-typedef struct _POS
-{
-	float x;
-	float y;
-	float z;
-}POS;
 
 typedef struct _ACTIVESTATE
 {

@@ -23,9 +23,7 @@ void CClient::DataInit()
 	m_eTee = TEE::T40;
 	m_eClub = CLUB::DRIVER;
 
-	m_fX = -1;
-	m_fY = -1;
-	m_fZ = -1;
+	m_ePlace = BALLPLACE::OB;
 
 	m_bState = false;
 
@@ -164,15 +162,16 @@ void CClient::ReadData(PACKETTYPE type)
 
 	if (type == PACKETTYPE::PT_Pos)
 	{
-		POS pos;
-		ZeroMemory(&pos, sizeof(pos));
-		client.ClientRecv(&pos, sizeof(pos));
+		std::cout << "PT_Pos Recv\n";
+		BALLPLACE place;
+		ZeroMemory(&place, sizeof(place));
+		client.ClientRecv(&place, sizeof(place));
 
 		client.m_hMutex.lock();
-		client.SetPos(pos);
+		client.SetPlace(place);
 		client.m_hMutex.unlock();
 
-		std::cout << "ball pos : " << client.m_fX << " " << client.m_fY << " " << client.m_fZ << "\n";
+		std::cout << "ball pos : " << (unsigned int)client.m_ePlace << "\n";
 	}
 	else if (type == PACKETTYPE::PT_ShotData)
 	{
@@ -209,7 +208,7 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		ZeroMemory(&pt, sizeof(pt));
 		if (SOCKET_ERROR == client.ClientRecv(&pt, sizeof(Packet)))
 		{
-			std::cout << "Server_Recv error\n";
+			std::cout << "RecvThread ClientRecv error\n";
 			//err_quit("recv()");
 			break;
 		}

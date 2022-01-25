@@ -21,9 +21,7 @@ void CServer::DataInit()
 	m_eTee = TEE::T40;
 	m_eClub = CLUB::DRIVER;
 
-	m_fX = 0;
-	m_fY = 0;
-	m_fZ = 0;
+	m_ePlace = BALLPLACE::OB;
 
 	m_bState = false;
 
@@ -121,9 +119,12 @@ void CServer::ReadData(PACKETTYPE type)
 		server.m_bState = activestate.state;
 		server.m_hMutex.unlock();
 		
-		Packet pt(PACKETTYPE::PT_Pos, sizeof(Packet));		//공 위치 정보 send
-		POS pos{0,0,0};
-		ServerSend(&pt, &pos, sizeof(pos));
+		if (true == server.m_bState)
+		{
+			Packet pt(PACKETTYPE::PT_Pos, sizeof(Packet));		//공 위치 정보 send
+			BALLPLACE bp{ server.GetPlace() };
+			ServerSend(&pt, &bp, sizeof(bp));
+		}
 		return;
 	}
 	else if (type == PACKETTYPE::PT_Shot)		//샷을 진행했다는 알람(pc -> pc에만 적용사항)
