@@ -79,8 +79,8 @@ int CClient::InputKey(const char input)
 	if ('w' == input)		//Tee, Club 세팅 변경
 	{
 		Packet pt(PACKETTYPE::PT_Setting, sizeof(Packet));
-		TCSetting setting{ m_eTee, m_eClub };
-		retval = client.ClientSend(&pt, &setting, sizeof(TCSetting));
+		TeeClubSetting setting{ m_eTee, m_eClub };
+		retval = client.ClientSend(&pt, &setting, sizeof(TeeClubSetting));
 
 		std::cout << "Send PT_Setting\n";
 	}
@@ -186,6 +186,10 @@ void CClient::ReadData(PACKETTYPE type)
 		std::cout << "shot data : " << client.m_fBallSpeed << " " << client.m_fLaunchAngle << " " << client.m_fLaunchDirection
 			<< " " << client.m_fHeadSpeed << " " << client.m_iBackSpin << " " << client.m_iSideSpin << "\n";
 
+	}
+	else if (type == PACKETTYPE::PT_ConnectRecv)
+	{
+		std::cout << "PT_ConnectRecv recv\n";
 	}
 	else if (type == PACKETTYPE::PT_None)
 	{

@@ -95,8 +95,8 @@ void CServer::ReadData(PACKETTYPE type)
 	{
 		std::cout << "PT_Setting recv\n";
 		
-		TCSetting tcs;
-		ServerRecv(&tcs, sizeof(TCSetting));
+		TeeClubSetting tcs;
+		ServerRecv(&tcs, sizeof(TeeClubSetting));
 
 		server.m_hMutex.lock();
 		server.SetTCSetting(tcs);
@@ -104,7 +104,7 @@ void CServer::ReadData(PACKETTYPE type)
 
 		std::cout << (unsigned int)server.m_eTee << "   " << (unsigned int)server.m_eClub << "\n";
 		
-		Packet pt(PACKETTYPE::PT_None, sizeof(Packet));
+		Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
 		ServerSend(&pt, nullptr, 0);
 		return;
 	}

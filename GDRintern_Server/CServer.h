@@ -47,7 +47,7 @@ public:
 		this->m_iBackSpin = sd.backspin;
 		this->m_iSideSpin = sd.sidespin;
 	}
-	void SetTCSetting(const TCSetting& tcs)
+	void SetTCSetting(const TeeClubSetting& tcs)
 	{
 		this->m_eTee = tcs.tee;
 		this->m_eClub = tcs.club;
@@ -61,9 +61,9 @@ public:
 		this->m_bState = state;
 	}
 
-	const TCSetting GetTCSetting()
+	const TeeClubSetting GetTCSetting()
 	{
-		return TCSetting{ this->m_eTee, this->m_eClub };
+		return TeeClubSetting{ this->m_eTee, this->m_eClub };
 	}
 	const ShotData GetShotData()
 	{

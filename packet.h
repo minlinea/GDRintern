@@ -21,6 +21,7 @@ enum class CLUB {
 
 enum class PACKETTYPE {
 	PT_Connect,
+	PT_ConnectRecv,
 	PT_Active,
 	PT_Pos,
 	PT_Setting,
@@ -48,10 +49,10 @@ typedef struct _ShotData {
 	int sidespin;
 }ShotData;
 
-typedef struct _TCSetting {
+typedef struct _TeeClubSetting {
 	TEE tee;
 	CLUB club;
-}TCSetting;
+}TeeClubSetting;
 
 typedef struct _ACTIVESTATE
 {
