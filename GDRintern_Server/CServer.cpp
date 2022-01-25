@@ -1,5 +1,6 @@
 #include "CServer.h"
 #include <iostream>
+#include "conio.h"
 
 CServer::CServer()
 {
@@ -127,23 +128,44 @@ void CServer::ReadData(PACKETTYPE type)
 		}
 		return;
 	}
-	else if (type == PACKETTYPE::PT_Shot)		//샷을 진행했다는 알람(pc -> pc에만 적용사항)
-	{
-		std::cout << "PT_Shot recv\n";
-
-		Packet pt(PACKETTYPE::PT_ShotData, sizeof(Packet));
-		ShotData shotdata{ server.GetShotData() };		//샷 데이터 send
-		ServerSend(&pt, &shotdata, sizeof(ShotData));
-
-		server.m_bState = false;		//샷 후 inactive 상태 변경
-		return;							
-	}
 	else
 	{
 		std::cout << "recv ok\n";
 	}
 
 	return;
+}
+
+int CServer::InputKey(const char input)
+{
+	auto& server = CServer::Instance();
+	int retval{ 1 };
+	if ('w' == input)		//ShotData 전달
+	{
+		Packet pt(PACKETTYPE::PT_ShotData, sizeof(Packet));
+		ShotData shotdata{ server.GetShotData() };		//샷 데이터 send
+		ServerSend(&pt, &shotdata, sizeof(ShotData));
+
+		std::cout << "PT_ShotData send\n";
+
+		server.m_hMutex.lock();
+		server.m_bState = false;		//샷 후 inactive 상태 변경
+		server.m_hMutex.unlock();
+
+		Packet pt2(PACKETTYPE::PT_Active, sizeof(Packet));
+		ACTIVESTATE state{ server.GetState() };		//샷 데이터 send
+		ServerSend(&pt2, &state, sizeof(ACTIVESTATE));
+
+		std::cout << "PT_Active send\n";
+	}
+	else if ('e' == input)		
+	{
+	}
+	else
+	{
+	}
+
+	return retval;
 }
 
 DWORD WINAPI CServer::SendThread(LPVOID socket)
@@ -155,14 +177,27 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	Packet pt{ PACKETTYPE::PT_Connect, sizeof(Packet) };
 	while (true)
 	{
-		//if (SOCKET_ERROR == server.ServerSend(&pt, nullptr, 0))
-		//{
-		//	std::cout << "SendThread ServerSend error\n";
-		//	//err_quit("send()");
-		//	break;
-		//}//Set_Packet->Server_Send
+		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		{
+			if (SOCKET_ERROR == server.InputKey(_getch()))
+			{
+				std::cout << "SendThread InputKey error\n";
+				//err_quit("send()");
+				break;
+			}//InputKey->Client_Send
+		}
+		else
+		{
+			//Sleep(2000);		//5초마다 통신(유휴상태 체크)
 
-		//std::cout << "Send OK\n";
+			//Packet pt{ PT_None, sizeof(Packet) };
+			//if (SOCKET_ERROR == client.ClientSend(&pt, NULL, 0))
+			//{
+			//	std::cout << "SendThread Set_Packet error\n";
+			//	//err_quit("send()");
+			//	break;
+			//}//Client_Send
+		}
 
 	}
 	return NULL;

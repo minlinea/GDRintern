@@ -90,7 +90,9 @@ int CClient::InputKey(const char input)
 		ACTIVESTATE activestate{ true };
 		retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));
 
+		client.m_hMutex.lock();
 		client.m_bState = true;
+		client.m_hMutex.unlock();
 		std::cout << "Send PT_Active(true)\n";
 	}
 	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
@@ -99,23 +101,11 @@ int CClient::InputKey(const char input)
 		ACTIVESTATE activestate{ false };
 		retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));
 
+		client.m_hMutex.lock();
 		client.m_bState = false;
-		std::cout << "Send PT_Active(false)\n";
-	}
-	else if ('t' == input)		//ShotData 요청 (클라이언트 테스트 용, Shot 상황 가정)
-	{
-		if (true == client.m_bState)
-		{
-			Packet pt(PACKETTYPE::PT_Shot, sizeof(Packet));
-			retval = client.ClientSend(&pt, nullptr, 0);
+		client.m_hMutex.unlock();
 
-			client.m_bState = false;
-			std::cout << "Send PT_Shot\n";
-		}
-		else
-		{
-			std::cout << "server is not active\n";
-		}
+		std::cout << "Send PT_Active(false)\n";
 	}
 	else
 	{
@@ -190,6 +180,21 @@ void CClient::ReadData(PACKETTYPE type)
 	else if (type == PACKETTYPE::PT_ConnectRecv)
 	{
 		std::cout << "PT_ConnectRecv recv\n";
+	}
+	else if (type == PACKETTYPE::PT_Active)
+	{
+		std::cout << "PT_Active recv\n";
+
+		ACTIVESTATE state;
+		client.ClientRecv(&state, sizeof(ACTIVESTATE));
+
+		client.m_hMutex.lock();
+		client.SetState(state.state);
+		client.m_hMutex.unlock();
+
+		Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
+		client.ClientSend(&pt, nullptr, 0);
+
 	}
 	else if (type == PACKETTYPE::PT_None)
 	{
