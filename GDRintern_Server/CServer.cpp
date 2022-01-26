@@ -108,8 +108,8 @@ void CServer::ReadData(PACKETTYPE type)
 			server.SetTeeClubSetting(tcs);
 			server.m_hMutex.unlock();
 
-			Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
-			ServerSend(&pt, nullptr, 0);
+			//Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
+			//ServerSend(&pt, nullptr, 0);
 			return;
 		}
 	}
@@ -125,9 +125,9 @@ void CServer::ReadData(PACKETTYPE type)
 		
 		if (true == server.m_bState)
 		{
-			Packet pt(PACKETTYPE::PT_Place, sizeof(Packet));		//공 위치 정보 send
+			//Packet pt(PACKETTYPE::PT_Place, sizeof(Packet));		//공 위치 정보 send
 			BALLPLACE bp{ server.GetPlace() };
-			ServerSend(&pt, &bp, sizeof(bp));
+			//ServerSend(&pt, &bp, sizeof(bp));
 		}
 		return;
 	}
@@ -139,30 +139,41 @@ void CServer::ReadData(PACKETTYPE type)
 	return;
 }
 
+
+
 int CServer::InputKey(const char input)
 {
 	auto& server = CServer::Instance();
 	int retval{ 1 };
 	if ('w' == input)		//ShotData 전달
 	{
-		Packet pt(PACKETTYPE::PT_ShotData, sizeof(Packet));
-		ShotData shotdata{ server.GetShotData() };		//샷 데이터 send
-		ServerSend(&pt, &shotdata, sizeof(ShotData));
+		//ShotData shotdata{ server.GetShotData() };		//샷 데이터 send
+		//Packet pt(PACKETTYPE::PT_ShotData, sizeof(ShotData));
+		//Packet* pts{ pt.SetVariableData(&shotdata) };
+		//server.TestSend(pts, pts->size);
+		// ServerSend(&pt, &shotdata, sizeof(ShotData));
 
 		std::cout << "PT_ShotData send\n";
 
-		server.m_hMutex.lock();
-		server.m_bState = false;		//샷 후 inactive 상태 변경
-		server.m_hMutex.unlock();
+		//server.m_hMutex.lock();
+		//server.m_bState = false;		//샷 후 inactive 상태 변경
+		//server.m_hMutex.unlock();
 
-		Packet pt2(PACKETTYPE::PT_Active, sizeof(Packet));
-		ACTIVESTATE state{ server.GetState() };		//샷 데이터 send
-		ServerSend(&pt2, &state, sizeof(ACTIVESTATE));
+		//Packet pt2(PACKETTYPE::PT_Active, sizeof(Packet));
+		//ACTIVESTATE state{ server.GetState() };		//샷 데이터 send
+		//ServerSend(&pt2, &state, sizeof(ACTIVESTATE));
 
-		std::cout << "PT_Active send\n";
+		//std::cout << "PT_Active send\n";
 	}
 	else if ('e' == input)		
 	{
+		Packet<ShotData> pt(PACKETTYPE::PT_ShotDataRecv, sizeof(ShotData), server.GetShotData());
+		server.ServerSend(&pt, sizeof(pt));
+		std::cout << "PT_ShotData test send\n";
+	}
+	else if ('r' == input)
+	{
+		std::cout << sizeof(Packet<ShotData>);
 	}
 	else
 	{
@@ -177,7 +188,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 
 	std::cout << "ConnectInit\n" << std::endl;
 
-	Packet pt{ PACKETTYPE::PT_Connect, sizeof(Packet) };
+	//Packet<void> pt{ PACKETTYPE::PT_Connect};
 	while (true)
 	{
 		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
@@ -209,23 +220,21 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
-	Packet pt;
+	//Packet<int> pt;
 	while (true)
 	{
 
-		ZeroMemory(&pt, sizeof(pt));
-		if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(Packet)))
-		{
-			std::cout << "Server_Recv error\n";
-			//err_quit("recv()");
-			break;
-		}
-		else
-		{
-			server.ReadData(pt.type);
-		}
-
-
+		////ZeroMemory(&pt, sizeof(pt));
+		//if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(pt)))
+		//{
+		//	std::cout << "Server_Recv error\n";
+		//	//err_quit("recv()");
+		//	break;
+		//}
+		//else
+		//{
+		//	server.ReadData(pt.GetType());
+		//}
 	}
 	return NULL;
 }
@@ -252,28 +261,10 @@ void CServer::ServerAccept()
 	return;
 }
 
-int CServer::ServerSend(const void* fixbuf, const void* varbuf, const int varlen)
+int CServer::ServerSend(const void* buf, const unsigned int size)
 {
 	auto& server = CServer::Instance();
-	int retval{ 0 };
-
-	retval = send(server.m_hClient, (const char*)fixbuf, sizeof(Packet), 0);	//고정데이터 전송
-	if (SOCKET_ERROR == retval)
-	{
-		std::cout << "ServerSend error fixbuf send\n";
-	}
-	else
-	{
-		if (0 != varlen)		//가변 데이터에 무언가 있어 추가 전송
-		{
-			retval = send(server.m_hClient, (const char*)varbuf, varlen, 0);
-			if (SOCKET_ERROR == retval)
-			{
-				std::cout << "ServerSend error varbuf send\n";
-			}
-		}
-	}
-	return retval;
+	return send(server.m_hClient, (const char*)buf, size, 0);
 }
 int CServer::ServerRecv(void* buf, const int len)
 {

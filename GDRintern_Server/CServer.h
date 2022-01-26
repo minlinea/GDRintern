@@ -38,7 +38,7 @@ public:
 	//recv 후 패킷 type에 따른 정보 파악
 	void ReadData(PACKETTYPE type);
 
-	int ServerSend(const void* fixbuf, const void* varbuf, const int varlen);
+	int ServerSend(const void* buf, const unsigned int size);
 	int ServerRecv(void* buf, const int len);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);

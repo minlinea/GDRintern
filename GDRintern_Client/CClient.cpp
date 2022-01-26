@@ -76,17 +76,17 @@ int CClient::InputKey(const char input)
 	int retval{ 1 };
 	if ('w' == input)		//Tee, Club 세팅 변경
 	{
-		Packet pt(PACKETTYPE::PT_Setting, sizeof(Packet));
+		/*Packet pt(PACKETTYPE::PT_Setting, sizeof(Packet));
 		TeeClubSetting setting{ m_eTee, m_eClub };
-		retval = client.ClientSend(&pt, &setting, sizeof(TeeClubSetting));
+		retval = client.ClientSend(&pt, &setting, sizeof(TeeClubSetting));*/
 
 		std::cout << "Send PT_Setting\n";
 	}
 	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
 	{
-		Packet pt(PACKETTYPE::PT_Active, sizeof(Packet));
+		/*Packet pt(PACKETTYPE::PT_Active, sizeof(Packet));
 		ACTIVESTATE activestate{ true };
-		retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));
+		retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));*/
 
 		client.m_hMutex.lock();
 		client.m_bState = true;
@@ -95,9 +95,9 @@ int CClient::InputKey(const char input)
 	}
 	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
 	{
-		Packet pt(PACKETTYPE::PT_Active, sizeof(Packet));
-		ACTIVESTATE activestate{ false };
-		retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));
+		//Packet pt(PACKETTYPE::PT_Active, sizeof(Packet));
+		//ACTIVESTATE activestate{ false };
+		//retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));
 
 		client.m_hMutex.lock();
 		client.m_bState = false;
@@ -118,27 +118,27 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	int retval{ 0 };
 	while (true)
 	{
-		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
-		{
-			if (SOCKET_ERROR == client.InputKey(_getch()))
-			{
-				std::cout << "SendThread InputKey error\n";
-				//err_quit("send()");
-				break;
-			}//InputKey->Client_Send
-		}
-		else
-		{
-			//Sleep(2000);		//5초마다 통신(유휴상태 체크)
+		//if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		//{
+		//	if (SOCKET_ERROR == client.InputKey(_getch()))
+		//	{
+		//		std::cout << "SendThread InputKey error\n";
+		//		//err_quit("send()");
+		//		break;
+		//	}//InputKey->Client_Send
+		//}
+		//else
+		//{
+		//	//Sleep(2000);		//5초마다 통신(유휴상태 체크)
 
-			//Packet pt{ PT_None, sizeof(Packet) };
-			//if (SOCKET_ERROR == client.ClientSend(&pt, NULL, 0))
-			//{
-			//	std::cout << "SendThread Set_Packet error\n";
-			//	//err_quit("send()");
-			//	break;
-			//}//Client_Send
-		}
+		//	//Packet pt{ PT_None, sizeof(Packet) };
+		//	//if (SOCKET_ERROR == client.ClientSend(&pt, NULL, 0))
+		//	//{
+		//	//	std::cout << "SendThread Set_Packet error\n";
+		//	//	//err_quit("send()");
+		//	//	break;
+		//	//}//Client_Send
+		//}
 
 	}
 	return NULL;
@@ -158,6 +158,17 @@ void CClient::ReadData(PACKETTYPE type)
 		client.m_hMutex.lock();
 		client.SetPlace(place);
 		client.m_hMutex.unlock();
+	}
+	else if (type == PACKETTYPE::PT_ShotDataRecv)
+	{
+		//std::cout << "PT_ShotDataRecv Recv\n";
+		//ShotData shotdata;
+		//ZeroMemory(&shotdata, sizeof(shotdata));
+		//client.ClientRecv(&shotdata, sizeof(ShotData));
+
+		//client.m_hMutex.lock();
+		//client.SetShotData(shotdata);
+		//client.m_hMutex.unlock();
 	}
 	else if (type == PACKETTYPE::PT_ShotData)
 	{
@@ -184,8 +195,8 @@ void CClient::ReadData(PACKETTYPE type)
 		client.SetState(state.state);
 		client.m_hMutex.unlock();
 
-		Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
-		client.ClientSend(&pt, nullptr, 0);
+		//Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
+		//client.ClientSend(&pt, nullptr, 0);
 
 	}
 	else if (type == PACKETTYPE::PT_None)
@@ -202,12 +213,14 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 {
 	auto& client = CClient::Instance();
 	int retval{ 0 };
-	Packet pt;
+	Packet<ShotData> pt;
 	while (true)
 	{
-
+		//std::cout << "RecvThread on\n";
 		ZeroMemory(&pt, sizeof(pt));
-		if (SOCKET_ERROR == client.ClientRecv(&pt, sizeof(Packet)))
+		retval = recv(client.m_hSock, (char*)&pt, sizeof(pt), 0);
+
+		if (SOCKET_ERROR == retval)
 		{
 			std::cout << "RecvThread ClientRecv error\n";
 			//err_quit("recv()");
@@ -215,7 +228,13 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		}
 		else	//에러가 아니라면 데이터 읽기
 		{
-			client.ReadData(pt.type);
+			//recv(client.m_hSock, (char*)&sd, sizeof(ShotData), 0);
+			client.SetShotData(pt.GetData());
+			std::cout << "ShotData recv\n";
+			//free(p);
+			//free(pts);
+			//client.ReadData(pt.type);
+			//free(p);
 		}
 		
 	}
@@ -246,31 +265,19 @@ void CClient::ClientConnect()
 	return;
 }
 
-int CClient::ClientSend(const void* fixbuf, const void* varbuf, const int varlen)
+int CClient::ClientSend(const void* buf, const unsigned int size)
 {
-	auto& client = CClient::Instance();
-	int retval{ 0 };
-
-	retval = send(client.m_hSock, (const char*)fixbuf, sizeof(Packet), 0);	//고정데이터 전송
-	if (SOCKET_ERROR == retval)
-	{
-		std::cout << "ClientSend error fixbuf send\n";
-	}
-	else
-	{
-		if (0 != varlen)		//가변 데이터에 무언가 있어 추가 전송
-		{
-			retval = send(client.m_hSock, (const char*)varbuf, varlen, 0);
-			if (SOCKET_ERROR == retval)
-			{
-				std::cout << "ClientSend error varbuf send\n";
-			}
-		}
-	}
-	return retval;
+	auto& server = CClient::Instance();
+	return send(server.m_hSock, (const char*)buf, size, 0);
 }
 
 int CClient::ClientRecv(void* buf, const int len)
+{
+	auto& client = CClient::Instance();
+	return recv(client.m_hSock, (char*)buf, len, 0);
+}
+
+int CClient::TestRecv(void* buf, const int len)
 {
 	auto& client = CClient::Instance();
 	return recv(client.m_hSock, (char*)buf, len, 0);

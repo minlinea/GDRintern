@@ -34,11 +34,12 @@ public:
 	//w(Tee, club 세팅) e(active 상태 전달) r(inactive 상태 전달), t(샷data 요청 *pc, pc한정)
 	int InputKey(const char input);
 
-	//고정데이터 send 후 가변데이터가 존재한다면 가변데이터도 send
-	int ClientSend(const void* fixbuf, const void* varbuf, const int varlen);
+	//고정 + 가변 데이터 send
+	int ClientSend(const void* buf, const unsigned int size);
 
 	//서버로부터 오는 정보 recv
 	int ClientRecv(void* buf, int len);
+	int TestRecv(void* buf, int len);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);

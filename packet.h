@@ -28,6 +28,7 @@ enum class PACKETTYPE {
 	PT_Place,
 	PT_Setting,
 	PT_ShotData,
+	PT_ShotDataRecv,
 	PT_ConnectCheck,
 	PT_Disconnect,
 	PT_Shot,
@@ -67,20 +68,60 @@ Packet
 type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분
 size : 해당 타입 패킷의 사이즈
 */
-typedef struct _Packet
+
+template <class T>
+class Packet
 {
-	PACKETTYPE type;
-	unsigned int size;
-	_Packet()
+public:
+	Packet()
 	{
 		this->type = PACKETTYPE::PT_None;
-		this->size = 8;
+		this->size = sizeof(Packet);
 	}
 
-	_Packet(PACKETTYPE type, unsigned int size)
+	Packet(const PACKETTYPE& type)
+	{
+		this->type = type;
+		this->size = sizeof(Packet);
+	}
+
+	Packet(const PACKETTYPE& type, const unsigned int& size, const T& data)
 	{
 		this->type = type;
 		this->size = size;
+		this->data = data;
 	}
 
-}Packet;
+	void SetType(const PACKETTYPE& type)
+	{
+		this->type = type;
+	}
+	void SetSize(const unsigned int& size)
+	{
+		this->size = size;
+	}
+	void SetData(const T& data)
+	{
+		this->data = data;
+	}
+
+	const PACKETTYPE GetType()
+	{
+		return this->type;
+	}
+	const unsigned int GetSize()
+	{
+		return this->size;
+	}
+	const T GetData()
+	{
+		return this->data;
+	}
+
+private:
+	PACKETTYPE type;
+	unsigned int size;
+	T data;
+
+};
+
