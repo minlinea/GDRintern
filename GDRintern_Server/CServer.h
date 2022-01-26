@@ -46,6 +46,7 @@ public:
 
 	void SetShotData(const ShotData& sd)
 	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_iPhase = sd.phase;
 		this->m_fBallSpeed = sd.ballspeed;
 		this->m_fLaunchAngle = sd.launchangle;
@@ -61,6 +62,7 @@ public:
 	}
 	void SetTeeClubSetting(const TeeClubSetting& tcs)
 	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_eTee = tcs.tee;
 		this->m_eClub = tcs.club;
 #ifdef datalog
@@ -69,6 +71,7 @@ public:
 	}
 	void SetPlace(const BALLPLACE& place)
 	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_ePlace = place;
 #ifdef datalog
 		std::cout << "Place:" << (unsigned int)this->m_ePlace << "\n";
@@ -76,6 +79,7 @@ public:
 	}
 	void SetState(const bool& state)
 	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_bState = state;
 #ifdef datalog
 		std::cout << "State:" << this->m_bState << "\n";

@@ -20,27 +20,32 @@ enum class CLUB {
 	WOOD
 };
 
-
-enum class PACKETTYPE {
-	PT_Connect,
-	PT_ConnectRecv,
-	PT_Active,
-	PT_Place,
-	PT_Setting,
-	PT_ShotData,
-	PT_ShotDataRecv,
-	PT_ConnectCheck,
-	PT_Disconnect,
-	PT_Shot,
-	PT_None
-};
-
 enum class BALLPLACE
 {
 	PAIRWAY,
 	TEE,
 	OB
 };
+
+enum class PACKETTYPE {
+	PT_Connect,
+	PT_ConnectRecv,
+	PT_Active,
+	PT_ActiveRecv,
+	PT_Place,
+	PT_PlaceRecv,
+	PT_Setting,
+	PT_SettingRecv,
+	PT_ShotData,
+	PT_ShotDataRecv,
+	PT_ConnectCheck,
+	PT_Disconnect,
+	PT_Shot,
+	PT_ShotRecv,
+	PT_None
+};
+
+
 
 typedef struct _ShotData {
 	int phase;
@@ -61,6 +66,7 @@ typedef struct _ACTIVESTATE
 {
 	bool state;
 }ACTIVESTATE;
+
 
 
 /*
@@ -105,15 +111,15 @@ public:
 		this->data = data;
 	}
 
-	const PACKETTYPE GetType()
+	PACKETTYPE& GetType()
 	{
 		return this->type;
 	}
-	const unsigned int GetSize()
+	unsigned int& GetSize()
 	{
 		return this->size;
 	}
-	const T GetData()
+	T& GetData()
 	{
 		return this->data;
 	}
@@ -122,6 +128,5 @@ private:
 	PACKETTYPE type;
 	unsigned int size;
 	T data;
-
 };
 

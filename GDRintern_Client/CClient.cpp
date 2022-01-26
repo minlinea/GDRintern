@@ -2,6 +2,26 @@
 #include "windows.h"
 #include "conio.h"
 
+void* CastConversion(PACKETTYPE type)
+{
+	if (PACKETTYPE::PT_Shot == type)
+	{
+		auto p = ShotData{};
+		return &p;
+	}
+	else if (PACKETTYPE::PT_Place == type)
+	{
+		auto p = BALLPLACE{};
+		return &p;
+	}
+	else
+	{
+		auto p = nullptr_t{};
+		return &p;
+	}
+}
+
+
 CClient::CClient()
 {
 	DataInit();
@@ -144,68 +164,45 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	return NULL;
 }
 
-void CClient::ReadData(PACKETTYPE type)
+template <class T>
+void CClient::ReadData(Packet<nullptr_t>& header)
 {
 	auto& client = CClient::Instance();
 
-	if (type == PACKETTYPE::PT_Place)
+	T data;
+	if (SOCKET_ERROR == client.ClientRecv(&data, header.GetSize()))
 	{
-		std::cout << "PT_Place Recv\n";
-		BALLPLACE place;
-		ZeroMemory(&place, sizeof(place));
-		client.ClientRecv(&place, sizeof(place));
-
-		client.m_hMutex.lock();
-		client.SetPlace(place);
-		client.m_hMutex.unlock();
-	}
-	else if (type == PACKETTYPE::PT_ShotDataRecv)
-	{
-		//std::cout << "PT_ShotDataRecv Recv\n";
-		//ShotData shotdata;
-		//ZeroMemory(&shotdata, sizeof(shotdata));
-		//client.ClientRecv(&shotdata, sizeof(ShotData));
-
-		//client.m_hMutex.lock();
-		//client.SetShotData(shotdata);
-		//client.m_hMutex.unlock();
-	}
-	else if (type == PACKETTYPE::PT_ShotData)
-	{
-		std::cout << "PT_ShotData recv\n";
-		ShotData shotdata;
-		client.ClientRecv(&shotdata, sizeof(ShotData));
-
-		client.m_hMutex.lock();
-		client.SetShotData(shotdata);
-		client.m_hMutex.unlock();
-	}
-	else if (type == PACKETTYPE::PT_ConnectRecv)
-	{
-		std::cout << "PT_ConnectRecv recv\n";
-	}
-	else if (type == PACKETTYPE::PT_Active)
-	{
-		std::cout << "PT_Active recv\n";
-
-		ACTIVESTATE state;
-		client.ClientRecv(&state, sizeof(ACTIVESTATE));
-
-		client.m_hMutex.lock();
-		client.SetState(state.state);
-		client.m_hMutex.unlock();
-
-		//Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
-		//client.ClientSend(&pt, nullptr, 0);
-
-	}
-	else if (type == PACKETTYPE::PT_None)
-	{
-		//std::cout << "PT_None\n";
+		std::cout << "ReadData ClientRecv\n";
 	}
 	else
 	{
-		std::cout << "ReadData unknown type\n";
+		if (PACKETTYPE::PT_Place == header.GetType())
+		{
+			std::cout << "PT_Place Recv\n";
+			//client.SetPlace(static_cast<BALLPLACE>(data));
+		}
+		else if (PACKETTYPE::PT_ShotDataRecv == header.GetType())
+		{
+			std::cout << "PT_ShotDataRecv recv\n";
+		}
+		else if (PACKETTYPE::PT_ShotData == header.GetType())
+		{
+			std::cout << "PT_ShotData Recv\n";
+			//client.SetShotData(static_cast<ShotData>(data));
+		}
+		else if (PACKETTYPE::PT_ConnectRecv == header.GetType())
+		{
+			std::cout << "PT_ConnectRecv recv\n";
+		}
+		else if (PACKETTYPE::PT_Active == header.GetType())
+		{
+			std::cout << "PT_Active recv\n";
+			//client.SetState(static_cast<ACTIVESTATE>(data));
+		}
+		else
+		{
+			std::cout << "ReadData unknown type\n";
+		}
 	}
 }
 
@@ -213,12 +210,12 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 {
 	auto& client = CClient::Instance();
 	int retval{ 0 };
-	Packet<ShotData> pt;
+	Packet<nullptr_t> pt;
 	while (true)
 	{
 		//std::cout << "RecvThread on\n";
 		ZeroMemory(&pt, sizeof(pt));
-		retval = recv(client.m_hSock, (char*)&pt, sizeof(pt), 0);
+		retval = client.ClientRecv((char*)&pt, sizeof(pt));
 
 		if (SOCKET_ERROR == retval)
 		{
@@ -228,13 +225,7 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		}
 		else	//에러가 아니라면 데이터 읽기
 		{
-			//recv(client.m_hSock, (char*)&sd, sizeof(ShotData), 0);
-			client.SetShotData(pt.GetData());
-			std::cout << "ShotData recv\n";
-			//free(p);
-			//free(pts);
-			//client.ReadData(pt.type);
-			//free(p);
+			client.ReadData<decltype(CastConversion(pt.GetType()))>(pt);
 		}
 		
 	}

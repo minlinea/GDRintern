@@ -1,6 +1,26 @@
 #include "CServer.h"
 #include "conio.h"
 
+
+void* CastConversion(PACKETTYPE type)
+{
+	if (PACKETTYPE::PT_Shot == type)
+	{
+		auto p = ShotData{};
+		return &p;
+	}
+	else if (PACKETTYPE::PT_Place == type)
+	{
+		auto p = BALLPLACE{};
+		return &p;
+	}
+	else
+	{
+		auto p = nullptr_t{};
+		return &p;
+	}
+}
+
 CServer::CServer()
 {
 	DataInit();
@@ -94,7 +114,7 @@ void CServer::ReadData(PACKETTYPE type)
 	else if (PACKETTYPE::PT_Setting == type)	//Tee, Club설정 변경
 	{
 		TeeClubSetting tcs;
-		retval = ServerRecv(&tcs, sizeof(TeeClubSetting));
+		retval = server.ServerRecv(&tcs, sizeof(TeeClubSetting));
 		if (SOCKET_ERROR == retval)
 		{
 			std::cout << "ReadData PT_Setting error\n";
@@ -104,9 +124,7 @@ void CServer::ReadData(PACKETTYPE type)
 		{
 			std::cout << "PT_Setting recv\n";
 
-			server.m_hMutex.lock();
 			server.SetTeeClubSetting(tcs);
-			server.m_hMutex.unlock();
 
 			//Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
 			//ServerSend(&pt, nullptr, 0);
@@ -139,46 +157,28 @@ void CServer::ReadData(PACKETTYPE type)
 	return;
 }
 
-
-
 int CServer::InputKey(const char input)
 {
 	auto& server = CServer::Instance();
 	int retval{ 1 };
+	//Packet<nullptr_t> pt;
 	if ('w' == input)		//ShotData 전달
-	{
-		//ShotData shotdata{ server.GetShotData() };		//샷 데이터 send
-		//Packet pt(PACKETTYPE::PT_ShotData, sizeof(ShotData));
-		//Packet* pts{ pt.SetVariableData(&shotdata) };
-		//server.TestSend(pts, pts->size);
-		// ServerSend(&pt, &shotdata, sizeof(ShotData));
-
-		std::cout << "PT_ShotData send\n";
-
-		//server.m_hMutex.lock();
-		//server.m_bState = false;		//샷 후 inactive 상태 변경
-		//server.m_hMutex.unlock();
-
-		//Packet pt2(PACKETTYPE::PT_Active, sizeof(Packet));
-		//ACTIVESTATE state{ server.GetState() };		//샷 데이터 send
-		//ServerSend(&pt2, &state, sizeof(ACTIVESTATE));
-
-		//std::cout << "PT_Active send\n";
+	{		
+		Packet<BALLPLACE> pt(PACKETTYPE::PT_Place, sizeof(BALLPLACE), server.GetPlace());
+		std::cout << pt.GetSize() << "    "<< sizeof(pt) << "\n";
+		server.ServerSend(&pt, sizeof(pt));
+		std::cout << "PT_Place send\n";
 	}
 	else if ('e' == input)		
 	{
-		Packet<ShotData> pt(PACKETTYPE::PT_ShotDataRecv, sizeof(ShotData), server.GetShotData());
+		Packet<ShotData> pt(PACKETTYPE::PT_ShotData, sizeof(ShotData), server.GetShotData());
 		server.ServerSend(&pt, sizeof(pt));
-		std::cout << "PT_ShotData test send\n";
-	}
-	else if ('r' == input)
-	{
-		std::cout << sizeof(Packet<ShotData>);
+		std::cout << "PT_ShotData send\n";
 	}
 	else
 	{
 	}
-
+	//server.ServerSend(&pt, sizeof(pt));
 	return retval;
 }
 
@@ -220,21 +220,21 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
-	//Packet<int> pt;
+	Packet<int> pt;
 	while (true)
 	{
 
-		////ZeroMemory(&pt, sizeof(pt));
-		//if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(pt)))
-		//{
-		//	std::cout << "Server_Recv error\n";
-		//	//err_quit("recv()");
-		//	break;
-		//}
-		//else
-		//{
-		//	server.ReadData(pt.GetType());
-		//}
+		//ZeroMemory(&pt, sizeof(pt));
+		if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(pt)))
+		{
+			std::cout << "Server_Recv error\n";
+			//err_quit("recv()");
+			break;
+		}
+		else
+		{
+			server.ReadData(pt.GetType());
+		}
 	}
 	return NULL;
 }
