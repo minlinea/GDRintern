@@ -163,6 +163,7 @@ void CClient::ReadData(Packet packet)
 			{
 				std::cout << "PT_ShotData Recv\n";
 				client.SetShotData(packet.GetData());
+				std::cout << client.GetShotData();
 			}
 			else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 			{
@@ -237,9 +238,4 @@ int CClient::ClientRecv(void* buf, const int len)
 	return recv(client.m_hSock, (char*)buf, len, 0);
 }
 
-int CClient::TestRecv(void* buf, const int len)
-{
-	auto& client = CClient::Instance();
-	return recv(client.m_hSock, (char*)buf, len, 0);
-}
 

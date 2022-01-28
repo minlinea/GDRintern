@@ -39,7 +39,6 @@ public:
 
 	//서버로부터 오는 정보 recv
 	int ClientRecv(void* buf, int len);
-	int TestRecv(void* buf, int len);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
