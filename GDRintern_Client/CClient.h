@@ -35,7 +35,7 @@ public:
 	int InputKey(const char input);
 
 	//고정 + 가변 데이터 send
-	int ClientSend(const void* buf, const unsigned int size);
+	int ClientSend(Packet& packet);
 
 	//서버로부터 오는 정보 recv
 	int ClientRecv(void* buf, int len);
@@ -47,61 +47,98 @@ public:
 	void SetShotData(const ShotData& sd)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		this->m_iPhase = sd.phase;
-		this->m_fBallSpeed = sd.ballspeed;
-		this->m_fLaunchAngle = sd.launchangle;
-		this->m_fLaunchDirection = sd.launchdirection;
-		this->m_fHeadSpeed = sd.headspeed;
-		this->m_iBackSpin = sd.backspin;
-		this->m_iSideSpin = sd.sidespin;
+		this->m_sdShotData = sd;
 #ifdef datalog
-		std::cout << "ballspeed:" << this->m_fBallSpeed << "  launchangle:" << this->m_fLaunchAngle
-			<< "  launchdirection:" << this->m_fLaunchDirection << "  headspeed:" << this->m_fHeadSpeed
-			<< "  backspin:" << this->m_iBackSpin << "  sidespin:" << this->m_iSideSpin << "\n";
 #endif
 	}
-	void SetTeeClubSetting(const TeeClubSetting& tcs)
+	void SetShotData(char* sd)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		this->m_eTee = tcs.tee;
-		this->m_eClub = tcs.club;
+		memcpy_s(&m_sdShotData, sizeof(ShotData), sd, sizeof(ShotData));
 #ifdef datalog
-		std::cout << "Tee:" << (unsigned int)this->m_eTee << "  Club:" << (unsigned int)this->m_eClub << "\n";
+
 #endif
 	}
-	void SetPlace(const BALLPLACE& place)
+	void SetTeeSetting(const TEESETTING& tee)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		this->m_ePlace = place;
+		this->m_eTee = tee;
 #ifdef datalog
-		std::cout << "Place:" << (unsigned int)this->m_ePlace << "\n";
 #endif
 	}
-	void SetState(const bool& state)
+	void SetTeeSetting(char* tee)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		this->m_bState = state;
+		memcpy_s(&m_sdShotData, sizeof(ShotData), tee, sizeof(ShotData));
 #ifdef datalog
-		std::cout << "State:" << this->m_bState << "\n";
+#endif
+	}
+	void SetClubSetting(const CLUBSETTING& club)
+	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
+		this->m_eClub = club;
+#ifdef datalog
+#endif
+	}
+	void SetClubSetting(char* club)
+	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
+		memcpy_s(&m_sdShotData, sizeof(ShotData), club, sizeof(ShotData));
+#ifdef datalog
+#endif
+	}
+	void SetBallPlace(const BALLPLACE& place)
+	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
+		this->m_eBallPlace = place;
+#ifdef datalog
+		std::cout << "Place:" << (unsigned int)this->m_eBallPlace << "\n";
+#endif
+	}
+	void SetBallPlace(char *ballplace)
+	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
+		memcpy_s(&m_eBallPlace, sizeof(ShotData), ballplace, sizeof(ShotData));
+#ifdef datalog
+		std::cout << "Place:" << (unsigned int)this->m_eBallPlace << "\n";
+#endif
+	}
+	void SetActiveState(const bool& activestate)
+	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
+		this->m_bActiveState = activestate;
+#ifdef datalog
+		std::cout << "State:" << this->m_bActiveState << "\n";
+#endif
+	}
+	void SetActiveState(char* activestate)
+	{
+		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
+		memcpy_s(&m_bActiveState, sizeof(ShotData), activestate, sizeof(ShotData));
+#ifdef datalog
+		std::cout << "State:" << this->m_bActiveState << "\n";
 #endif
 	}
 
-	const TeeClubSetting GetTeeClubSetting()
+	const TEESETTING GetTeeSetting()
 	{
-		return TeeClubSetting{ this->m_eTee, this->m_eClub };
+		return this->m_eTee;
+	}
+	const CLUBSETTING GetClubSetting()
+	{
+		return this->m_eClub;
 	}
 	const ShotData GetShotData()
 	{
-		return ShotData{ this->m_iPhase, this->m_fBallSpeed, this->m_fLaunchAngle,
-			this->m_fLaunchDirection, this->m_fHeadSpeed, this->m_iBackSpin, this->m_iSideSpin };
+		return m_sdShotData;
 	}
-	const BALLPLACE GetPlace()
+	const BALLPLACE GetBallPlace()
 	{
-		return m_ePlace;
+		return m_eBallPlace;
 	}
-	const bool GetState()
+	const bool GetActiveState()
 	{
-		return m_bState;
+		return m_bActiveState;
 	}
 
 private:
@@ -116,21 +153,15 @@ private:
 	HANDLE m_hRecv;
 
 	//Tee, Club 데이터 관련
-	TEE m_eTee;
-	CLUB m_eClub;
+	TEESETTING m_eTee;
+	CLUBSETTING m_eClub;
 
 	//POS
-	BALLPLACE m_ePlace;
+	BALLPLACE m_eBallPlace;
 
 	//센서 상태 변경 (active, inactive)
-	bool m_bState;
+	bool m_bActiveState;
 
 	//ShotData
-	int m_iPhase;
-	float m_fBallSpeed;
-	float m_fLaunchAngle;
-	float m_fLaunchDirection;
-	float m_fHeadSpeed;
-	int m_iBackSpin;
-	int m_iSideSpin;
+	ShotData m_sdShotData;
 };

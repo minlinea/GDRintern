@@ -2,26 +2,6 @@
 #include "windows.h"
 #include "conio.h"
 
-void* CastConversion(PACKETTYPE type)
-{
-	if (PACKETTYPE::PT_Shot == type)
-	{
-		auto p = ShotData{};
-		return &p;
-	}
-	else if (PACKETTYPE::PT_Place == type)
-	{
-		auto p = BALLPLACE{};
-		return &p;
-	}
-	else
-	{
-		auto p = nullptr_t{};
-		return &p;
-	}
-}
-
-
 CClient::CClient()
 {
 	DataInit();
@@ -38,20 +18,14 @@ CClient::~CClient()
 
 void CClient::DataInit()
 {
-	m_eTee = TEE::T40;
-	m_eClub = CLUB::DRIVER;
+	m_eTee = TEESETTING::T40;
+	m_eClub = CLUBSETTING::DRIVER;
 
-	m_ePlace = BALLPLACE::OB;
+	m_eBallPlace = BALLPLACE::OB;
 
-	m_bState = false;
+	m_bActiveState = false;
 
-	m_iPhase = 0;
-	m_fBallSpeed = 0.f;
-	m_fLaunchAngle = 0.f;
-	m_fLaunchDirection = 0.f;
-	m_fHeadSpeed = 0.f;
-	m_iBackSpin = 0;
-	m_iSideSpin = 0;
+	m_sdShotData = ShotData{};
 }
 
 bool CClient::ClientInit()
@@ -94,35 +68,30 @@ int CClient::InputKey(const char input)
 {
 	auto& client = CClient::Instance();
 	int retval{ 1 };
-	if ('w' == input)		//Tee, Club 세팅 변경
+	if ('q' == input)		//Club 세팅 전송
 	{
-		/*Packet pt(PACKETTYPE::PT_Setting, sizeof(Packet));
-		TeeClubSetting setting{ m_eTee, m_eClub };
-		retval = client.ClientSend(&pt, &setting, sizeof(TeeClubSetting));*/
-
+		Packet pt(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
+		client.ClientSend(pt);
 		std::cout << "Send PT_Setting\n";
+	}
+	else if ('w' == input)		//Tee 세팅 전송
+	{
+		Packet pt(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
+		client.ClientSend(pt);
+		std::cout << "Send PT_TeeSetting\n";
 	}
 	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
 	{
-		/*Packet pt(PACKETTYPE::PT_Active, sizeof(Packet));
-		ACTIVESTATE activestate{ true };
-		retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));*/
-
-		client.m_hMutex.lock();
-		client.m_bState = true;
-		client.m_hMutex.unlock();
+		client.SetActiveState(true);
+		Packet pt(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+		client.ClientSend(pt);
 		std::cout << "Send PT_Active(true)\n";
 	}
 	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
 	{
-		//Packet pt(PACKETTYPE::PT_Active, sizeof(Packet));
-		//ACTIVESTATE activestate{ false };
-		//retval = client.ClientSend(&pt, &activestate, sizeof(ACTIVESTATE));
-
-		client.m_hMutex.lock();
-		client.m_bState = false;
-		client.m_hMutex.unlock();
-
+		client.SetActiveState(false);
+		Packet pt(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+		client.ClientSend(pt);
 		std::cout << "Send PT_Active(false)\n";
 	}
 	else
@@ -138,100 +107,86 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	int retval{ 0 };
 	while (true)
 	{
-		//if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
-		//{
-		//	if (SOCKET_ERROR == client.InputKey(_getch()))
-		//	{
-		//		std::cout << "SendThread InputKey error\n";
-		//		//err_quit("send()");
-		//		break;
-		//	}//InputKey->Client_Send
-		//}
-		//else
-		//{
-		//	//Sleep(2000);		//5초마다 통신(유휴상태 체크)
-
-		//	//Packet pt{ PT_None, sizeof(Packet) };
-		//	//if (SOCKET_ERROR == client.ClientSend(&pt, NULL, 0))
-		//	//{
-		//	//	std::cout << "SendThread Set_Packet error\n";
-		//	//	//err_quit("send()");
-		//	//	break;
-		//	//}//Client_Send
-		//}
+		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		{
+			if (SOCKET_ERROR == client.InputKey(_getch()))
+			{
+				std::cout << "SendThread InputKey error\n";
+				//err_quit("send()");
+				break;
+			}//InputKey->ClientSend
+		}
+		else	//유휴상태 추가
+		{
+			
+		}
 
 	}
 	return NULL;
 }
 
-void CClient::ReadData(Packet header)
+void CClient::ReadData(Packet packet)
 {
 	auto& client = CClient::Instance();
 
-	//if (nullptr_t == decltype(body.GetData()))
-	//{
-	//	if (PACKETTYPE::PT_ShotDataRecv == body.GetType())
-	//	{
-	//		std::cout << "PT_ShotDataRecv recv\n";
-	//	}
-	//	else if (PACKETTYPE::PT_ConnectRecv == body.GetType())
-	//	{
-	//		std::cout << "PT_ConnectRecv recv\n";
-	//	}
-	//	else
-	//	{
-	//		std::cout << "ReadData unknown type\n";
-	//	}
-	//}
-	//else
-	//{
-	std::cout << header.GetSize() << " " << (int)header.GetType();
-	char* buf = (char*)malloc(header.GetSize());
-		if (SOCKET_ERROR == client.ClientRecv(buf, header.GetSize()))
+	if (sizeof(Packet) == packet.GetSize())
+	{
+		if (PACKETTYPE::PT_ShotDataRecv == packet.GetType())
+		{
+			std::cout << "PT_ShotDataRecv recv\n";
+		}
+		else if (PACKETTYPE::PT_ConnectRecv == packet.GetType())
+		{
+			std::cout << "PT_ConnectRecv recv\n";
+		}
+		else
+		{
+			std::cout << "ReadData unknown type\n";
+		}
+	}
+	else
+	{
+		packet.SetRecvData();
+		if (SOCKET_ERROR == client.ClientRecv(packet.GetData(), packet.GetSize()))
 		{
 			std::cout << "ReadData ClientRecv\n";
 		}
 		else
 		{
-			if (PACKETTYPE::PT_Place == header.GetType())
+			if (PACKETTYPE::PT_BallPlace == packet.GetType())
 			{
-				std::cout << "PT_Place Recv\n";
-				//client.SetPlace(static_cast<BALLPLACE>(data));
+				std::cout << "PT_BallPlace Recv\n";
+				client.SetBallPlace(packet.GetData());
 			}
 
-			else if (PACKETTYPE::PT_ShotData == header.GetType())
+			else if (PACKETTYPE::PT_ShotData == packet.GetType())
 			{
 				std::cout << "PT_ShotData Recv\n";
-				ShotData sd;
-				memcpy_s(&sd, sizeof(ShotData), buf, sizeof(ShotData));
-				client.SetShotData(sd);
+				client.SetShotData(packet.GetData());
 			}
-			else if (PACKETTYPE::PT_Active == header.GetType())
+			else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 			{
-				std::cout << "PT_Active recv\n";
-				//client.SetState(static_cast<ACTIVESTATE>(data));
+				std::cout << "PT_ActiveState recv\n";
+				client.SetActiveState(packet.GetData());
 			}
 			else
 			{
 				std::cout << "ReadData unknown type\n";
 			}
 		}
-		free(buf);
-	//}
+		packet.DeleteData();
+	}
 }
 
 DWORD WINAPI CClient::RecvThread(LPVOID socket)
 {
 	auto& client = CClient::Instance();
-	int retval{ 0 };
-	Packet pt;
+
 	while (true)
 	{
-		//std::cout << "RecvThread on\n";
+		Packet pt;
 		ZeroMemory(&pt, sizeof(pt));
-		retval = client.ClientRecv((char*)&pt, sizeof(Packet));
-
-		if (SOCKET_ERROR == retval)
+		if (SOCKET_ERROR == client.ClientRecv((char*)&pt, sizeof(Packet)))
 		{
 			std::cout << "RecvThread ClientRecv error\n";
 			//err_quit("recv()");
@@ -270,10 +225,10 @@ void CClient::ClientConnect()
 	return;
 }
 
-int CClient::ClientSend(const void* buf, const unsigned int size)
+int CClient::ClientSend(Packet& packet)
 {
-	auto& server = CClient::Instance();
-	return send(server.m_hSock, (const char*)buf, size, 0);
+	auto& client = CClient::Instance();
+	return send(client.m_hSock, (const char*)packet.GetData(), packet.GetSize(), 0);
 }
 
 int CClient::ClientRecv(void* buf, const int len)

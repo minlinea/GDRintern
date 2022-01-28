@@ -1,26 +1,6 @@
 #include "CServer.h"
 #include "conio.h"
 
-
-void* CastConversion(PACKETTYPE type)
-{
-	if (PACKETTYPE::PT_Shot == type)
-	{
-		auto p = ShotData{};
-		return &p;
-	}
-	else if (PACKETTYPE::PT_Place == type)
-	{
-		auto p = BALLPLACE{};
-		return &p;
-	}
-	else
-	{
-		auto p = nullptr_t{};
-		return &p;
-	}
-}
-
 CServer::CServer()
 {
 	DataInit();
@@ -38,20 +18,15 @@ CServer::~CServer()
 
 void CServer::DataInit()
 {
-	m_eTee = TEE::T40;
-	m_eClub = CLUB::DRIVER;
+	m_eTee = TEESETTING::T40;
 
-	m_ePlace = BALLPLACE::OB;
+	m_eClub = CLUBSETTING::DRIVER;
 
-	m_bState = false;
+	m_eBallPlace = BALLPLACE::OB;
 
-	m_iPhase = 0;
-	m_fBallSpeed = 1.f;
-	m_fLaunchAngle = 2.f;
-	m_fLaunchDirection = 3.f;
-	m_fHeadSpeed = 4.f;
-	m_iBackSpin = 5;
-	m_iSideSpin = 6;
+	m_bActiveState = false;
+
+	m_sdShotData = ShotData{ 0,1,2,3,4,5,6 };
 }
 
 bool CServer::ServerInit()
@@ -103,58 +78,55 @@ void CServer::err_quit(const char* msg)
 	exit(1);
 }
 
-void CServer::ReadData(PACKETTYPE type)
+void CServer::ReadData(Packet packet)
 {
 	auto& server = CServer::Instance();
-	int retval{ 0 };
-	if (PACKETTYPE::PT_Connect == type)		//대기 시 통신
+	if (sizeof(Packet) == packet.GetSize())
 	{
-		std::cout << "PT_Connect recv\n";
-	}
-	else if (PACKETTYPE::PT_Setting == type)	//Tee, Club설정 변경
-	{
-		TeeClubSetting tcs;
-		retval = server.ServerRecv(&tcs, sizeof(TeeClubSetting));
-		if (SOCKET_ERROR == retval)
+		if (PACKETTYPE::PT_ShotDataRecv == packet.GetType())
 		{
-			std::cout << "ReadData PT_Setting error\n";
-			return;
+			std::cout << "PT_ShotDataRecv recv\n";
+		}
+		else if (PACKETTYPE::PT_ConnectRecv == packet.GetType())
+		{
+			std::cout << "PT_ConnectRecv recv\n";
 		}
 		else
 		{
-			std::cout << "PT_Setting recv\n";
-
-			server.SetTeeClubSetting(tcs);
-
-			//Packet pt(PACKETTYPE::PT_ConnectRecv, sizeof(Packet));
-			//ServerSend(&pt, nullptr, 0);
-			return;
+			std::cout << "ReadData unknown type\n";
 		}
-	}
-	else if (PACKETTYPE::PT_Active == type)		//Active 상태 변경
-	{
-		ACTIVESTATE activestate;		//가변데이터 state 상태 수신
-		ServerRecv(&activestate, sizeof(ACTIVESTATE));
-		std::cout << "PT_Active recv\n";
-
-		server.m_hMutex.lock();
-		server.m_bState = activestate.state;
-		server.m_hMutex.unlock();
-		
-		if (true == server.m_bState)
-		{
-			//Packet pt(PACKETTYPE::PT_Place, sizeof(Packet));		//공 위치 정보 send
-			BALLPLACE bp{ server.GetPlace() };
-			//ServerSend(&pt, &bp, sizeof(bp));
-		}
-		return;
 	}
 	else
 	{
-		std::cout << "recv ok\n";
+		packet.SetRecvData();
+		if (SOCKET_ERROR == server.ServerRecv(packet.GetData(), packet.GetSize()))
+		{
+			std::cout << "ReadData ClientRecv\n";
+		}
+		else
+		{
+			if (PACKETTYPE::PT_ClubSetting == packet.GetType())
+			{
+				std::cout << "PT_ClubSetting recv\n";
+				server.SetClubSetting(packet.GetData());
+			}
+			else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
+			{
+				std::cout << "PT_TeeSetting recv\n";
+				server.SetTeeSetting(packet.GetData());
+			}
+			else if (PACKETTYPE::PT_ActiveState == packet.GetType())
+			{
+				std::cout << "PT_BallPlace Recv\n";
+				server.SetActiveState(packet.GetData());
+			}
+			else
+			{
+				std::cout << "ReadData unknown type\n";
+			}
+		}
+		packet.DeleteData();
 	}
-
-	return;
 }
 
 int CServer::InputKey(const char input)
@@ -164,24 +136,23 @@ int CServer::InputKey(const char input)
 	//Packet<nullptr_t> pt;
 	if ('w' == input)		//ShotData 전달
 	{		
-		Packet pt(PACKETTYPE::PT_Place);
-		std::cout << pt.GetSize() << "    "<< sizeof(pt) << "\n";
-		server.ServerSend(&pt, sizeof(pt));
-		std::cout << "PT_Place send\n";
+		Packet pt(PACKETTYPE::PT_BallPlace, server.GetBallPlace());
+		server.ServerSend(pt);
+		std::cout << "PT_BallPlace send\n";
 	}
 	else if ('e' == input)		
 	{
 		Packet pt(PACKETTYPE::PT_ShotData, server.GetShotData());
-
-		char* buf = (char*)malloc(pt.GetSize() + sizeof(Packet));
-
-		std::cout << pt.GetSize() << "\n";
-		memcpy_s(buf, sizeof(Packet), &pt, sizeof(Packet));
-		memcpy_s(buf + sizeof(Packet), sizeof(ShotData), pt.GetData(), sizeof(ShotData));
-
-		server.ServerSend(buf, pt.GetSize());
-		free(buf);
+		server.ServerSend(pt);
 		std::cout << "PT_ShotData send\n";
+	}
+	else if ('r' == input)
+	{
+		server.SetActiveState(false);
+
+		Packet pt(PACKETTYPE::PT_ActiveState, server.GetActiveState());
+		server.ServerSend(pt);
+		std::cout << "PT_ActiveState(false) send\n";
 	}
 	else
 	{
@@ -206,19 +177,11 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 				std::cout << "SendThread InputKey error\n";
 				//err_quit("send()");
 				break;
-			}//InputKey->Client_Send
+			}//InputKey->ServerSend
 		}
-		else
+		else	//유휴상태 추가
 		{
-			//Sleep(2000);		//5초마다 통신(유휴상태 체크)
 
-			//Packet pt{ PT_None, sizeof(Packet) };
-			//if (SOCKET_ERROR == client.ClientSend(&pt, NULL, 0))
-			//{
-			//	std::cout << "SendThread Set_Packet error\n";
-			//	//err_quit("send()");
-			//	break;
-			//}//Client_Send
 		}
 
 	}
@@ -228,20 +191,20 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
-	Packet pt;
+	
 	while (true)
 	{
-
-		//ZeroMemory(&pt, sizeof(pt));
+		Packet pt;
+		ZeroMemory(&pt, sizeof(pt));
 		if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(pt)))
 		{
 			std::cout << "Server_Recv error\n";
 			//err_quit("recv()");
 			break;
 		}
-		else
+		else    //에러가 아니라면 데이터 읽기
 		{
-			server.ReadData(pt.GetType());
+			server.ReadData(pt);
 		}
 	}
 	return NULL;
@@ -269,10 +232,10 @@ void CServer::ServerAccept()
 	return;
 }
 
-int CServer::ServerSend(const void* buf, const unsigned int size)
+int CServer::ServerSend(Packet& packet)
 {
 	auto& server = CServer::Instance();
-	return send(server.m_hClient, (const char*)buf, size + sizeof(Packet), 0);
+	return send(server.m_hClient, (const char*)packet.GetData(), packet.GetSize(), 0);
 }
 int CServer::ServerRecv(void* buf, const int len)
 {
