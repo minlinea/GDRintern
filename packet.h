@@ -75,7 +75,6 @@ type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분
 size : 해당 타입 패킷의 사이즈
 */
 
-template <class T>
 class Packet
 {
 public:
@@ -83,21 +82,35 @@ public:
 	{
 		this->type = PACKETTYPE::PT_None;
 		this->size = sizeof(Packet);
+		this->data = nullptr;
 	}
 
 	Packet(const PACKETTYPE& type)
 	{
 		this->type = type;
 		this->size = sizeof(Packet);
+		this->data = nullptr;
 	}
 
-	Packet(const PACKETTYPE& type, const unsigned int& size, const T& data)
+	template <class T>
+	Packet(const PACKETTYPE& type, const T& data)
 	{
 		this->type = type;
-		this->size = size;
-		this->data = data;
+		this->size = sizeof(T);
+		this->data = nullptr;
+
+		
+		this->SetData(data);
 	}
 
+	~Packet()
+	{
+		if (nullptr != this->data)
+		{
+			free(this->data);
+		}
+	}
+	
 	void SetType(const PACKETTYPE& type)
 	{
 		this->type = type;
@@ -106,9 +119,17 @@ public:
 	{
 		this->size = size;
 	}
+
+	template <class T>
 	void SetData(const T& data)
 	{
-		this->data = data;
+		if (nullptr != this->data)
+		{
+			free(this->data);
+		}
+		
+		this->data = (char*)malloc(this->size);
+		memcpy_s(this->data, this->size, &data, this->size);
 	}
 
 	PACKETTYPE& GetType()
@@ -119,14 +140,56 @@ public:
 	{
 		return this->size;
 	}
-	T& GetData()
+	char* GetData()
 	{
 		return this->data;
 	}
 
-private:
+	void MakeBuf(char* p)
+	{
+		p = (char*)malloc(sizeof(Packet) + this->size);
+		memcpy_s(p, sizeof(Packet), this, sizeof(Packet));
+		if (0 != this->size)
+		{
+			memcpy_s(p + sizeof(Packet), this->size, this->data, this->size);
+		}
+		return;
+	}
+
+protected:
 	PACKETTYPE type;
 	unsigned int size;
-	T data;
+	char* data;
 };
 
+//class PacketShotData : public PacketHeader
+//{
+//public:
+//	PacketShotData()
+//	{
+//		this->data = ShotData{};
+//	}
+//	PacketShotData(PACKETTYPE type)
+//	{
+//		this->type = type;
+//		this->size = size;
+//		this->data = ShotData{};
+//	}
+//	PacketShotData(PacketHeader header)
+//	{
+//		this->type = header.GetType();
+//		this->size = header.GetSize();
+//		this->data = ShotData{};
+//	}
+//	PacketShotData(const void *data)
+//	{
+//		this->data = (ShotData&)data;
+//	}
+//	~PacketShotData() = default;
+//	virtual void PrintLog() override
+//	{
+//		std::cout << this->size << "\n";
+//	}
+//private:
+//	ShotData data;
+//};

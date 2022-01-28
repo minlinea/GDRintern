@@ -28,8 +28,7 @@ public:
 	void ClientConnect();
 
 	//recv 후 패킷 type에 따른 정보 파악
-	template <class T>
-	void ReadData(Packet<nullptr_t>& header);
+	void ReadData(Packet header);
 
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신
 	//w(Tee, club 세팅) e(active 상태 전달) r(inactive 상태 전달), t(샷data 요청 *pc, pc한정)

@@ -1,28 +1,8 @@
 #include <iostream>
 #include "conio.h"
 #include "windows.h"
+#include "../packet.h"
 using namespace std;
-
-struct A {
-	int pos = 0;
-	int len = 0;
-};
-
-struct B {
-	float x = 0.f;
-	float y = 0.f;
-	float z = 0.f;
-};
-
-A* SetVariableData(unsigned int size, void* data)
-{
-	A* pt = (A*)malloc(sizeof(A*) + size);
-
-	memcpy_s(pt + sizeof(A), size, data, size);
-	cout << "size : " << sizeof(A) + size << endl;
-	return pt;
-//	free(pt);
-}
 
 
 int main()
@@ -30,21 +10,46 @@ int main()
 	char c;
 	while(true)
 	{
-		
-		if(true == _kbhit())
+		ShotData sd{0,1,2,3,4,5,6};
+		if(1 == _kbhit())	//1이 true인데 true라 하면 경고냄
 		{
 			c = _getch();
 			cout << c << " " << "test\n";
 
 			if (c == 'q')
 			{
-				cout << "y\n";
+				Packet pt(PACKETTYPE::PT_ShotData, sd);
+				char* buf = (char*)malloc(pt.GetSize() + sizeof(Packet));
+				cout << pt.GetSize() + sizeof(Packet) << endl;
+				memcpy_s(buf, sizeof(Packet), &pt, sizeof(Packet));
+
+				int size, type;
+				memcpy_s(&type, sizeof(int), buf, sizeof(int));
+				memcpy_s(&size, sizeof(int), buf + sizeof(int), sizeof(int));
+
+				cout << size << " " << type << endl;
+				memcpy_s(buf + sizeof(Packet), sizeof(ShotData), pt.GetData(), sizeof(ShotData));
+				//pt.MakeBuf(buf);
+				//server.ServerSend(buf, pt.GetSize());
+
+
+				ShotData t;
+				memcpy_s(&t, sizeof(ShotData), buf + sizeof(ShotData), sizeof(ShotData));
+
+				std::cout << "ballspeed:" << sd.ballspeed << "  launchangle:" << sd.launchangle
+					<< "  launchdirection:" << sd.launchdirection << "  headspeed:" << sd.headspeed
+					<< "  backspin:" << sd.backspin << "  sidespin:" << sd.sidespin << "\n";
+
+
+				free(buf);
+				//std::cout << "PT_ShotData send\n";
+
 			}
 		}
 		else
 		{
-			Sleep(2000);
-			cout << "sleep\n";
+			//Sleep(2000);
+			//cout << "sleep\n";
 		}
 
 	}

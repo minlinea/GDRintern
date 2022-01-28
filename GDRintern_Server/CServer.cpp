@@ -164,15 +164,23 @@ int CServer::InputKey(const char input)
 	//Packet<nullptr_t> pt;
 	if ('w' == input)		//ShotData РќДо
 	{		
-		Packet<BALLPLACE> pt(PACKETTYPE::PT_Place, sizeof(BALLPLACE), server.GetPlace());
+		Packet pt(PACKETTYPE::PT_Place);
 		std::cout << pt.GetSize() << "    "<< sizeof(pt) << "\n";
 		server.ServerSend(&pt, sizeof(pt));
 		std::cout << "PT_Place send\n";
 	}
 	else if ('e' == input)		
 	{
-		Packet<ShotData> pt(PACKETTYPE::PT_ShotData, sizeof(ShotData), server.GetShotData());
-		server.ServerSend(&pt, sizeof(pt));
+		Packet pt(PACKETTYPE::PT_ShotData, server.GetShotData());
+
+		char* buf = (char*)malloc(pt.GetSize() + sizeof(Packet));
+
+		std::cout << pt.GetSize() << "\n";
+		memcpy_s(buf, sizeof(Packet), &pt, sizeof(Packet));
+		memcpy_s(buf + sizeof(Packet), sizeof(ShotData), pt.GetData(), sizeof(ShotData));
+
+		server.ServerSend(buf, pt.GetSize());
+		free(buf);
 		std::cout << "PT_ShotData send\n";
 	}
 	else
@@ -220,7 +228,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
-	Packet<int> pt;
+	Packet pt;
 	while (true)
 	{
 
@@ -264,7 +272,7 @@ void CServer::ServerAccept()
 int CServer::ServerSend(const void* buf, const unsigned int size)
 {
 	auto& server = CServer::Instance();
-	return send(server.m_hClient, (const char*)buf, size, 0);
+	return send(server.m_hClient, (const char*)buf, size + sizeof(Packet), 0);
 }
 int CServer::ServerRecv(void* buf, const int len)
 {
