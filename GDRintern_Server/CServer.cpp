@@ -78,87 +78,109 @@ void CServer::err_quit(const char* msg)
 	exit(1);
 }
 
-void CServer::ReadData(Packet packet)
+void CServer::ReadRecv(const PACKETTYPE& type)
+{
+	if (PACKETTYPE::PT_BallPlaceRecv == type)
+	{
+		std::cout << "PT_BallPlaceRecv recv\n";
+	}
+	else if (PACKETTYPE::PT_ShotDataRecv == type)
+	{
+		std::cout << "PT_ShotDataRecv recv\n";
+	}
+	else if (PACKETTYPE::PT_ActiveStateRecv == type)
+	{
+		std::cout << "PT_ActiveStateRecv recv\n";
+	}
+	else
+	{
+		std::cout << "ReadRecv unknown type\n";
+	}
+}
+
+int CServer::SendRecv(const PACKETTYPE& recvtype)
 {
 	auto& server = CServer::Instance();
-	if (sizeof(Packet) == packet.GetSize())
+	Packet sendrecvpt(recvtype);
+	sendrecvpt.SetRecvData();
+	return server.ServerSend(sendrecvpt);
+}
+
+int CServer::ReadData(Packet& packet)
+{
+	auto& server = CServer::Instance();
+	PACKETTYPE recvtype = PACKETTYPE::PT_None;
+
+	packet.SetRecvData();
+	if (SOCKET_ERROR == server.ServerRecv(packet.GetData(), packet.GetSize()))
 	{
-		if (PACKETTYPE::PT_ShotDataRecv == packet.GetType())
+		std::cout << "ReadData ServerRecv\n";
+		return SOCKET_ERROR;
+	}
+	else
+	{
+		if (PACKETTYPE::PT_ClubSetting == packet.GetType())
 		{
-			std::cout << "PT_ShotDataRecv recv\n";
+			std::cout << "PT_ClubSetting recv\n";
+			server.SetClubSetting(packet.GetData());
+			recvtype = PACKETTYPE::PT_ClubSettingRecv;
 		}
-		else if (PACKETTYPE::PT_ConnectRecv == packet.GetType())
+		else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
 		{
-			std::cout << "PT_ConnectRecv recv\n";
+			std::cout << "PT_TeeSetting recv\n";
+			server.SetTeeSetting(packet.GetData());
+			recvtype = PACKETTYPE::PT_TeeSettingRecv;
+		}
+		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
+		{
+			std::cout << "PT_BallPlace Recv\n";
+			server.SetActiveState(packet.GetData());
+			recvtype = PACKETTYPE::PT_ActiveStateRecv;
 		}
 		else
 		{
 			std::cout << "ReadData unknown type\n";
 		}
 	}
-	else
-	{
-		packet.SetRecvData();
-		if (SOCKET_ERROR == server.ServerRecv(packet.GetData(), packet.GetSize()))
-		{
-			std::cout << "ReadData ClientRecv\n";
-		}
-		else
-		{
-			if (PACKETTYPE::PT_ClubSetting == packet.GetType())
-			{
-				std::cout << "PT_ClubSetting recv\n";
-				server.SetClubSetting(packet.GetData());
-			}
-			else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
-			{
-				std::cout << "PT_TeeSetting recv\n";
-				server.SetTeeSetting(packet.GetData());
-			}
-			else if (PACKETTYPE::PT_ActiveState == packet.GetType())
-			{
-				std::cout << "PT_BallPlace Recv\n";
-				server.SetActiveState(packet.GetData());
-			}
-			else
-			{
-				std::cout << "ReadData unknown type\n";
-			}
-		}
-		packet.DeleteData();
-	}
+	packet.DeleteData();
+
+	return server.SendRecv(recvtype);
 }
 
 int CServer::InputKey(const char input)
 {
 	auto& server = CServer::Instance();
-	int retval{ 1 };
-	//Packet<nullptr_t> pt;
-	if ('w' == input)		//ShotData 전달
-	{		
-		Packet pt(PACKETTYPE::PT_BallPlace, server.GetBallPlace());
-		server.ServerSend(pt);
+	Packet pt{};
+	if ('w' == input)		//공위치 전달(enum)
+	{
+		pt.SetType(PACKETTYPE::PT_BallPlace);
+		pt.SetSize(sizeof(BALLPLACE));
+		pt.SetSendData(server.GetBallPlace());
+
 		std::cout << "PT_BallPlace send\n";
 	}
-	else if ('e' == input)		
+	else if ('e' == input)		//샷정보 전달
 	{
-		Packet pt(PACKETTYPE::PT_ShotData, server.GetShotData());
-		server.ServerSend(pt);
+		pt.SetType(PACKETTYPE::PT_ShotData);
+		pt.SetSize(sizeof(ShotData));
+		pt.SetSendData(server.GetShotData());
+
 		std::cout << "PT_ShotData send\n";
 	}
-	else if ('r' == input)
+	else if ('r' == input)		//샷 이후 activestate false 전달
 	{
 		server.SetActiveState(false);
 
-		Packet pt(PACKETTYPE::PT_ActiveState, server.GetActiveState());
-		server.ServerSend(pt);
+		pt.SetType(PACKETTYPE::PT_ActiveState);
+		pt.SetSize(sizeof(ACTIVESTATE));
+		pt.SetSendData(server.GetActiveState());
+
 		std::cout << "PT_ActiveState(false) send\n";
 	}
 	else
 	{
 	}
-	//server.ServerSend(&pt, sizeof(pt));
-	return retval;
+	return server.ServerSend(pt);
 }
 
 DWORD WINAPI CServer::SendThread(LPVOID socket)
@@ -194,8 +216,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 	
 	while (true)
 	{
-		Packet pt;
-		ZeroMemory(&pt, sizeof(pt));
+		Packet pt{};
 		if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(pt)))
 		{
 			std::cout << "Server_Recv error\n";
@@ -204,7 +225,19 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 		}
 		else    //에러가 아니라면 데이터 읽기
 		{
-			server.ReadData(pt);
+			if (sizeof(Packet) == pt.GetSize())
+			{
+				server.ReadRecv(pt.GetType());
+			}
+			else
+			{
+				if (SOCKET_ERROR == server.ReadData(pt))
+				{
+					std::cout << "Server_Recv ReadData error\n";
+					//err_quit("recv()");
+					break;
+				}
+			}
 		}
 	}
 	return NULL;

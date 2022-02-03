@@ -32,11 +32,13 @@ public:
 	void ServerAccept();
 
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신(테스트 코드)
-	//w(Shotdata 전달)
+	//w(공위치), e(샷정보), r(ballstate false)
 	int InputKey(const char input);
+	int SendRecv(const PACKETTYPE& type);
 
 	//recv 후 패킷 type에 따른 정보 파악
-	void ReadData(Packet type);
+	void ReadRecv(const PACKETTYPE& type);
+	int ReadData(Packet& type);
 
 	int ServerSend(Packet& packet);
 	int ServerRecv(void* buf, const int len);

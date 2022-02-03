@@ -115,12 +115,13 @@ public:
 	}
 	void SetSize(const unsigned int& size)
 	{
-		this->size = size;
+		this->size = size + sizeof(Packet);
 	}
 
 	void SetRecvData()
 	{
-		this->data = (char*)malloc(this->size - sizeof(Packet));
+		this->data = (char*)malloc(this->size);
+		memcpy_s(this->data, sizeof(Packet), this, sizeof(Packet));
 	}
 
 	template <class T>
@@ -157,6 +158,7 @@ public:
 	void DeleteData()
 	{
 		free(this->data);
+		this->data = nullptr;
 	}
 
 private:
