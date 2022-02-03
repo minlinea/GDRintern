@@ -102,6 +102,7 @@ int CServer::SendRecv(const PACKETTYPE& recvtype)
 {
 	auto& server = CServer::Instance();
 	Packet sendrecvpt(recvtype);
+
 	sendrecvpt.SetRecvData();
 	return server.ServerSend(sendrecvpt);
 }
@@ -154,7 +155,6 @@ int CServer::InputKey(const char input)
 	if ('w' == input)		//공위치 전달(enum)
 	{
 		pt.SetType(PACKETTYPE::PT_BallPlace);
-		pt.SetSize(sizeof(BALLPLACE));
 		pt.SetSendData(server.GetBallPlace());
 
 		std::cout << "PT_BallPlace send\n";
@@ -162,7 +162,6 @@ int CServer::InputKey(const char input)
 	else if ('e' == input)		//샷정보 전달
 	{
 		pt.SetType(PACKETTYPE::PT_ShotData);
-		pt.SetSize(sizeof(ShotData));
 		pt.SetSendData(server.GetShotData());
 
 		std::cout << "PT_ShotData send\n";
@@ -172,7 +171,6 @@ int CServer::InputKey(const char input)
 		server.SetActiveState(false);
 
 		pt.SetType(PACKETTYPE::PT_ActiveState);
-		pt.SetSize(sizeof(ACTIVESTATE));
 		pt.SetSendData(server.GetActiveState());
 
 		std::cout << "PT_ActiveState(false) send\n";
@@ -189,7 +187,6 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 
 	std::cout << "ConnectInit\n" << std::endl;
 
-	//Packet<void> pt{ PACKETTYPE::PT_Connect};
 	while (true)
 	{
 		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
@@ -199,7 +196,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 				std::cout << "SendThread InputKey error\n";
 				//err_quit("send()");
 				break;
-			}//InputKey->ServerSend
+			}
 		}
 		else	//유휴상태 추가
 		{
@@ -234,7 +231,6 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 				if (SOCKET_ERROR == server.ReadData(pt))
 				{
 					std::cout << "Server_Recv ReadData error\n";
-					//err_quit("recv()");
 					break;
 				}
 			}
@@ -260,8 +256,8 @@ void CServer::ServerAccept()
 
 		WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
 		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
-		closesocket(server.m_hClient);
 	}
+	closesocket(server.m_hClient);
 	return;
 }
 

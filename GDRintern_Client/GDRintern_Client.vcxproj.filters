@@ -23,10 +23,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\packet.h">
+    <ClInclude Include="CClient.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CClient.h">
+    <ClInclude Include="packet.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

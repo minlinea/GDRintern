@@ -1,10 +1,10 @@
 #pragma once
 #include <mutex>
-#include <iostream>
 #include <winsock2.h>
+
 #pragma comment(lib, "Ws2_32.lib")
 
-#include "../packet.h"
+#include "packet.h"
 
 class CClient
 {
@@ -44,6 +44,7 @@ public:
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);
+
 
 	void SetShotData(const ShotData& sd)
 	{
@@ -96,7 +97,7 @@ public:
 		std::cout << "Place:" << (unsigned int)this->m_eBallPlace << "\n";
 #endif
 	}
-	void SetBallPlace(char *ballplace)
+	void SetBallPlace(char* ballplace)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		memcpy_s(&m_eBallPlace, sizeof(ShotData), ballplace, sizeof(ShotData));
@@ -141,6 +142,7 @@ public:
 	{
 		return m_bActiveState;
 	}
+
 
 private:
 

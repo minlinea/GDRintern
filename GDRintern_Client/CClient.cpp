@@ -73,7 +73,6 @@ int CClient::InputKey(const char input)
 	if ('q' == input)		//Club 技泼 傈价
 	{
 		pt.SetType(PACKETTYPE::PT_ClubSetting);
-		pt.SetSize(sizeof(CLUBSETTING));
 		pt.SetSendData(client.GetClubSetting());
 
 		std::cout << "Send PT_Setting\n";
@@ -81,7 +80,6 @@ int CClient::InputKey(const char input)
 	else if ('w' == input)		//Tee 技泼 傈价
 	{
 		pt.SetType(PACKETTYPE::PT_TeeSetting);
-		pt.SetSize(sizeof(TEESETTING));
 		pt.SetSendData(client.GetTeeSetting());
 
 		std::cout << "Send PT_TeeSetting\n";
@@ -91,7 +89,6 @@ int CClient::InputKey(const char input)
 		client.SetActiveState(true);
 
 		pt.SetType(PACKETTYPE::PT_ActiveState);
-		pt.SetSize(sizeof(ACTIVESTATE));
 		pt.SetSendData(client.GetActiveState());
 
 		std::cout << "Send PT_Active(true)\n";
@@ -101,7 +98,6 @@ int CClient::InputKey(const char input)
 		client.SetActiveState(false);
 
 		pt.SetType(PACKETTYPE::PT_ActiveState);
-		pt.SetSize(sizeof(ACTIVESTATE));
 		pt.SetSendData(client.GetActiveState());
 
 		std::cout << "Send PT_Active(false)\n";

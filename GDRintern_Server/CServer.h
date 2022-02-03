@@ -1,10 +1,10 @@
 #pragma once
 #include <mutex>
 #include <winsock2.h>
-#include <iostream>
+
 #pragma comment(lib, "Ws2_32.lib")
 
-#include "../packet.h"
+#include "packet.h"
 
 #define datalog 0
 

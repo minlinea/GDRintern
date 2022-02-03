@@ -143,8 +143,8 @@
     <ClCompile Include="server_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\packet.h" />
     <ClInclude Include="CServer.h" />
+    <ClInclude Include="packet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,8 @@
 #pragma once
 #pragma pack(1)
 
+#include <iostream>
+
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
 
@@ -131,7 +133,7 @@ public:
 		{
 			free(this->data);
 		}
-		
+		this->SetSize(sizeof(T));
 		this->data = (char*)malloc(this->size);
 		memcpy_s(this->data, sizeof(Packet), this, sizeof(Packet));
 		memcpy_s(this->data + sizeof(Packet), sizeof(T), &data, sizeof(T));
