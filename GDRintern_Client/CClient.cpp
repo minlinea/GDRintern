@@ -103,8 +103,10 @@ int CClient::InputKey(const char input)
 DWORD WINAPI CClient::SendThread(LPVOID socket)
 {
 	auto& client = CClient::Instance();
-
+	
 	clog.Log("INFO", "SendThread ON");
+	std::cout << "SendThread ON\n";
+
 	while (true)
 	{
 		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
@@ -211,6 +213,9 @@ int CClient::ReadData(Packet& packet)
 DWORD WINAPI CClient::RecvThread(LPVOID socket)
 {
 	auto& client = CClient::Instance();
+
+	clog.Log("INFO", "RecvThread ON");
+	std::cout << "RecvThread ON\n";
 
 	while (true)
 	{

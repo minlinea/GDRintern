@@ -12,3 +12,29 @@
 [17:30:04.450][INFO]	Send PT_Setting
 [17:30:04.451][INFO]	PT_ClubSettingRecv recv
 [17:30:05.050][ERROR]	SendThread InputKey error
+[17:34:04.935][START]	==============================================
+[17:34:04.940][INFO]	SendThread ON
+[17:34:06.867][INFO]	PT_ShotData Recv
+[17:34:07.572][INFO]	PT_BallPlace Recv
+[17:34:20.604][ERROR]	RecvThread ClientRecv error
+[17:34:20.605][END]	==============================================
+[17:35:46.293][START]	==============================================
+[17:35:46.297][INFO]	SendThread ON
+[17:35:48.087][INFO]	PT_BallPlace Recv
+[17:35:48.110][INFO]	PT_ShotData Recv
+[17:35:48.199][INFO]	PT_ActiveState Recv
+[17:35:49.727][INFO]	Send PT_Active(true)
+[17:35:49.727][INFO]	Send PT_TeeSetting
+[17:35:49.728][INFO]	PT_ActiveStateRecv recv
+[17:35:49.729][INFO]	PT_TeeSettingRecv recv
+[17:35:49.782][INFO]	Send PT_Active(false)
+[17:35:49.784][INFO]	PT_ActiveStateRecv recv
+[17:35:50.254][INFO]	Send PT_Setting
+[17:35:50.255][INFO]	PT_ClubSettingRecv recv
+[17:35:50.590][INFO]	Send PT_TeeSetting
+[17:35:50.591][INFO]	PT_TeeSettingRecv recv
+[17:35:50.614][INFO]	Send PT_Setting
+[17:35:50.615][INFO]	PT_ClubSettingRecv recv
+[17:35:52.023][INFO]	PT_ShotData Recv
+[17:35:52.047][INFO]	PT_BallPlace Recv
+[17:35:53.742][ERROR]	SendThread InputKey error

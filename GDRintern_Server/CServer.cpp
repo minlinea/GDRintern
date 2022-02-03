@@ -183,7 +183,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	auto& server = CServer::Instance();
 
 	clog.Log("INFO", "SendThread ON");
-	std::cout << "SendThread ON\n" << std::endl;
+	std::cout << "SendThread ON\n";
 
 	while (true)
 	{
@@ -211,7 +211,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 	auto& server = CServer::Instance();
 
 	clog.Log("INFO", "RecvThread ON");
-	std::cout << "RecvThread ON\n" << std::endl;
+	std::cout << "RecvThread ON\n";
 
 	while (true)
 	{
@@ -252,10 +252,7 @@ void CServer::ServerAccept()
 		int iCIntSize = sizeof(tCIntAddr);
 		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
 
-		/*char ipAddress[MAX_PATH] = { 0, };
-		sprintf_s(ipAddress, MAX_PATHNAME_LEN, "%s%s", "[login]Client IP : ", inet_ntoa(tCIntAddr.sin_addr));
-		clog.Log("INFO", ipAddress);*/
-
+		clog.Log("LOGIN", inet_ntoa(tCIntAddr.sin_addr));
 		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
 
 		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
@@ -263,8 +260,7 @@ void CServer::ServerAccept()
 		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
 
 		WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
-		//sprintf_s(ipAddress, MAX_PATHNAME_LEN, "%s%s", "[logout]Client IP : ", inet_ntoa(tCIntAddr.sin_addr));
-		//clog.Log("INFO", ipAddress);
+		clog.Log("LOGOUT", inet_ntoa(tCIntAddr.sin_addr));
 		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
 	}
 	closesocket(server.m_hClient);
