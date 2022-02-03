@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CServer.cpp" />
     <ClCompile Include="server_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CLog.h" />
     <ClInclude Include="CServer.h" />
     <ClInclude Include="packet.h" />
   </ItemGroup>

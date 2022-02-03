@@ -1,0 +1,13 @@
+[17:29:56.864][START]	==============================================
+[17:30:01.337][INFO]	RecvThread ON
+[17:30:02.402][INFO]	PT_BallPlace send
+[17:30:02.404][INFO]	PT_BallPlaceRecv recv
+[17:30:02.554][INFO]	PT_ShotData send
+[17:30:02.555][INFO]	PT_ShotDataRecv recv
+[17:30:02.882][INFO]	PT_ActiveState(false) send
+[17:30:02.883][INFO]	PT_ActiveStateRecv recv
+[17:30:03.635][INFO]	PT_TeeSetting recv
+[17:30:03.762][INFO]	PT_BallPlace recv
+[17:30:03.851][INFO]	PT_BallPlace recv
+[17:30:04.450][INFO]	PT_ClubSetting recv
+[17:30:08.708][ERROR]	Server_Recv error

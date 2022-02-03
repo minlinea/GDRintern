@@ -4,6 +4,12 @@ CLog::CLog()
 {
 	::CreateDirectoryA("Log", NULL);				//작업중인 해당 프로젝트
 	SetPathFile();
+	Log("START", "==============================================");
+}
+
+CLog::~CLog()
+{
+	Log("END", "==============================================");
 }
 
 void CLog::SetPathFile()
@@ -26,7 +32,7 @@ void CLog::Log(const char * loglevel, const char* logmsg)
 	fopen_s(&pFile, caFileName, "at");		//append text 모드
 	if (pFile)
 	{
-		fprintf_s(pFile, "[%02d:%02d:%02d.%03d][%s] %s\n", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds, loglevel, logmsg);
+		fprintf_s(pFile, "[%02d:%02d:%02d.%03d][%s]\t%s\n", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds, loglevel, logmsg);
 									//로그 내용 작성
 		fclose(pFile);
 	}

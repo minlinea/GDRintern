@@ -2,6 +2,8 @@
 #include "windows.h"
 #include "conio.h"
 
+CLog clog;
+
 CClient::CClient()
 {
 	DataInit();
@@ -19,6 +21,7 @@ CClient::~CClient()
 void CClient::DataInit()
 {
 	m_eTee = TEESETTING::T40;
+
 	m_eClub = CLUBSETTING::DRIVER;
 
 	m_eBallPlace = BALLPLACE::OB;
@@ -33,6 +36,7 @@ bool CClient::ClientInit()
 	auto& client = CClient::Instance();
 	if (0 != WSAStartup(MAKEWORD(2, 2), &client.m_wsaData))
 	{
+		clog.Log("ERROR", "ClientInit WSAStartup fail");
 		std::cout << "ClientInit WSAStartup fail\n";
 		return false;
 	}
@@ -40,6 +44,7 @@ bool CClient::ClientInit()
 	client.m_hSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (INVALID_SOCKET == client.m_hSock)
 	{
+		clog.Log("ERROR", "ClientInit ListenSocket fail");
 		std::cout << "ClientInit ListenSocket fail\n";
 		return false;
 	}
@@ -48,20 +53,6 @@ bool CClient::ClientInit()
 	client.m_tAddr.sin_port = htons(PORT);
 	client.m_tAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
 	return true;
-}
-
-void CClient::err_quit(const char* msg)
-{
-	LPVOID lpMsgBuf;
-	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER
-		| FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, WSAGetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPTSTR)&lpMsgBuf, 0, NULL);
-	MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	exit(1);
 }
 
 int CClient::InputKey(const char input)
@@ -74,12 +65,14 @@ int CClient::InputKey(const char input)
 	{
 		pt.SetSendData(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
 
+		clog.Log("INFO", "Send PT_Setting");
 		std::cout << "Send PT_Setting\n";
 	}
 	else if ('w' == input)		//Tee 세팅 전송
 	{
 		pt.SetSendData(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
 
+		clog.Log("INFO", "Send PT_TeeSetting");
 		std::cout << "Send PT_TeeSetting\n";
 	}
 	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
@@ -88,6 +81,7 @@ int CClient::InputKey(const char input)
 
 		pt.SetSendData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
+		clog.Log("INFO", "Send PT_Active(true)");
 		std::cout << "Send PT_Active(true)\n";
 	}
 	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
@@ -96,6 +90,7 @@ int CClient::InputKey(const char input)
 
 		pt.SetSendData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
+		clog.Log("INFO", "Send PT_Active(false)");
 		std::cout << "Send PT_Active(false)\n";
 	}
 	else
@@ -108,16 +103,19 @@ int CClient::InputKey(const char input)
 DWORD WINAPI CClient::SendThread(LPVOID socket)
 {
 	auto& client = CClient::Instance();
+
+	clog.Log("INFO", "SendThread ON");
 	while (true)
 	{
 		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
 		{
 			if (SOCKET_ERROR == client.InputKey(_getch()))
 			{
+				clog.Log("ERROR", "SendThread InputKey error");
+
 				std::cout << "SendThread InputKey error\n";
-				//err_quit("send()");
 				break;
-			}//InputKey->ClientSend
+			}
 		}
 		else	//유휴상태 추가
 		{
@@ -132,18 +130,22 @@ void CClient::ReadRecv(const PACKETTYPE& type)
 {
 	if (PACKETTYPE::PT_ClubSettingRecv == type)
 	{
+		clog.Log("INFO", "PT_ClubSettingRecv recv");
 		std::cout << "PT_ClubSettingRecv recv\n";
 	}
 	else if (PACKETTYPE::PT_TeeSettingRecv == type)
 	{
+		clog.Log("INFO", "PT_TeeSettingRecv recv");
 		std::cout << "PT_TeeSettingRecv recv\n";
 	}
 	else if (PACKETTYPE::PT_ActiveStateRecv == type)
 	{
+		clog.Log("INFO", "PT_ActiveStateRecv recv");
 		std::cout << "PT_ActiveStateRecv recv\n";
 	}
 	else
 	{
+		clog.Log("WARNING", "ReadRecv unknown type");
 		std::cout << "ReadRecv unknown type\n";
 	}
 
@@ -165,31 +167,39 @@ int CClient::ReadData(Packet& packet)
 	packet.SetRecvData();
 	if (SOCKET_ERROR == client.ClientRecv(packet.GetData(), packet.GetSize()))
 	{
+		clog.Log("ERROR", "ReadData ClientRecv");
 		std::cout << "ReadData ClientRecv\n";
 	}
 	else
 	{
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
+			clog.Log("INFO", "PT_BallPlace Recv");
 			std::cout << "PT_BallPlace Recv\n";
+
 			client.SetBallPlace(packet.GetData());
 			recvtype = PACKETTYPE::PT_BallPlaceRecv;
 		}
 
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
+			clog.Log("INFO", "PT_ShotData Recv");
 			std::cout << "PT_ShotData Recv\n";
+
 			client.SetShotData(packet.GetData());
 			recvtype = PACKETTYPE::PT_ShotDataRecv;
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
-			std::cout << "PT_ActiveState recv\n";
+			clog.Log("INFO", "PT_ActiveState Recv");
+			std::cout << "PT_ShotData Recv\n";
+
 			client.SetActiveState(packet.GetData());
 			recvtype = PACKETTYPE::PT_ActiveStateRecv;
 		}
 		else
 		{
+			clog.Log("WARNING", "ReadData unknown type");
 			std::cout << "ReadData unknown type\n";
 		}
 	}
@@ -208,8 +218,8 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		ZeroMemory(&pt, sizeof(pt));
 		if (SOCKET_ERROR == client.ClientRecv((char*)&pt, sizeof(Packet)))
 		{
+			clog.Log("ERROR", "RecvThread ClientRecv error");
 			std::cout << "RecvThread ClientRecv error\n";
-			//err_quit("recv()");
 			break;
 		}
 		else	//에러가 아니라면 데이터 읽기
@@ -222,8 +232,8 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == client.ReadData(pt))
 				{
+					clog.Log("ERROR", "ReadData error");
 					std::cout << "ReadData error\n";
-					//err_quit("recv()");
 					break;
 				}
 			}
@@ -240,6 +250,7 @@ void CClient::ClientConnect()
 	int retval{ connect(client.m_hSock, (SOCKADDR*)&client.m_tAddr, sizeof(client.m_tAddr)) };
 	if (retval == SOCKET_ERROR)
 	{
+		clog.Log("ERROR", "connect error");
 		std::cout << "connect error" << std::endl;
 	}
 	else

@@ -13,7 +13,7 @@ class CLog
 {
 public:
 	CLog();
-	~CLog() = default;
+	~CLog();
 
 	void SetPathFile();
 	void Log(const char* loglevel, const char * logmsg);

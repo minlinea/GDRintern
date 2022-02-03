@@ -141,9 +141,11 @@
   <ItemGroup>
     <ClCompile Include="CClient.cpp" />
     <ClCompile Include="client_main.cpp" />
+    <ClCompile Include="CLog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CClient.h" />
+    <ClInclude Include="CLog.h" />
     <ClInclude Include="packet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

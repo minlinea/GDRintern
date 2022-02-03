@@ -1,7 +1,7 @@
 #pragma once
 #include <mutex>
 #include <winsock2.h>
-
+#include "CLog.h"
 #pragma comment(lib, "Ws2_32.lib")
 
 #include "packet.h"
@@ -18,9 +18,6 @@ public:
 
 	CClient();
 	~CClient();
-
-	//에러 확인 함수
-	void err_quit(const char* msg);
 
 	//최초 생성에 따른 데이터, 소켓 설정, 연결 및 스레드 생성
 	void DataInit();

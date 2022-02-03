@@ -1,0 +1,14 @@
+[17:30:01.331][START]	==============================================
+[17:30:01.337][INFO]	SendThread ON
+[17:30:02.403][INFO]	PT_BallPlace Recv
+[17:30:02.554][INFO]	PT_ShotData Recv
+[17:30:02.882][INFO]	PT_ActiveState Recv
+[17:30:03.635][INFO]	Send PT_TeeSetting
+[17:30:03.636][INFO]	PT_TeeSettingRecv recv
+[17:30:03.762][INFO]	Send PT_Active(true)
+[17:30:03.763][INFO]	PT_ActiveStateRecv recv
+[17:30:03.850][INFO]	Send PT_Active(false)
+[17:30:03.851][INFO]	PT_ActiveStateRecv recv
+[17:30:04.450][INFO]	Send PT_Setting
+[17:30:04.451][INFO]	PT_ClubSettingRecv recv
+[17:30:05.050][ERROR]	SendThread InputKey error

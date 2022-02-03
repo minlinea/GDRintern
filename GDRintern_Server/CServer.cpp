@@ -1,6 +1,8 @@
 #include "CServer.h"
 #include "conio.h"
 
+CLog clog;
+
 CServer::CServer()
 {
 	DataInit();
@@ -34,14 +36,14 @@ bool CServer::ServerInit()
 	auto& server = CServer::Instance();
 	if (0 != WSAStartup(MAKEWORD(2, 2), &server.m_wsaData))
 	{
-		std::cout << "ServerInit WSAStartup fail\n";
+		clog.Log("ERROR", "ServerInit WSAStartup fail");
 		return false;
 	}
 
 	server.m_hListenSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (INVALID_SOCKET == server.m_hListenSock)
 	{
-		std::cout << "ServerInit ListenSocket fail\n";
+		clog.Log("ERROR", "ServerInit ListenSocket fail");
 		return false;
 	}
 
@@ -51,49 +53,39 @@ bool CServer::ServerInit()
 
 	if (SOCKET_ERROR == bind(server.m_hListenSock, (SOCKADDR*)&server.m_tListenAddr, sizeof(server.m_tListenAddr)))
 	{
-		std::cout << "ServerInit bind fail\n";
+		clog.Log("ERROR", "ServerInit bind fail");
 		return false;
 	}
 
 	if (SOCKET_ERROR == listen(server.m_hListenSock, SOMAXCONN))
 	{
-		std::cout << "ServerInit listen fail\n";
+		clog.Log("ERROR", "ServerInit listen fail");
 		return false;
 	}
 
 	return true;
 }
 
-void CServer::err_quit(const char* msg)
-{
-	LPVOID lpMsgBuf;
-	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER
-		| FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, WSAGetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPTSTR)&lpMsgBuf, 0, NULL);
-	MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	exit(1);
-}
-
 void CServer::ReadRecv(const PACKETTYPE& type)
 {
 	if (PACKETTYPE::PT_BallPlaceRecv == type)
 	{
+		clog.Log("INFO", "PT_BallPlaceRecv recv");
 		std::cout << "PT_BallPlaceRecv recv\n";
 	}
 	else if (PACKETTYPE::PT_ShotDataRecv == type)
 	{
+		clog.Log("INFO", "PT_ShotDataRecv recv");
 		std::cout << "PT_ShotDataRecv recv\n";
 	}
 	else if (PACKETTYPE::PT_ActiveStateRecv == type)
 	{
+		clog.Log("INFO", "PT_ActiveStateRecv recv");
 		std::cout << "PT_ActiveStateRecv recv\n";
 	}
 	else
 	{
+		clog.Log("WARNING", "ReadRecv unknown type");
 		std::cout << "ReadRecv unknown type\n";
 	}
 }
@@ -115,6 +107,7 @@ int CServer::ReadData(Packet& packet)
 	packet.SetRecvData();
 	if (SOCKET_ERROR == server.ServerRecv(packet.GetData(), packet.GetSize()))
 	{
+		clog.Log("ERROR", "ReadData ServerRecv");
 		std::cout << "ReadData ServerRecv\n";
 		return SOCKET_ERROR;
 	}
@@ -122,24 +115,28 @@ int CServer::ReadData(Packet& packet)
 	{
 		if (PACKETTYPE::PT_ClubSetting == packet.GetType())
 		{
+			clog.Log("INFO", "PT_ClubSetting recv");
 			std::cout << "PT_ClubSetting recv\n";
 			server.SetClubSetting(packet.GetData());
 			recvtype = PACKETTYPE::PT_ClubSettingRecv;
 		}
 		else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
 		{
+			clog.Log("INFO", "PT_TeeSetting recv");
 			std::cout << "PT_TeeSetting recv\n";
 			server.SetTeeSetting(packet.GetData());
 			recvtype = PACKETTYPE::PT_TeeSettingRecv;
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
+			clog.Log("INFO", "PT_BallPlace recv");
 			std::cout << "PT_BallPlace Recv\n";
 			server.SetActiveState(packet.GetData());
 			recvtype = PACKETTYPE::PT_ActiveStateRecv;
 		}
 		else
 		{
+			clog.Log("WARNING", "ReadData unknown type");
 			std::cout << "ReadData unknown type\n";
 		}
 	}
@@ -156,12 +153,14 @@ int CServer::InputKey(const char input)
 	{
 		pt.SetSendData(PACKETTYPE::PT_BallPlace, server.GetBallPlace());
 
+		clog.Log("INFO", "PT_BallPlace send");
 		std::cout << "PT_BallPlace send\n";
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
 		pt.SetSendData(PACKETTYPE::PT_ShotData, server.GetShotData());
 
+		clog.Log("INFO", "PT_ShotData send");
 		std::cout << "PT_ShotData send\n";
 	}
 	else if ('r' == input)		//샷 이후 activestate false 전달
@@ -170,6 +169,7 @@ int CServer::InputKey(const char input)
 
 		pt.SetSendData(PACKETTYPE::PT_ActiveState, server.GetActiveState());
 
+		clog.Log("INFO", "PT_ActiveState(false) send");
 		std::cout << "PT_ActiveState(false) send\n";
 	}
 	else
@@ -182,7 +182,8 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
 
-	std::cout << "ConnectInit\n" << std::endl;
+	clog.Log("INFO", "SendThread ON");
+	std::cout << "SendThread ON\n" << std::endl;
 
 	while (true)
 	{
@@ -190,6 +191,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 		{
 			if (SOCKET_ERROR == server.InputKey(_getch()))
 			{
+				clog.Log("ERROR", "SendThread InputKey error");
 				std::cout << "SendThread InputKey error\n";
 				//err_quit("send()");
 				break;
@@ -207,12 +209,16 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
-	
+
+	clog.Log("INFO", "RecvThread ON");
+	std::cout << "RecvThread ON\n" << std::endl;
+
 	while (true)
 	{
 		Packet pt{};
 		if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(pt)))
 		{
+			clog.Log("ERROR", "Server_Recv error");
 			std::cout << "Server_Recv error\n";
 			//err_quit("recv()");
 			break;
@@ -227,6 +233,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == server.ReadData(pt))
 				{
+					clog.Log("ERROR", "Server_Recv ReadData error");
 					std::cout << "Server_Recv ReadData error\n";
 					break;
 				}
@@ -245,6 +252,10 @@ void CServer::ServerAccept()
 		int iCIntSize = sizeof(tCIntAddr);
 		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
 
+		/*char ipAddress[MAX_PATH] = { 0, };
+		sprintf_s(ipAddress, MAX_PATHNAME_LEN, "%s%s", "[login]Client IP : ", inet_ntoa(tCIntAddr.sin_addr));
+		clog.Log("INFO", ipAddress);*/
+
 		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
 
 		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
@@ -252,6 +263,8 @@ void CServer::ServerAccept()
 		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
 
 		WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
+		//sprintf_s(ipAddress, MAX_PATHNAME_LEN, "%s%s", "[logout]Client IP : ", inet_ntoa(tCIntAddr.sin_addr));
+		//clog.Log("INFO", ipAddress);
 		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
 	}
 	closesocket(server.m_hClient);
