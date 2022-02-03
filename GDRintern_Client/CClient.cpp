@@ -72,15 +72,13 @@ int CClient::InputKey(const char input)
 
 	if ('q' == input)		//Club 세팅 전송
 	{
-		pt.SetType(PACKETTYPE::PT_ClubSetting);
-		pt.SetSendData(client.GetClubSetting());
+		pt.SetSendData(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
 
 		std::cout << "Send PT_Setting\n";
 	}
 	else if ('w' == input)		//Tee 세팅 전송
 	{
-		pt.SetType(PACKETTYPE::PT_TeeSetting);
-		pt.SetSendData(client.GetTeeSetting());
+		pt.SetSendData(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
 
 		std::cout << "Send PT_TeeSetting\n";
 	}
@@ -88,8 +86,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(true);
 
-		pt.SetType(PACKETTYPE::PT_ActiveState);
-		pt.SetSendData(client.GetActiveState());
+		pt.SetSendData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
 		std::cout << "Send PT_Active(true)\n";
 	}
@@ -97,8 +94,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(false);
 
-		pt.SetType(PACKETTYPE::PT_ActiveState);
-		pt.SetSendData(client.GetActiveState());
+		pt.SetSendData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
 		std::cout << "Send PT_Active(false)\n";
 	}
@@ -112,7 +108,6 @@ int CClient::InputKey(const char input)
 DWORD WINAPI CClient::SendThread(LPVOID socket)
 {
 	auto& client = CClient::Instance();
-	int retval{ 0 };
 	while (true)
 	{
 		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력

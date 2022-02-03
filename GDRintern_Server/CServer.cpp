@@ -154,15 +154,13 @@ int CServer::InputKey(const char input)
 	Packet pt{};
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		pt.SetType(PACKETTYPE::PT_BallPlace);
-		pt.SetSendData(server.GetBallPlace());
+		pt.SetSendData(PACKETTYPE::PT_BallPlace, server.GetBallPlace());
 
 		std::cout << "PT_BallPlace send\n";
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		pt.SetType(PACKETTYPE::PT_ShotData);
-		pt.SetSendData(server.GetShotData());
+		pt.SetSendData(PACKETTYPE::PT_ShotData, server.GetShotData());
 
 		std::cout << "PT_ShotData send\n";
 	}
@@ -170,8 +168,7 @@ int CServer::InputKey(const char input)
 	{
 		server.SetActiveState(false);
 
-		pt.SetType(PACKETTYPE::PT_ActiveState);
-		pt.SetSendData(server.GetActiveState());
+		pt.SetSendData(PACKETTYPE::PT_ActiveState, server.GetActiveState());
 
 		std::cout << "PT_ActiveState(false) send\n";
 	}

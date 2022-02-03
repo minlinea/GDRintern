@@ -127,13 +127,15 @@ public:
 	}
 
 	template <class T>
-	void SetSendData(const T& data)
+	void SetSendData(const PACKETTYPE type, const T& data)
 	{
 		if (nullptr != this->data)
 		{
 			free(this->data);
 		}
+		this->SetType(type);
 		this->SetSize(sizeof(T));
+
 		this->data = (char*)malloc(this->size);
 		memcpy_s(this->data, sizeof(Packet), this, sizeof(Packet));
 		memcpy_s(this->data + sizeof(Packet), sizeof(T), &data, sizeof(T));
