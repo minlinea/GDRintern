@@ -8,7 +8,6 @@
 
 //////////////////////////////////////////////////////////////////////////////////
 // #define
-#define datalog 0
 #define WaitingTime 2
 #define MAXWaitingCount 5
 
@@ -59,77 +58,53 @@ public:
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_sdShotData = sd;
-#ifdef datalog
-
-#endif
 	}
 	void SetShotData(char* sd)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		memcpy_s(&m_sdShotData, sizeof(ShotData), sd, sizeof(ShotData));
-#ifdef datalog
-
-#endif
 	}
 	void SetTeeSetting(const TEESETTING& tee)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_eTee = tee;
-#ifdef datalog
-#endif
+
 	}
 	void SetTeeSetting(char* tee)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		memcpy_s(&m_sdShotData, sizeof(ShotData), tee, sizeof(ShotData));
-#ifdef datalog
-#endif
+
 	}
 	void SetClubSetting(const CLUBSETTING& club)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_eClub = club;
-#ifdef datalog
-#endif
 	}
 	void SetClubSetting(char* club)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		memcpy_s(&m_sdShotData, sizeof(ShotData), club, sizeof(ShotData));
-#ifdef datalog
-#endif
 	}
 	void SetBallPlace(const BALLPLACE& place)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_eBallPlace = place;
-#ifdef datalog
-		std::cout << "Place:" << (unsigned int)this->m_eBallPlace << "\n";
-#endif
 	}
 	void SetBallPlace(char* ballplace)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		memcpy_s(&m_eBallPlace, sizeof(ShotData), ballplace, sizeof(ShotData));
-#ifdef datalog
-		std::cout << "Place:" << (unsigned int)this->m_eBallPlace << "\n";
-#endif
 	}
 	void SetActiveState(const bool& activestate)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_bActiveState = activestate;
-#ifdef datalog
-		std::cout << "State:" << this->m_bActiveState << "\n";
-#endif
 	}
 	void SetActiveState(char* activestate)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		memcpy_s(&m_bActiveState, sizeof(ShotData), activestate, sizeof(ShotData));
-#ifdef datalog
-		std::cout << "State:" << this->m_bActiveState << "\n";
-#endif
 	}
 
 	const TEESETTING GetTeeSetting()

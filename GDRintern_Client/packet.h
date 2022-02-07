@@ -9,7 +9,6 @@
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
 #define PACKETHEADER 8
-#define datalog 0
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -23,11 +22,41 @@ enum class TEESETTING {
 	T50
 };
 
+inline std::ostream& operator << (std::ostream& os, const TEESETTING& t);
+
+inline std::ostream& operator << (std::ostream& os, const TEESETTING& t)
+{
+	if (TEESETTING::T30 == t)
+		std::cout << "T30";
+	else if (TEESETTING::T35 == t)
+		std::cout << "T35";
+	else if (TEESETTING::T40 == t)
+		std::cout << "T40";
+	else if (TEESETTING::T45 == t)
+		std::cout << "T45";
+	else if (TEESETTING::T50 == t)
+		std::cout << "T50";
+	return os;
+}
+
 enum class CLUBSETTING {
 	DRIVER,
 	IRON,
 	WOOD
 };
+
+inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t);
+
+inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t)
+{
+	if (CLUBSETTING::DRIVER == t)
+		std::cout << "DRIVER";
+	else if (CLUBSETTING::IRON == t)
+		std::cout << "IRON";
+	else if (CLUBSETTING::WOOD == t)
+		std::cout << "WOOD";
+	return os;
+}
 
 enum class BALLPLACE
 {
@@ -35,6 +64,19 @@ enum class BALLPLACE
 	TEE,
 	OB
 };
+
+inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t);
+
+inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t)
+{
+	if (BALLPLACE::PAIRWAY == t)
+		std::cout << "PAIRWAY";
+	else if (BALLPLACE::TEE == t)
+		std::cout << "TEE";
+	else if (BALLPLACE::OB == t)
+		std::cout << "OB";
+	return os;
+}
 
 enum class PACKETTYPE {
 	PT_Connect,
@@ -72,12 +114,15 @@ typedef struct _ShotData {
 	int sidespin;
 }ShotData;
 
-typedef struct _ACTIVESTATE
+inline std::ostream& operator << (std::ostream& os, const ShotData& t);
+
+inline std::ostream& operator << (std::ostream& os, const ShotData& t)
 {
-	bool activestate;
-}ACTIVESTATE;
-
-
+	std::cout << "phase : " << t.phase << "\nballspeed : " << t.ballspeed
+		<< "  launchangle : " << t.launchangle << "  launchdirection : " << t.launchdirection
+		<< "\nheadspeed : " << t.headspeed << "  backspin : " << t.backspin << "  sidespin : " << t.sidespin;
+	return os;
+}
 
 /*
 Packet
