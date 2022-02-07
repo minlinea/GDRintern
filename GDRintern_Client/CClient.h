@@ -26,12 +26,12 @@ public:
 
 	//recv 후 패킷 type에 따른 정보 파악
 	void ReadRecv(const PACKETTYPE& type);
-	int ReadData(Packet& header);
+	int ReadAddData(Packet& header);
 
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신
 	//w(Tee, club 세팅) e(active 상태 전달) r(inactive 상태 전달), t(샷data 요청 *pc, pc한정)
 	int InputKey(const char input);
-	int SendRecv(const PACKETTYPE& type);
+	int SendRecv(const PACKETTYPE& sendtype);
 
 	//고정 + 가변 데이터 send
 	int ClientSend(Packet& packet);

@@ -58,19 +58,18 @@ bool CClient::ClientInit()
 int CClient::InputKey(const char input)
 {
 	auto& client = CClient::Instance();
-	int retval{ 1 };
 	Packet pt{};
 
 	if ('q' == input)		//Club 技泼 傈价
 	{
-		pt.SetSendData(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
+		pt.SetData(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
 
 		clog.Log("INFO", "Send PT_Setting");
 		std::cout << "Send PT_Setting\n";
 	}
 	else if ('w' == input)		//Tee 技泼 傈价
 	{
-		pt.SetSendData(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
+		pt.SetData(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
 
 		clog.Log("INFO", "Send PT_TeeSetting");
 		std::cout << "Send PT_TeeSetting\n";
@@ -79,7 +78,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(true);
 
-		pt.SetSendData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+		pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
 		clog.Log("INFO", "Send PT_Active(true)");
 		std::cout << "Send PT_Active(true)\n";
@@ -88,7 +87,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(false);
 
-		pt.SetSendData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+		pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
 		clog.Log("INFO", "Send PT_Active(false)");
 		std::cout << "Send PT_Active(false)\n";
@@ -145,6 +144,11 @@ void CClient::ReadRecv(const PACKETTYPE& type)
 		clog.Log("INFO", "PT_ActiveStateRecv recv");
 		std::cout << "PT_ActiveStateRecv recv\n";
 	}
+	else if (PACKETTYPE::PT_ConnectCheck == type)
+	{
+		clog.Log("INFO", "PT_Connect recv");
+		std::cout << "PT_Connect recv\n";
+	}
 	else
 	{
 		clog.Log("WARNING", "ReadRecv unknown type");
@@ -153,24 +157,24 @@ void CClient::ReadRecv(const PACKETTYPE& type)
 
 }
 
-int CClient::SendRecv(const PACKETTYPE& recvtype)
+int CClient::SendRecv(const PACKETTYPE& sendtype)
 {
 	auto& client = CClient::Instance();
-	Packet sendrecvpt(recvtype);
-	sendrecvpt.SetRecvData();
-	return client.ClientSend(sendrecvpt);
+	Packet sendpt(sendtype);
+	sendpt.SetData();
+	return client.ClientSend(sendpt);
 }
 
 int CClient::ReadData(Packet& packet)
 {
 	auto& client = CClient::Instance();
-	PACKETTYPE recvtype = PACKETTYPE::PT_None;
+	Packet recvpt{};
 
-	packet.SetRecvData();
+	packet.SetData();
 	if (SOCKET_ERROR == client.ClientRecv(packet.GetData(), packet.GetSize()))
 	{
-		clog.Log("ERROR", "ReadData ClientRecv");
-		std::cout << "ReadData ClientRecv\n";
+		clog.Log("ERROR", "ReadAddData ClientRecv");
+		std::cout << "ReadAddData ClientRecv\n";
 	}
 	else
 	{
@@ -180,16 +184,15 @@ int CClient::ReadData(Packet& packet)
 			std::cout << "PT_BallPlace Recv\n";
 
 			client.SetBallPlace(packet.GetData());
-			recvtype = PACKETTYPE::PT_BallPlaceRecv;
+			recvpt.SetType(PACKETTYPE::PT_BallPlaceRecv);
 		}
-
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
 			clog.Log("INFO", "PT_ShotData Recv");
 			std::cout << "PT_ShotData Recv\n";
 
 			client.SetShotData(packet.GetData());
-			recvtype = PACKETTYPE::PT_ShotDataRecv;
+			recvpt.SetType(PACKETTYPE::PT_ShotDataRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
@@ -197,17 +200,17 @@ int CClient::ReadData(Packet& packet)
 			std::cout << "PT_ShotData Recv\n";
 
 			client.SetActiveState(packet.GetData());
-			recvtype = PACKETTYPE::PT_ActiveStateRecv;
+			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{
-			clog.Log("WARNING", "ReadData unknown type");
-			std::cout << "ReadData unknown type\n";
+			clog.Log("WARNING", "ReadAddData unknown type");
+			std::cout << "ReadAddData unknown type\n";
 		}
 	}
-	packet.DeleteData();
 
-	return client.SendRecv(recvtype);
+	recvpt.SetData();
+	return client.ClientSend(recvpt);
 }
 
 DWORD WINAPI CClient::RecvThread(LPVOID socket)
@@ -217,10 +220,10 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 	clog.Log("INFO", "RecvThread ON");
 	std::cout << "RecvThread ON\n";
 
+	Packet pt;
 	while (true)
 	{
-		Packet pt;
-		ZeroMemory(&pt, sizeof(pt));
+		ZeroMemory(&pt, sizeof(Packet));
 		if (SOCKET_ERROR == client.ClientRecv((char*)&pt, sizeof(Packet)))
 		{
 			clog.Log("ERROR", "RecvThread ClientRecv error");
@@ -237,10 +240,11 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == client.ReadData(pt))
 				{
-					clog.Log("ERROR", "ReadData error");
-					std::cout << "ReadData error\n";
+					clog.Log("ERROR", "ReadAddData error");
+					std::cout << "ReadAddData error\n";
 					break;
 				}
+				pt.DeleteData();
 			}
 			
 		}

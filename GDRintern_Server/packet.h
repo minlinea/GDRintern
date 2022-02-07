@@ -107,14 +107,20 @@ public:
 	template <class T>
 	Packet(const PACKETTYPE& type, const T& data)
 	{
-		this->type = type;
 		this->size = sizeof(T) + sizeof(Packet);
 		this->data = nullptr;
-
-		this->SetSendData(data);
+		this->SetData(this->type, data);
 	}
 
-	~Packet() = default;
+//	~Packet() = default;
+	~Packet()
+	{
+		if (this->data != nullptr)
+		{
+			free(this->data);
+		}
+		this->data = nullptr;
+	}
 	
 	//type 변경 시
 	void SetType(const PACKETTYPE& type)
@@ -128,21 +134,18 @@ public:
 		this->size = size + sizeof(Packet);
 	}
 
-	//패킷만 전달 시 생성하는 data
-	void SetRecvData()
+	//Recv전 size만큼 데이터 공간 확보용
+	void SetData()
 	{
 		this->data = (char*)malloc(this->size);
 		memcpy_s(this->data, sizeof(Packet), this, sizeof(Packet));
 	}
 
-	//data도 전달 시 생성하는 data
+	//AddData도 전달 시 생성하는 data
 	template <class T>
-	void SetSendData(const PACKETTYPE type, const T& data)
+	void SetData(const PACKETTYPE type, const T& data)
 	{
-		if (nullptr != this->data)
-		{
-			free(this->data);
-		}
+		this->DeleteData();
 		this->SetType(type);
 		this->SetSize(sizeof(T));
 
@@ -167,7 +170,10 @@ public:
 	//data 부분 free
 	void DeleteData()
 	{
-		free(this->data);
+		if (this->data != nullptr)
+		{
+			free(this->data);
+		}
 		this->data = nullptr;
 	}
 

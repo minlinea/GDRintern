@@ -5,3 +5,133 @@
 [10:35:47.925][INFO]	PT_ActiveState Recv
 [10:35:49.434][ERROR]	RecvThread ClientRecv error
 [10:35:49.435][END]	==============================================
+[10:54:15.805][START]	==============================================
+[10:54:16.812][ERROR]	connect error
+[10:54:16.813][END]	==============================================
+[13:34:05.752][START]	==============================================
+[13:34:05.756][INFO]	RecvThread ON
+[13:34:07.162][INFO]	PT_BallPlace Recv
+[13:34:08.145][INFO]	PT_ShotData Recv
+[13:34:08.730][INFO]	PT_ActiveState Recv
+[13:34:10.497][INFO]	Send PT_TeeSetting
+[13:34:10.498][INFO]	PT_TeeSettingRecv recv
+[13:34:11.033][INFO]	Send PT_Active(true)
+[13:34:11.034][INFO]	PT_ActiveStateRecv recv
+[13:34:11.353][INFO]	Send PT_Active(false)
+[13:34:11.355][INFO]	PT_ActiveStateRecv recv
+[13:34:11.673][INFO]	Send PT_Setting
+[13:34:11.674][INFO]	PT_ClubSettingRecv recv
+[13:34:13.146][ERROR]	RecvThread ClientRecv error
+[13:34:13.147][END]	==============================================
+[13:35:28.751][START]	==============================================
+[13:35:28.760][INFO]	SendThread ON
+[13:35:29.179][INFO]	PT_BallPlace Recv
+[13:35:32.280][ERROR]	RecvThread ClientRecv error
+[13:35:32.281][END]	==============================================
+[13:35:47.800][START]	==============================================
+[13:35:48.116][INFO]	SendThread ON
+[13:35:49.260][INFO]	Send PT_TeeSetting
+[13:35:49.262][INFO]	PT_TeeSettingRecv recv
+[13:36:57.793][START]	==============================================
+[13:36:58.008][INFO]	SendThread ON
+[13:36:58.628][INFO]	Send PT_TeeSetting
+[13:36:58.629][INFO]	PT_TeeSettingRecv recv
+[13:36:59.197][INFO]	Send PT_Active(true)
+[13:36:59.199][INFO]	PT_ActiveStateRecv recv
+[13:36:59.627][INFO]	Send PT_Active(false)
+[13:36:59.628][INFO]	PT_ActiveStateRecv recv
+[13:36:59.867][INFO]	Send PT_Setting
+[13:36:59.869][INFO]	PT_ClubSettingRecv recv
+[13:37:00.731][INFO]	Send PT_Setting
+[13:37:00.732][INFO]	PT_ClubSettingRecv recv
+[13:37:00.779][INFO]	Send PT_TeeSetting
+[13:37:00.780][INFO]	PT_TeeSettingRecv recv
+[13:37:00.875][INFO]	Send PT_Active(true)
+[13:37:00.877][INFO]	PT_ActiveStateRecv recv
+[13:37:01.741][INFO]	PT_ShotData Recv
+[13:37:03.639][ERROR]	RecvThread ClientRecv error
+[13:37:03.641][END]	==============================================
+[13:39:17.288][START]	==============================================
+[13:39:18.294][ERROR]	connect error
+[13:39:18.295][END]	==============================================
+[13:39:27.729][START]	==============================================
+[13:39:27.734][INFO]	RecvThread ON
+[13:39:28.683][INFO]	PT_BallPlace Recv
+[13:39:30.427][INFO]	PT_ShotData Recv
+[13:39:31.915][INFO]	PT_ActiveState Recv
+[13:39:40.083][INFO]	Send PT_TeeSetting
+[13:39:40.085][INFO]	PT_TeeSettingRecv recv
+[13:39:41.772][INFO]	Send PT_Active(true)
+[13:39:41.773][INFO]	PT_ActiveStateRecv recv
+[13:39:44.316][INFO]	Send PT_Active(false)
+[13:39:44.317][INFO]	PT_ActiveStateRecv recv
+[13:43:29.474][START]	==============================================
+[13:43:29.479][INFO]	RecvThread ON
+[13:43:30.202][INFO]	PT_BallPlace Recv
+[13:43:31.115][INFO]	PT_ShotData Recv
+[13:43:31.891][INFO]	PT_ActiveState Recv
+[13:43:34.874][INFO]	Send PT_Setting
+[13:43:34.875][INFO]	PT_ClubSettingRecv recv
+[13:43:35.330][INFO]	Send PT_TeeSetting
+[13:43:35.331][INFO]	PT_TeeSettingRecv recv
+[13:43:35.658][INFO]	Send PT_Active(true)
+[13:43:35.659][INFO]	PT_ActiveStateRecv recv
+[13:43:35.914][INFO]	Send PT_Active(false)
+[13:43:35.915][INFO]	PT_ActiveStateRecv recv
+[13:43:36.641][INFO]	Send PT_TeeSetting
+[13:43:36.643][INFO]	PT_TeeSettingRecv recv
+[13:43:36.722][INFO]	Send PT_Active(true)
+[13:43:36.723][INFO]	PT_ActiveStateRecv recv
+[13:43:36.866][INFO]	Send PT_Setting
+[13:43:36.867][INFO]	PT_ClubSettingRecv recv
+[13:43:37.361][INFO]	Send PT_TeeSetting
+[13:43:37.363][INFO]	PT_TeeSettingRecv recv
+[13:43:37.450][INFO]	Send PT_Active(false)
+[13:43:37.451][INFO]	PT_ActiveStateRecv recv
+[13:43:37.866][INFO]	Send PT_Setting
+[13:43:37.867][INFO]	PT_ClubSettingRecv recv
+[13:43:38.314][INFO]	Send PT_Setting
+[13:43:38.315][INFO]	PT_ClubSettingRecv recv
+[13:43:38.554][INFO]	Send PT_TeeSetting
+[13:43:38.555][INFO]	PT_TeeSettingRecv recv
+[13:43:38.618][INFO]	Send PT_Active(true)
+[13:43:38.619][INFO]	PT_ActiveStateRecv recv
+[13:43:38.962][INFO]	Send PT_Active(false)
+[13:43:38.963][INFO]	PT_ActiveStateRecv recv
+[13:43:41.492][ERROR]	RecvThread ClientRecv error
+[13:43:41.493][END]	==============================================
+[13:47:56.647][START]	==============================================
+[13:47:56.653][INFO]	SendThread ON
+[13:47:57.533][INFO]	PT_BallPlace Recv
+[13:48:10.438][INFO]	Send PT_TeeSetting
+[13:48:10.439][INFO]	PT_TeeSettingRecv recv
+[13:48:14.062][INFO]	PT_ShotData Recv
+[13:50:12.504][ERROR]	RecvThread ClientRecv error
+[13:50:12.505][END]	==============================================
+[13:50:29.506][START]	==============================================
+[13:50:29.512][INFO]	SendThread ON
+[13:50:47.639][INFO]	PT_BallPlace Recv
+[13:50:53.615][INFO]	Send PT_TeeSetting
+[13:51:10.527][INFO]	PT_TeeSettingRecv recv
+[13:51:29.495][WARNING]	ReadAddData unknown type
+[13:56:54.860][START]	==============================================
+[13:56:54.864][INFO]	SendThread ON
+[13:56:56.391][INFO]	PT_BallPlace Recv
+[13:56:57.022][INFO]	PT_ShotData Recv
+[13:56:57.431][INFO]	PT_ActiveState Recv
+[13:56:58.486][INFO]	Send PT_Setting
+[13:56:58.487][INFO]	PT_ClubSettingRecv recv
+[13:56:58.590][INFO]	Send PT_TeeSetting
+[13:56:58.591][INFO]	PT_TeeSettingRecv recv
+[13:56:58.670][INFO]	Send PT_Active(true)
+[13:56:58.672][INFO]	PT_ActiveStateRecv recv
+[13:56:58.902][INFO]	Send PT_Active(false)
+[13:56:58.903][INFO]	PT_ActiveStateRecv recv
+[13:56:59.454][INFO]	Send PT_Active(true)
+[13:56:59.456][INFO]	PT_ActiveStateRecv recv
+[13:56:59.533][INFO]	Send PT_TeeSetting
+[13:56:59.534][INFO]	PT_TeeSettingRecv recv
+[13:56:59.654][INFO]	Send PT_Active(true)
+[13:56:59.656][INFO]	PT_ActiveStateRecv recv
+[13:57:02.199][ERROR]	RecvThread ClientRecv error
+[13:57:02.200][END]	==============================================

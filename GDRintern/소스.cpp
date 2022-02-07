@@ -5,16 +5,24 @@
 #include "conio.h"
 #include "windows.h"
 #include "packet.h"
+#include <ctime>
 #include "CLog.h"
 using namespace std;
 
+void CALLBACK MyTimerProc(HWND hWnd, UINT nMsg, UINT_PTR nIDEvent, DWORD dwTime)
+{
+	cout << "timerproccccc" << endl;
+}
+
 int main()
 {
+	time_t t1;
+	time_t t2;
 	CLog clog;
 	char c;
+	time(&t1);
 	while(true)
 	{
-		ShotData sd{0,1,2,3,4,5,6};
 		if(1 == _kbhit())	//1이 true인데 true라 하면 경고냄
 		{
 			c = _getch();
@@ -29,9 +37,13 @@ int main()
 			}
 			else if (c == 'w')
 			{
-				clog.Log("error", "에러러러러러러러러");
-				cout << "write" << endl;
+				time(&t2);
 
+				if (t2 - t1 >= 2)
+				{
+					cout << "2sec" << endl;
+					time(&t1);
+				}
 			}
 			
 		}
