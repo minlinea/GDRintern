@@ -9,16 +9,12 @@
 #include "CLog.h"
 using namespace std;
 
-void CALLBACK MyTimerProc(HWND hWnd, UINT nMsg, UINT_PTR nIDEvent, DWORD dwTime)
-{
-	cout << "timerproccccc" << endl;
-}
 
 int main()
 {
 	time_t t1;
 	time_t t2;
-	CLog clog;
+	//CLog clog;
 	char c;
 	time(&t1);
 	while(true)
@@ -29,10 +25,10 @@ int main()
 
 			if (c == 'q')
 			{
-				char path[MAX_PATH] = { 0, };		
-				GetModuleFileNameA(NULL, path, MAX_PATH);
-				string str(path);
-				cout << str << endl;
+				//char path[MAX_PATH] = { 0, };		
+				//GetModuleFileNameA(NULL, path, MAX_PATH);
+				//string str(path);
+				//cout << str << endl;
 				//유니코드 사용 시 wchar_t에 GetModuleFileNameW 사용
 			}
 			else if (c == 'w')

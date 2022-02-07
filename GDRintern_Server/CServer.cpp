@@ -33,7 +33,7 @@ void CServer::DataInit()
 	m_sdShotData = ShotData{ 0,1,2,3,4,5,6 };
 }
 
-//통신 관련 초기화
+//통신관련 초기화
 bool CServer::ServerInit()
 {
 	auto& server = CServer::Instance();
@@ -94,8 +94,130 @@ void CServer::ServerAccept()
 	return;
 }
 
-//응답용 recv
-void CServer::ReadRecv(const PACKETTYPE& type)
+//send 스레드
+DWORD WINAPI CServer::SendThread(LPVOID socket)
+{
+	auto& server = CServer::Instance();
+
+	clog.Log("INFO", "SendThread ON");
+	std::cout << "SendThread ON\n";
+
+	time_t waiting = time(NULL);
+	time_t nowtime = waiting;
+
+	
+	while (true)
+	{
+		Packet packet{ PACKETTYPE::PT_ConnectCheck };
+
+		time(&nowtime);
+		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		{
+			if (SOCKET_ERROR == server.InputKey(_getch()))
+			{
+				clog.Log("ERROR", "SendThread InputKey error");
+				std::cout << "SendThread InputKey error\n";
+				break;
+			}
+			else
+			{
+			}
+			waiting = nowtime;
+		}
+		else	//유휴상태 추가
+		{
+			if (nowtime - waiting >= 2)
+			{
+				packet.SetData();
+				server.ServerSend(packet);
+				waiting = nowtime;
+
+				clog.Log("INFO", "PT_ConnectCheck");
+				std::cout << "Send PT_ConnectCheck\n";
+			}
+			else
+			{
+			}
+		}
+
+	}
+	return NULL;
+}
+
+//테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
+int CServer::InputKey(const char input)
+{
+	auto& server = CServer::Instance();
+	Packet pt{};
+	if ('w' == input)		//공위치 전달(enum)
+	{
+		pt.SetData(PACKETTYPE::PT_BallPlace, server.GetBallPlace());
+
+		clog.Log("INFO", "PT_BallPlace send");
+		std::cout << "PT_BallPlace send\n";
+	}
+	else if ('e' == input)		//샷정보 전달
+	{
+		pt.SetData(PACKETTYPE::PT_ShotData, server.GetShotData());
+
+		clog.Log("INFO", "PT_ShotData send");
+		std::cout << "PT_ShotData send\n";
+	}
+	else if ('r' == input)		//샷 이후 activestate false 전달
+	{
+		server.SetActiveState(false);
+
+		pt.SetData(PACKETTYPE::PT_ActiveState, server.GetActiveState());
+
+		clog.Log("INFO", "PT_ActiveState(false) send");
+		std::cout << "PT_ActiveState(false) send\n";
+	}
+	else
+	{
+	}
+	return server.ServerSend(pt);
+}
+
+//recv 스레드
+DWORD WINAPI CServer::RecvThread(LPVOID socket)
+{
+	auto& server = CServer::Instance();
+
+	clog.Log("INFO", "RecvThread ON");
+	std::cout << "RecvThread ON\n";
+
+	while (true)
+	{
+		Packet packet{};
+
+		if (SOCKET_ERROR == server.ServerRecv(&packet, sizeof(packet)))
+		{
+			clog.Log("ERROR", "ServerRecv error");
+			std::cout << "ServerRecv error\n";
+			break;
+		}
+		else    //에러가 아니라면 데이터 읽기
+		{
+			if (PACKETHEADER == packet.GetSize())
+			{
+				server.ReadHeader(packet.GetType());
+			}
+			else
+			{
+				if (SOCKET_ERROR == server.ReadAddData(packet))
+				{
+					clog.Log("ERROR", "ServerRecv ReadAddData error");
+					std::cout << "ServerRecv ReadAddData error\n";
+					break;
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+//추가 데이터 없이 header만 받는 경우
+void CServer::ReadHeader(const PACKETTYPE& type)
 {
 	if (PACKETTYPE::PT_BallPlaceRecv == type)
 	{
@@ -119,8 +241,8 @@ void CServer::ReadRecv(const PACKETTYPE& type)
 	}
 }
 
-//추가 데이터 읽기(club, tee, activestate)
-int CServer::ReadData(Packet& packet)
+//추가 데이터 recv 시
+int CServer::ReadAddData(Packet& packet)
 {
 	auto& server = CServer::Instance();
 	Packet recvpt{};
@@ -164,121 +286,6 @@ int CServer::ReadData(Packet& packet)
 
 	recvpt.SetData();
 	return server.ServerSend(recvpt);
-}
-
-//테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
-int CServer::InputKey(const char input)
-{
-	auto& server = CServer::Instance();
-	Packet pt{};
-	if ('w' == input)		//공위치 전달(enum)
-	{
-		pt.SetData(PACKETTYPE::PT_BallPlace, server.GetBallPlace());
-
-		clog.Log("INFO", "PT_BallPlace send");
-		std::cout << "PT_BallPlace send\n";
-	}
-	else if ('e' == input)		//샷정보 전달
-	{
-		pt.SetData(PACKETTYPE::PT_ShotData, server.GetShotData());
-
-		clog.Log("INFO", "PT_ShotData send");
-		std::cout << "PT_ShotData send\n";
-	}
-	else if ('r' == input)		//샷 이후 activestate false 전달
-	{
-		server.SetActiveState(false);
-
-		pt.SetData(PACKETTYPE::PT_ActiveState, server.GetActiveState());
-
-		clog.Log("INFO", "PT_ActiveState(false) send");
-		std::cout << "PT_ActiveState(false) send\n";
-	}
-	else
-	{
-	}
-	return server.ServerSend(pt);
-}
-
-//
-DWORD WINAPI CServer::SendThread(LPVOID socket)
-{
-	auto& server = CServer::Instance();
-
-	clog.Log("INFO", "SendThread ON");
-	std::cout << "SendThread ON\n";
-
-	time_t waiting = time(NULL);
-	time_t nowtime = waiting;
-
-	while (true)
-	{
-		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
-		{
-			if (SOCKET_ERROR == server.InputKey(_getch()))
-			{
-				clog.Log("ERROR", "SendThread InputKey error");
-				std::cout << "SendThread InputKey error\n";
-				//err_quit("send()");
-				break;
-			}
-		}
-		else	//유휴상태 추가
-		{
-			/*time(&nowtime);
-			if (nowtime - waiting >= 2)
-			{
-				server.SendRecv(PACKETTYPE::PT_Connect);
-				waiting = nowtime;
-			}
-			else
-			{
-
-			}*/
-
-		}
-
-	}
-	return NULL;
-}
-
-//
-DWORD WINAPI CServer::RecvThread(LPVOID socket)
-{
-	auto& server = CServer::Instance();
-
-	clog.Log("INFO", "RecvThread ON");
-	std::cout << "RecvThread ON\n";
-
-	Packet pt{};
-	while (true)
-	{
-		ZeroMemory(&pt, sizeof(Packet));
-		if (SOCKET_ERROR == server.ServerRecv(&pt, sizeof(pt)))
-		{
-			clog.Log("ERROR", "Server_Recv error");
-			std::cout << "Server_Recv error\n";
-			break;
-		}
-		else    //에러가 아니라면 데이터 읽기
-		{
-			if (sizeof(Packet) == pt.GetSize())
-			{
-				server.ReadRecv(pt.GetType());
-			}
-			else
-			{
-				if (SOCKET_ERROR == server.ReadData(pt))
-				{
-					clog.Log("ERROR", "Server_Recv ReadData error");
-					std::cout << "Server_Recv ReadData error\n";
-					break;
-				}
-				pt.DeleteData();
-			}
-		}
-	}
-	return NULL;
 }
 
 //send

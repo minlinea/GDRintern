@@ -8,6 +8,7 @@
 
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
+#define PACKETHEADER 8
 #define datalog 0
 
 
@@ -91,7 +92,7 @@ public:
 	Packet()
 	{
 		this->type = PACKETTYPE::PT_None;
-		this->size = sizeof(Packet);
+		this->size = PACKETHEADER;
 		this->data = nullptr;
 	}
 
@@ -99,7 +100,7 @@ public:
 	Packet(const PACKETTYPE& type)
 	{
 		this->type = type;
-		this->size = sizeof(Packet);
+		this->size = PACKETHEADER;
 		this->data = nullptr;
 	}
 
@@ -138,7 +139,7 @@ public:
 	void SetData()
 	{
 		this->data = (char*)malloc(this->size);
-		memcpy_s(this->data, sizeof(Packet), this, sizeof(Packet));
+		memcpy_s(this->data, PACKETHEADER, this, PACKETHEADER);
 	}
 
 	//AddData도 전달 시 생성하는 data
