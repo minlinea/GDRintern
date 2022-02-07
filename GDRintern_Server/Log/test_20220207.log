@@ -3481,3 +3481,40 @@
 [16:30:21.594][INFO]	PT_ActiveStateRecv recv
 [16:30:22.513][ERROR]	ServerRecv error
 [16:30:23.000][INFO]	PT_ConnectCheck
+[16:38:29.887][START]	==============================================
+[16:38:36.645][LOGIN]	127.0.0.1
+[16:38:36.645][INFO]	RecvThread ON
+[16:38:36.646][INFO]	PT_ConnectCheck
+[16:38:37.498][INFO]	PT_BallPlace recv
+[16:38:38.858][INFO]	PT_BallPlace recv
+[16:38:39.409][INFO]	PT_TeeSetting recv
+[16:38:40.362][INFO]	PT_BallPlace recv
+[16:38:41.922][INFO]	PT_ClubSetting recv
+[16:38:43.000][INFO]	PT_ConnectCheck
+[16:38:43.289][INFO]	PT_TeeSetting recv
+[16:38:43.842][INFO]	PT_BallPlace recv
+[16:38:44.498][INFO]	PT_ClubSetting recv
+[16:38:45.137][INFO]	PT_TeeSetting recv
+[16:38:45.409][INFO]	PT_BallPlace recv
+[16:38:45.698][INFO]	PT_BallPlace recv
+[16:38:47.000][INFO]	PT_ConnectCheck
+[16:38:47.321][INFO]	PT_TeeSetting recv
+[16:38:48.306][INFO]	PT_ClubSetting recv
+[16:38:49.426][INFO]	PT_BallPlace recv
+[16:38:50.114][INFO]	PT_ClubSetting recv
+[16:38:50.673][INFO]	PT_BallPlace recv
+[16:38:51.018][INFO]	PT_TeeSetting recv
+[16:38:51.322][INFO]	PT_BallPlace recv
+[16:38:51.841][INFO]	PT_ClubSetting recv
+[16:38:52.522][INFO]	PT_BallPlace recv
+[16:38:53.922][INFO]	PT_TeeSetting recv
+[16:38:54.530][INFO]	PT_BallPlace recv
+[16:38:55.458][INFO]	PT_ClubSetting recv
+[16:38:56.650][INFO]	PT_TeeSetting recv
+[16:38:57.505][INFO]	PT_BallPlace recv
+[16:38:58.002][INFO]	PT_BallPlace recv
+[16:39:00.000][INFO]	PT_ConnectCheck
+[16:39:00.370][INFO]	PT_BallPlace recv
+[16:39:00.786][INFO]	PT_BallPlace recv
+[16:39:02.000][INFO]	PT_ConnectCheck
+[16:39:02.139][ERROR]	ServerRecv error

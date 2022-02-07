@@ -266,22 +266,22 @@ int CServer::ReadAddData(Packet& packet)
 		if (PACKETTYPE::PT_ClubSetting == packet.GetType())
 		{
 			clog.Log("INFO", "PT_ClubSetting recv");
-			std::cout << "PT_ClubSetting recv\n";
 			server.SetClubSetting(packet.GetData());
+			std::cout << "PT_ClubSetting recv // " << server.GetClubSetting() << "\n";
 			recvpt.SetType(PACKETTYPE::PT_ClubSettingRecv);
 		}
 		else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
 		{
 			clog.Log("INFO", "PT_TeeSetting recv");
-			std::cout << "PT_TeeSetting recv\n";
 			server.SetTeeSetting(packet.GetData());
+			std::cout << "PT_TeeSetting recv // " << server.GetTeeSetting() << "\n";
 			recvpt.SetType(PACKETTYPE::PT_TeeSettingRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
 			clog.Log("INFO", "PT_BallPlace recv");
-			std::cout << "PT_BallPlace Recv\n";
 			server.SetActiveState(packet.GetData());
+			std::cout << "PT_BallPlace Recv // " << server.GetBallPlace() << "\n";
 			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
