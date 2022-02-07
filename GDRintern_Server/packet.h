@@ -3,10 +3,16 @@
 
 #include <iostream>
 
+//////////////////////////////////////////////////////////////////////////////////
+// define
+
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
-
 #define datalog 0
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// enum
 
 enum class TEESETTING {
 	T30,
@@ -52,6 +58,8 @@ enum class PACKETTYPE {
 };
 
 
+//////////////////////////////////////////////////////////////////////////////////
+// struct
 
 typedef struct _ShotData {
 	int phase;
@@ -79,6 +87,7 @@ size : 해당 타입 패킷의 사이즈
 class Packet
 {
 public:
+	//일반 생성자
 	Packet()
 	{
 		this->type = PACKETTYPE::PT_None;
@@ -86,6 +95,7 @@ public:
 		this->data = nullptr;
 	}
 
+	//type이 지정된 생성자(send응답(~~recv 패킷 사용))
 	Packet(const PACKETTYPE& type)
 	{
 		this->type = type;
@@ -93,6 +103,7 @@ public:
 		this->data = nullptr;
 	}
 
+	//type, data 생성자(data 전달 시 사용)
 	template <class T>
 	Packet(const PACKETTYPE& type, const T& data)
 	{
@@ -103,29 +114,28 @@ public:
 		this->SetSendData(data);
 	}
 
-	~Packet()
-	{
-		//if (nullptr != this->data)
-		//{
-		//	free(this->data);
-		//}
-	}
+	~Packet() = default;
 	
+	//type 변경 시
 	void SetType(const PACKETTYPE& type)
 	{
 		this->type = type;
 	}
+
+	//size 변경 시(data 전달 시 사용) [패킷 + data크기]
 	void SetSize(const unsigned int& size)
 	{
 		this->size = size + sizeof(Packet);
 	}
 
+	//패킷만 전달 시 생성하는 data
 	void SetRecvData()
 	{
 		this->data = (char*)malloc(this->size);
 		memcpy_s(this->data, sizeof(Packet), this, sizeof(Packet));
 	}
 
+	//data도 전달 시 생성하는 data
 	template <class T>
 	void SetSendData(const PACKETTYPE type, const T& data)
 	{
@@ -154,11 +164,7 @@ public:
 		return this->data;
 	}
 
-	void MakeDataMemory()
-	{
-		this->data = (char*)malloc(this->size);
-	}
-
+	//data 부분 free
 	void DeleteData()
 	{
 		free(this->data);

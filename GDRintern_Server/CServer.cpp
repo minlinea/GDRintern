@@ -1,6 +1,7 @@
 #include "CServer.h"
 #include "conio.h"
 
+//로그
 CLog clog;
 
 CServer::CServer()
@@ -18,6 +19,7 @@ CServer::~CServer()
 	WSACleanup();
 }
 
+//데이터 초기화
 void CServer::DataInit()
 {
 	m_eTee = TEESETTING::T40;
@@ -31,6 +33,7 @@ void CServer::DataInit()
 	m_sdShotData = ShotData{ 0,1,2,3,4,5,6 };
 }
 
+//통신 관련 초기화
 bool CServer::ServerInit()
 {
 	auto& server = CServer::Instance();
@@ -66,6 +69,32 @@ bool CServer::ServerInit()
 	return true;
 }
 
+//서버 시작
+void CServer::ServerAccept()
+{
+	auto& server = CServer::Instance();
+	while (true)
+	{
+		SOCKADDR_IN tCIntAddr = {};
+		int iCIntSize = sizeof(tCIntAddr);
+		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
+
+		clog.Log("LOGIN", inet_ntoa(tCIntAddr.sin_addr));
+		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
+
+		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
+		server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.RecvThread, (LPVOID)server.m_hClient, 0, &dwRecvThreadID);
+		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
+
+		WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
+		clog.Log("LOGOUT", inet_ntoa(tCIntAddr.sin_addr));
+		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
+	}
+	closesocket(server.m_hClient);
+	return;
+}
+
+//응답용 recv
 void CServer::ReadRecv(const PACKETTYPE& type)
 {
 	if (PACKETTYPE::PT_BallPlaceRecv == type)
@@ -90,6 +119,7 @@ void CServer::ReadRecv(const PACKETTYPE& type)
 	}
 }
 
+//응답용 send
 int CServer::SendRecv(const PACKETTYPE& recvtype)
 {
 	auto& server = CServer::Instance();
@@ -99,6 +129,7 @@ int CServer::SendRecv(const PACKETTYPE& recvtype)
 	return server.ServerSend(sendrecvpt);
 }
 
+//추가 데이터 읽기(club, tee, activestate)
 int CServer::ReadData(Packet& packet)
 {
 	auto& server = CServer::Instance();
@@ -145,6 +176,7 @@ int CServer::ReadData(Packet& packet)
 	return server.SendRecv(recvtype);
 }
 
+//테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
 int CServer::InputKey(const char input)
 {
 	auto& server = CServer::Instance();
@@ -178,6 +210,7 @@ int CServer::InputKey(const char input)
 	return server.ServerSend(pt);
 }
 
+//
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
@@ -206,6 +239,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	return NULL;
 }
 
+//
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
 	auto& server = CServer::Instance();
@@ -220,7 +254,6 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 		{
 			clog.Log("ERROR", "Server_Recv error");
 			std::cout << "Server_Recv error\n";
-			//err_quit("recv()");
 			break;
 		}
 		else    //에러가 아니라면 데이터 읽기
@@ -243,35 +276,14 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 	return NULL;
 }
 
-void CServer::ServerAccept()
-{
-	auto& server = CServer::Instance();
-	while (true)
-	{
-		SOCKADDR_IN tCIntAddr = {};
-		int iCIntSize = sizeof(tCIntAddr);
-		server.m_hClient = accept(server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
-
-		clog.Log("LOGIN", inet_ntoa(tCIntAddr.sin_addr));
-		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
-
-		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
-		server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.RecvThread, (LPVOID)server.m_hClient, 0, &dwRecvThreadID);
-		server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)server.SendThread, (LPVOID)server.m_hClient, 0, &dwSendThreadID);
-
-		WaitForSingleObject(server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
-		clog.Log("LOGOUT", inet_ntoa(tCIntAddr.sin_addr));
-		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
-	}
-	closesocket(server.m_hClient);
-	return;
-}
-
+//send
 int CServer::ServerSend(Packet& packet)
 {
 	auto& server = CServer::Instance();
 	return send(server.m_hClient, (const char*)packet.GetData(), packet.GetSize(), 0);
 }
+
+//recv
 int CServer::ServerRecv(void* buf, const int len)
 {
 	auto& server = CServer::Instance();

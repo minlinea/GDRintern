@@ -1,0 +1,7 @@
+[10:35:44.818][START]	==============================================
+[10:35:44.824][INFO]	SendThread ON
+[10:35:46.229][INFO]	PT_ShotData Recv
+[10:35:47.501][INFO]	PT_BallPlace Recv
+[10:35:47.925][INFO]	PT_ActiveState Recv
+[10:35:49.434][ERROR]	RecvThread ClientRecv error
+[10:35:49.435][END]	==============================================

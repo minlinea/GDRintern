@@ -6,16 +6,26 @@
 
 #include "packet.h"
 
+//////////////////////////////////////////////////////////////////////////////////
+// #define
 #define datalog 0
 
 
-
+//////////////////////////////////////////////////////////////////////////////////
+//CServer
+/**
+* @brief CServer 클래스
+* @details 싱글톤 패턴을 적용하여 하나의 인스턴스만 생성하여 사용 하게함
+*/
 class CServer
 {
 
-
 public:
 
+	/*
+	* @brief 클래스 인스턴스 얻기
+	* @return 클래스 인스턴스
+	*/
 	static CServer& Instance()
 	{
 		static CServer Instance;
@@ -145,17 +155,6 @@ public:
 
 private:
 
-	WSADATA m_wsaData;
-	SOCKET m_hListenSock;
-	SOCKADDR_IN m_tListenAddr;
-
-	std::mutex m_hMutex;
-
-	HANDLE m_hSend;
-	HANDLE m_hRecv;
-	HANDLE m_hListen;
-	SOCKET m_hClient;
-	
 	//Tee, Club 데이터 관련
 	TEESETTING m_eTee;
 	CLUBSETTING m_eClub;
@@ -168,5 +167,16 @@ private:
 
 	//ShotData
 	ShotData m_sdShotData;
+
+	WSADATA m_wsaData;
+	SOCKET m_hListenSock;
+	SOCKADDR_IN m_tListenAddr;
+
+	std::mutex m_hMutex;
+
+	HANDLE m_hSend;
+	HANDLE m_hRecv;
+	HANDLE m_hListen;
+	SOCKET m_hClient;
 };
 

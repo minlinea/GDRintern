@@ -1,0 +1,9 @@
+[10:35:40.524][START]	==============================================
+[10:35:44.823][LOGIN]	127.0.0.1
+[10:35:44.825][INFO]	RecvThread ON
+[10:35:46.228][INFO]	PT_ShotData send
+[10:35:46.229][INFO]	PT_ShotDataRecv recv
+[10:35:47.500][INFO]	PT_BallPlace send
+[10:35:47.504][INFO]	PT_BallPlaceRecv recv
+[10:35:47.924][INFO]	PT_ActiveState(false) send
+[10:35:47.926][INFO]	PT_ActiveStateRecv recv
