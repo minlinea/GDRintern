@@ -23,7 +23,6 @@ enum class TEESETTING {
 };
 
 inline std::ostream& operator << (std::ostream& os, const TEESETTING& t);
-
 inline std::ostream& operator << (std::ostream& os, const TEESETTING& t)
 {
 	if (TEESETTING::T30 == t)
@@ -38,6 +37,21 @@ inline std::ostream& operator << (std::ostream& os, const TEESETTING& t)
 		std::cout << "T50";
 	return os;
 }
+inline const char* to_string(const TEESETTING& t);
+inline const char* to_string(const TEESETTING& t)
+{
+	if (TEESETTING::T30 == t)
+		return "T30";
+	else if (TEESETTING::T35 == t)
+		return "T35";
+	else if (TEESETTING::T40 == t)
+		return "T40";
+	else if (TEESETTING::T45 == t)
+		return "T45";
+	else if (TEESETTING::T50 == t)
+		return "T50";
+	return "NONE";
+}
 
 enum class CLUBSETTING {
 	DRIVER,
@@ -46,7 +60,6 @@ enum class CLUBSETTING {
 };
 
 inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t);
-
 inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t)
 {
 	if (CLUBSETTING::DRIVER == t)
@@ -57,6 +70,17 @@ inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t)
 		std::cout << "WOOD";
 	return os;
 }
+inline const char* to_string(const CLUBSETTING& t);
+inline const char* to_string(const CLUBSETTING& t)
+{
+	if (CLUBSETTING::DRIVER == t)
+		return "DRIVER";
+	else if (CLUBSETTING::IRON == t)
+		return "IRON";
+	else if (CLUBSETTING::WOOD == t)
+		return "WOOD";
+	return "NONE";
+}
 
 enum class BALLPLACE
 {
@@ -66,7 +90,6 @@ enum class BALLPLACE
 };
 
 inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t);
-
 inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t)
 {
 	if (BALLPLACE::PAIRWAY == t)
@@ -77,6 +100,19 @@ inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t)
 		std::cout << "OB";
 	return os;
 }
+
+inline const char* to_string(const BALLPLACE& t);
+inline const char* to_string(const BALLPLACE& t)
+{
+	if (BALLPLACE::PAIRWAY == t)
+		return "PAIRWAY";
+	else if (BALLPLACE::TEE == t)
+		return "TEE";
+	else if (BALLPLACE::OB == t)
+		return "OB";
+	return "NONE";
+}
+
 
 enum class PACKETTYPE {
 	PT_Connect,
@@ -115,13 +151,23 @@ typedef struct _ShotData {
 }ShotData;
 
 inline std::ostream& operator << (std::ostream& os, const ShotData& t);
-
 inline std::ostream& operator << (std::ostream& os, const ShotData& t)
 {
 	std::cout << "phase : " << t.phase << "\nballspeed : " << t.ballspeed
 		<< "  launchangle : " << t.launchangle << "  launchdirection : " << t.launchdirection
 		<< "\nheadspeed : " << t.headspeed << "  backspin : " << t.backspin << "  sidespin : " << t.sidespin;
 	return os;
+}
+
+inline const char* to_string(const ShotData& t);
+inline const char* to_string(const ShotData& t)
+{
+	std::string str;
+	str = "phase : " + std::to_string(t.phase) + "\nballspeed : " + std::to_string(t.ballspeed)
+		+ "  launchangle : " + std::to_string(t.launchangle) + "  launchdirection : " + std::to_string(t.launchdirection)
+		+ "\nheadspeed : " + std::to_string(t.headspeed) + "  backspin : " + std::to_string(t.backspin)
+		+ "  sidespin : " + std::to_string(t.sidespin);
+	return str.c_str();
 }
 
 /*
