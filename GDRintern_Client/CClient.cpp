@@ -165,7 +165,7 @@ int CClient::SendRecv(const PACKETTYPE& sendtype)
 	return client.ClientSend(sendpt);
 }
 
-int CClient::ReadData(Packet& packet)
+int CClient::ReadAddData(Packet& packet)
 {
 	auto& client = CClient::Instance();
 	Packet recvpt{};
@@ -238,7 +238,7 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 			}
 			else
 			{
-				if (SOCKET_ERROR == client.ReadData(pt))
+				if (SOCKET_ERROR == client.ReadAddData(pt))
 				{
 					clog.Log("ERROR", "ReadAddData error");
 					std::cout << "ReadAddData error\n";
