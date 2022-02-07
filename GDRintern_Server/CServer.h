@@ -40,15 +40,20 @@ public:
 	bool ServerInit();
 	void ServerAccept();
 
+	//recv 후 패킷 type에 따른 정보 파악
+	void ReadHeader(const PACKETTYPE& type);
+
+	//recv 후 추가 data recv
+	int ReadAddData(Packet& type);
+
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신(테스트 코드)
 	//w(공위치), e(샷정보), r(ballstate false)
 	int InputKey(const char input);
 
-	//recv 후 패킷 type에 따른 정보 파악
-	void ReadHeader(const PACKETTYPE& type);
-	int ReadAddData(Packet& type);
-
+	//고정 + 가변 데이터 send
 	int ServerSend(Packet& packet);
+	
+	//서버로부터 오는 정보 recv
 	int ServerRecv(void* buf, const int len);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
@@ -149,6 +154,7 @@ private:
 
 	std::mutex m_hMutex;
 
+	//유휴상태 관련
 	time_t m_tNowTime;
 	time_t m_tBeforeTime;
 	int m_iWaitingCount;

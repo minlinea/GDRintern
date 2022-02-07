@@ -94,12 +94,11 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 
 	while (true)
 	{
-		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		if (1 == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
 		{
 			if (SOCKET_ERROR == client.InputKey(_getch()))
 			{
 				clog.Log("ERROR", "SendThread InputKey error");
-
 				std::cout << "SendThread InputKey error\n";
 				break;
 			}
@@ -153,6 +152,7 @@ int CClient::InputKey(const char input)
 	}
 	else
 	{
+		pt.SetData();
 	}
 
 	return client.ClientSend(pt);
@@ -186,8 +186,8 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == client.ReadAddData(packet))
 				{
-					clog.Log("ERROR", "ReadAddData error");
-					std::cout << "ReadAddData error\n";
+					clog.Log("ERROR", "RecvThread ReadAddData error");
+					std::cout << "RecvThread ReadAddData error\n";
 					break;
 				}
 				else
@@ -204,28 +204,28 @@ void CClient::ReadHeader(const PACKETTYPE& type)
 {
 	if (PACKETTYPE::PT_ClubSettingRecv == type)
 	{
-		clog.Log("INFO", "PT_ClubSettingRecv recv");
-		std::cout << "PT_ClubSettingRecv recv\n";
+		clog.Log("INFO", "Recv PT_ClubSettingRecv");
+		std::cout << "Recv PT_ClubSettingRecv\n";
 	}
 	else if (PACKETTYPE::PT_TeeSettingRecv == type)
 	{
-		clog.Log("INFO", "PT_TeeSettingRecv recv");
-		std::cout << "PT_TeeSettingRecv recv\n";
+		clog.Log("INFO", "Recv PT_TeeSettingRecv");
+		std::cout << "Recv PT_TeeSettingRecv\n";
 	}
 	else if (PACKETTYPE::PT_ActiveStateRecv == type)
 	{
-		clog.Log("INFO", "PT_ActiveStateRecv recv");
-		std::cout << "PT_ActiveStateRecv recv\n";
+		clog.Log("INFO", "Recv PT_ActiveStateRecv");
+		std::cout << "Recv PT_ActiveStateRecv\n";
 	}
 	else if (PACKETTYPE::PT_ConnectCheck == type)
 	{
-		clog.Log("INFO", "PT_ConnectCheck recv");
-		std::cout << "PT_ConnectCheck recv\n";
+		clog.Log("INFO", "Recv PT_ConnectCheck");
+		std::cout << "Recv PT_ConnectCheck\n";
 	}
 	else
 	{
-		clog.Log("WARNING", "ReadRecv unknown type");
-		std::cout << "ReadRecv unknown type\n";
+		clog.Log("WARNING", "Recv ReadHeader unknown type");
+		std::cout << "Recv ReadHeader unknown type\n";
 	}
 
 }
@@ -239,36 +239,36 @@ int CClient::ReadAddData(Packet& packet)
 	packet.SetData();
 	if (SOCKET_ERROR == client.ClientRecv(packet.GetData(), packet.GetSize()))
 	{
-		clog.Log("ERROR", "ReadAddData ClientRecv");
-		std::cout << "ReadAddData ClientRecv\n";
+		clog.Log("ERROR", "ReadAddData SOCKET_ERROR");
+		std::cout << "ReadAddData SOCKET_ERROR\n";
 	}
 	else
 	{
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
-			clog.Log("INFO", "PT_BallPlace Recv");
+			clog.Log("INFO", "Recv PT_BallPlace");
 			client.SetBallPlace(packet.GetData());
-			std::cout << "PT_BallPlace Recv // " << client.GetBallPlace() << "\n";
+			std::cout << "Recv PT_BallPlace // " << client.GetBallPlace() << "\n";
 			recvpt.SetType(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
-			clog.Log("INFO", "PT_ShotData Recv");
+			clog.Log("INFO", "Recv PT_ShotData");
 			client.SetShotData(packet.GetData());
-			std::cout << "PT_ShotData Recv // " << client.GetShotData() << "\n";
+			std::cout << "Recv PT_ShotData // " << client.GetShotData() << "\n";
 			recvpt.SetType(PACKETTYPE::PT_ShotDataRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
-			clog.Log("INFO", "PT_ActiveState Recv");
+			clog.Log("INFO", "Recv PT_ActiveState");
 			client.SetActiveState(packet.GetData());
-			std::cout << "PT_ActiveState Recv // " << client.GetActiveState() << "\n";
+			std::cout << "Recv PT_ActiveState  // " << client.GetActiveState() << "\n";
 			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{
-			clog.Log("WARNING", "ReadAddData unknown type");
-			std::cout << "ReadAddData unknown type\n";
+			clog.Log("WARNING", "Recv ReadAddData unknown type");
+			std::cout << "Recv ReadAddData unknown type\n";
 		}
 	}
 
