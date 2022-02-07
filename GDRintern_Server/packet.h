@@ -168,16 +168,6 @@ public:
 		return this->data;
 	}
 
-	//data ºÎºÐ free
-	void DeleteData()
-	{
-		if (this->data != nullptr)
-		{
-			free(this->data);
-		}
-		this->data = nullptr;
-	}
-
 private:
 	PACKETTYPE type;
 	unsigned int size;
