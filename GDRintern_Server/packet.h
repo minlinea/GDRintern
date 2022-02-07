@@ -146,7 +146,11 @@ public:
 	template <class T>
 	void SetData(const PACKETTYPE type, const T& data)
 	{
-		this->DeleteData();
+		if (this->data != nullptr)
+		{
+			free(this->data);
+		}
+		this->data = nullptr;
 		this->SetType(type);
 		this->SetSize(sizeof(T));
 

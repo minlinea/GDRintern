@@ -31,6 +31,9 @@ void CServer::DataInit()
 	m_bActiveState = false;
 
 	m_sdShotData = ShotData{ 0,1,2,3,4,5,6 };
+
+	time(&m_tNowTime);
+	m_tBeforeTime = m_tNowTime;
 }
 
 //통신관련 초기화
@@ -102,15 +105,11 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	clog.Log("INFO", "SendThread ON");
 	std::cout << "SendThread ON\n";
 
-	time_t waiting = time(NULL);
-	time_t nowtime = waiting;
-
-	
 	while (true)
 	{
 		Packet packet{ PACKETTYPE::PT_ConnectCheck };
 
-		time(&nowtime);
+		time(&server.m_tNowTime);
 		if (true == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
 		{
 			if (SOCKET_ERROR == server.InputKey(_getch()))
@@ -122,15 +121,15 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 			else
 			{
 			}
-			waiting = nowtime;
+			server.m_tBeforeTime = server.m_tNowTime;
 		}
 		else	//유휴상태 추가
 		{
-			if (nowtime - waiting >= 2)
+			if (2 <= server.m_tNowTime - server.m_tBeforeTime)
 			{
 				packet.SetData();
 				server.ServerSend(packet);
-				waiting = nowtime;
+				server.m_tBeforeTime = server.m_tNowTime;
 
 				clog.Log("INFO", "PT_ConnectCheck");
 				std::cout << "Send PT_ConnectCheck\n";
@@ -211,7 +210,9 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 					break;
 				}
 			}
+			server.m_tBeforeTime = server.m_tNowTime;
 		}
+
 	}
 	return NULL;
 }

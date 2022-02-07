@@ -331,3 +331,35 @@
 [14:57:14.000][INFO]	PT_ConnectCheck recv
 [14:57:14.864][ERROR]	RecvThread ClientRecv error
 [14:57:14.866][END]	==============================================
+[15:07:38.644][START]	==============================================
+[15:07:38.649][INFO]	SendThread ON
+[15:07:38.650][INFO]	PT_ConnectCheck recv
+[15:07:40.000][INFO]	PT_ConnectCheck recv
+[15:07:42.000][INFO]	PT_ConnectCheck recv
+[15:07:44.000][INFO]	PT_ConnectCheck recv
+[15:07:44.478][INFO]	PT_ShotData Recv
+[15:07:45.606][INFO]	PT_BallPlace Recv
+[15:07:46.734][INFO]	PT_ShotData Recv
+[15:07:47.629][INFO]	Send PT_Active(true)
+[15:07:47.630][INFO]	PT_ActiveStateRecv recv
+[15:07:49.000][INFO]	PT_ConnectCheck recv
+[15:07:49.549][INFO]	Send PT_TeeSetting
+[15:07:49.550][INFO]	PT_TeeSettingRecv recv
+[15:07:51.000][INFO]	PT_ConnectCheck recv
+[15:07:51.109][INFO]	Send PT_Active(true)
+[15:07:51.111][INFO]	PT_ActiveStateRecv recv
+[15:07:52.102][INFO]	Send PT_Active(false)
+[15:07:52.103][INFO]	PT_ActiveStateRecv recv
+[15:07:53.077][INFO]	Send PT_Setting
+[15:07:53.078][INFO]	PT_ClubSettingRecv recv
+[15:07:53.910][INFO]	Send PT_TeeSetting
+[15:07:53.910][INFO]	PT_TeeSettingRecv recv
+[15:07:54.990][INFO]	Send PT_Active(true)
+[15:07:54.991][INFO]	PT_ActiveStateRecv recv
+[15:07:56.000][INFO]	PT_ConnectCheck recv
+[15:07:56.134][INFO]	Send PT_Active(false)
+[15:07:56.135][INFO]	PT_ActiveStateRecv recv
+[15:07:57.454][INFO]	Send PT_Active(true)
+[15:07:57.456][INFO]	PT_ActiveStateRecv recv
+[15:07:58.390][INFO]	Send PT_TeeSetting
+[15:07:58.391][INFO]	PT_TeeSettingRecv recv

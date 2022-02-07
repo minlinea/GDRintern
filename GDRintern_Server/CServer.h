@@ -173,6 +173,9 @@ private:
 
 	std::mutex m_hMutex;
 
+	time_t m_tNowTime;
+	time_t m_tBeforeTime;
+
 	HANDLE m_hSend;
 	HANDLE m_hRecv;
 	HANDLE m_hListen;

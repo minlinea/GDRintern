@@ -3212,3 +3212,31 @@
 [14:57:12.341][INFO]	PT_TeeSetting recv
 [14:57:12.437][INFO]	PT_BallPlace recv
 [14:57:14.000][INFO]	PT_ConnectCheck
+[15:07:32.581][START]	==============================================
+[15:07:38.648][LOGIN]	127.0.0.1
+[15:07:38.650][INFO]	RecvThread ON
+[15:07:38.650][INFO]	PT_ConnectCheck
+[15:07:40.000][INFO]	PT_ConnectCheck
+[15:07:42.000][INFO]	PT_ConnectCheck
+[15:07:44.000][INFO]	PT_ConnectCheck
+[15:07:44.478][INFO]	PT_ShotData send
+[15:07:44.479][INFO]	PT_ShotDataRecv recv
+[15:07:45.605][INFO]	PT_BallPlace send
+[15:07:45.607][INFO]	PT_BallPlaceRecv recv
+[15:07:46.733][INFO]	PT_ShotData send
+[15:07:46.734][INFO]	PT_ShotDataRecv recv
+[15:07:47.630][INFO]	PT_BallPlace recv
+[15:07:49.000][INFO]	PT_ConnectCheck
+[15:07:49.549][INFO]	PT_TeeSetting recv
+[15:07:51.000][INFO]	PT_ConnectCheck
+[15:07:51.110][INFO]	PT_BallPlace recv
+[15:07:52.102][INFO]	PT_BallPlace recv
+[15:07:53.078][INFO]	PT_ClubSetting recv
+[15:07:53.910][INFO]	PT_TeeSetting recv
+[15:07:54.990][INFO]	PT_BallPlace recv
+[15:07:56.000][INFO]	PT_ConnectCheck
+[15:07:56.134][INFO]	PT_BallPlace recv
+[15:07:57.455][INFO]	PT_BallPlace recv
+[15:07:58.390][INFO]	PT_TeeSetting recv
+[15:07:59.913][ERROR]	ServerRecv error
+[15:08:00.000][INFO]	PT_ConnectCheck
