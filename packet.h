@@ -8,7 +8,7 @@
 
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
-#define PACKETHEADER 8
+#define PACKETHEADER sizeof(Packet)
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -172,14 +172,14 @@ public:
 	Packet()
 	{
 		this->type = PACKETTYPE::PT_None;
-		this->size = sizeof(Packet);
+		this->size = PACKETHEADER;
 	}
 
 	//type이 지정된 생성자(send응답(~~recv 패킷 사용))
 	Packet(const PACKETTYPE& type)
 	{
 		this->type = type;
-		this->size = sizeof(Packet);
+		this->size = PACKETHEADER;
 	}
 
 	virtual ~Packet()

@@ -131,14 +131,14 @@ int CClient::InputKey(const char input)
 
 	if ('q' == input)		//Club 技泼 傈价
 	{
-		client.MakeSendData<Packet_ClubSetting>((pt), senddata, client.GetClubSetting());
+		client.MakeSendData<Packet_ClubSetting>(pt, senddata, client.GetClubSetting());
 
 		clog.Log("INFO", "Send PT_Setting");
 		std::cout << "Send PT_Setting\n";
 	}
 	else if ('w' == input)		//Tee 技泼 傈价
 	{
-		client.MakeSendData<Packet_TeeSetting>((pt), senddata, client.GetTeeSetting());
+		client.MakeSendData<Packet_TeeSetting>(pt, senddata, client.GetTeeSetting());
 
 		clog.Log("INFO", "Send PT_TeeSetting");
 		std::cout << "Send PT_TeeSetting\n";
@@ -147,7 +147,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(true);
 
-		client.MakeSendData<Packet_ActiveState>((pt), senddata, client.GetActiveState());
+		client.MakeSendData<Packet_ActiveState>(pt, senddata, client.GetActiveState());
 
 		clog.Log("INFO", "Send PT_Active(true)");
 		std::cout << "Send PT_Active(true)\n";
@@ -156,7 +156,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(false);
 
-		client.MakeSendData<Packet_ActiveState>((pt), senddata, client.GetActiveState());
+		client.MakeSendData<Packet_ActiveState>(pt, senddata, client.GetActiveState());
 
 		clog.Log("INFO", "Send PT_Active(false)");
 		std::cout << "Send PT_Active(false)\n";
@@ -255,6 +255,8 @@ int CClient::ReadAddData(Packet& packet)
 {
 	auto& client = CClient::Instance();
 	Packet recvpt{};
+	char* senddata = nullptr;
+	int retval{ 0 };
 
 	//packet.SetData();
 	char* recvdata = (char*)malloc(packet.GetSize());
@@ -304,8 +306,15 @@ int CClient::ReadAddData(Packet& packet)
 		}
 	}
 
-	//recvpt.SetData();
-	return client.ClientSend(recvpt);
+	senddata = (char*)malloc(PACKETHEADER);
+	memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
+
+	retval = send(client.m_hSock, (const char*)senddata, PACKETHEADER, 0);
+	
+	free(senddata);
+	free(recvdata);
+
+	return retval;
 }
 
 //send

@@ -177,14 +177,14 @@ int CServer::InputKey(const char input)
 
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		server.MakeSendData<Packet_BallPlace>((pt), senddata, server.GetBallPlace());
+		server.MakeSendData<Packet_BallPlace>(pt, senddata, server.GetBallPlace());
 
 		clog.Log("INFO", "Send PT_BallPlace");
 		std::cout << "Send PT_BallPlace\n";
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		server.MakeSendData<Packet_ShotData>((pt), senddata, server.GetShotData());
+		server.MakeSendData<Packet_ShotData>(pt, senddata, server.GetShotData());
 
 		clog.Log("INFO", "Send PT_ShotData");
 		std::cout << "Send PT_ShotData\n";
@@ -238,7 +238,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 			server.m_iWaitingCount = 0;
 			ResumeThread(server.m_hSend);
 
-			if (PACKETHEADER == packet.GetSize())
+			if (sizeof(Packet) == packet.GetSize())
 			{
 				server.ReadHeader(packet.GetType());
 			}
@@ -288,6 +288,8 @@ int CServer::ReadAddData(Packet& packet)
 {
 	auto& server = CServer::Instance();
 	Packet recvpt{};
+	char* senddata = nullptr;
+	int retval{ 0 };
 
 	//packet.SetData();
 	char* recvdata = (char*)malloc(packet.GetSize());
@@ -327,10 +329,15 @@ int CServer::ReadAddData(Packet& packet)
 		}
 	}
 
-	//recvpt.SetData();
+	senddata = (char*)malloc(PACKETHEADER);
+	memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
+
+	retval = send(server.m_hClient, (const char*)senddata, PACKETHEADER, 0);
+
+	free(senddata);
 	free(recvdata);
 
-	return server.ServerSend(recvpt);
+	return retval;
 }
 
 //send
