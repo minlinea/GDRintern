@@ -58074,3 +58074,39 @@
 [16:26:44.862][INFO]	Recv PT_ShotData
 [16:26:44.864][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
 [16:26:45.126][INFO]	Recv PT_ActiveState
+[16:38:39.522][START]	==============================================
+[16:38:39.527][INFO]	SendThread ON
+[16:38:41.022][INFO]	Recv PT_BallPlace
+[16:38:41.023][INFO]	OB
+[16:38:42.373][INFO]	Send PT_TeeSetting
+[16:38:45.080][ERROR]	RecvThread ClientRecv error
+[16:38:45.082][END]	==============================================
+[16:39:55.626][START]	==============================================
+[16:39:55.630][INFO]	SendThread ON
+[16:39:56.398][INFO]	Send PT_TeeSetting
+[16:39:57.303][INFO]	Send PT_Active(true)
+[16:39:57.934][INFO]	Send PT_Setting
+[16:39:58.511][INFO]	Send PT_Active(false)
+[16:40:00.558][INFO]	Send PT_Setting
+[16:40:02.335][INFO]	Recv PT_BallPlace
+[16:40:02.336][INFO]	OB
+[16:40:03.047][INFO]	Recv PT_ShotData
+[16:40:03.048][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[16:40:05.783][INFO]	Recv PT_BallPlace
+[16:40:05.784][INFO]	OB
+[16:40:06.239][INFO]	Recv PT_ShotData
+[16:40:06.241][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[16:40:06.744][INFO]	Recv PT_ActiveState
+[16:40:07.327][INFO]	Recv PT_ShotData
+[16:40:07.328][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[16:40:07.488][INFO]	Recv PT_BallPlace
+[16:40:07.488][INFO]	OB
+[16:40:07.942][INFO]	Send PT_TeeSetting
+[16:40:08.006][INFO]	Send PT_Active(true)
+[16:40:08.350][INFO]	Send PT_Setting
+[16:40:09.127][INFO]	Send PT_TeeSetting
+[16:40:09.159][INFO]	Send PT_Active(true)
+[16:40:09.872][INFO]	Recv PT_BallPlace
+[16:40:09.872][INFO]	OB
+[16:40:10.015][INFO]	Recv PT_ShotData
+[16:40:10.016][INFO]	[phase2] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]

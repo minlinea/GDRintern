@@ -30,6 +30,9 @@ public:
 	//recv 후 추가 data recv
 	int ReadAddData(Packet& header);
 
+	template <class T1, class T2>
+	void MakeSendData(Packet*& pt, char*& senddata, const T2& data);
+
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신
 	//q:ClubSetting, w:TeeSetting, e:active(true), r:active(false)
 	int InputKey(const char input);

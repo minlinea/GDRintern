@@ -315,3 +315,71 @@ public:
 private:
 	bool data;
 };
+
+class Packet_TeeSetting : public Packet
+{
+public:
+
+	Packet_TeeSetting()
+	{
+		this->type = PACKETTYPE::PT_TeeSetting;
+		this->size = sizeof(Packet) + sizeof(TEESETTING);
+		this->data = TEESETTING::T40;
+	}
+	Packet_TeeSetting(const TEESETTING& data)
+	{
+		this->type = PACKETTYPE::PT_TeeSetting;
+		this->size = sizeof(Packet) + sizeof(TEESETTING);
+		this->data = data;
+	}
+	~Packet_TeeSetting() override
+	{
+
+	};
+
+	void SetData(const TEESETTING& data)
+	{
+		this->data = data;
+	}
+	TEESETTING& GetData()
+	{
+		return this->data;
+	}
+
+private:
+	TEESETTING data;
+};
+
+class Packet_ClubSetting : public Packet
+{
+public:
+
+	Packet_ClubSetting()
+	{
+		this->type = PACKETTYPE::PT_TeeSetting;
+		this->size = sizeof(Packet) + sizeof(Packet_ClubSetting);
+		this->data = CLUBSETTING::DRIVER;
+	}
+	Packet_ClubSetting(const CLUBSETTING& data)
+	{
+		this->type = PACKETTYPE::PT_TeeSetting;
+		this->size = sizeof(Packet) + sizeof(TEESETTING);
+		this->data = data;
+	}
+	~Packet_ClubSetting() override
+	{
+
+	};
+
+	void SetData(const CLUBSETTING& data)
+	{
+		this->data = data;
+	}
+	CLUBSETTING& GetData()
+	{
+		return this->data;
+	}
+
+private:
+	CLUBSETTING data;
+};

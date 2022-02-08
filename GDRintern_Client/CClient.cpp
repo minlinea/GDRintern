@@ -112,52 +112,70 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	return NULL;
 }
 
+template <class T1, class T2>
+void CClient::MakeSendData(Packet*& pt, char*& senddata, const T2& data)
+{
+	pt = new T1{ data };
+	senddata = (char*)malloc(pt->GetSize());
+	memcpy_s(senddata, pt->GetSize(), pt, pt->GetSize());
+}
+
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))
 int CClient::InputKey(const char input)
 {
-	return 1;
+	auto& client = CClient::Instance();
 
-	//auto& client = CClient::Instance();
-	//Packet pt{};
+	Packet* pt{ nullptr };
+	char* senddata{ nullptr };
+	int retval{ 0 };
 
-	//if ('q' == input)		//Club 세팅 전송
-	//{
-	//	pt.SetData(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
+	if ('q' == input)		//Club 세팅 전송
+	{
+		client.MakeSendData<Packet_ClubSetting>((pt), senddata, client.GetClubSetting());
 
-	//	clog.Log("INFO", "Send PT_Setting");
-	//	std::cout << "Send PT_Setting\n";
-	//}
-	//else if ('w' == input)		//Tee 세팅 전송
-	//{
-	//	pt.SetData(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
+		clog.Log("INFO", "Send PT_Setting");
+		std::cout << "Send PT_Setting\n";
+	}
+	else if ('w' == input)		//Tee 세팅 전송
+	{
+		client.MakeSendData<Packet_TeeSetting>((pt), senddata, client.GetTeeSetting());
 
-	//	clog.Log("INFO", "Send PT_TeeSetting");
-	//	std::cout << "Send PT_TeeSetting\n";
-	//}
-	//else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
-	//{
-	//	client.SetActiveState(true);
+		clog.Log("INFO", "Send PT_TeeSetting");
+		std::cout << "Send PT_TeeSetting\n";
+	}
+	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
+	{
+		client.SetActiveState(true);
 
-	//	pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+		client.MakeSendData<Packet_ActiveState>((pt), senddata, client.GetActiveState());
 
-	//	clog.Log("INFO", "Send PT_Active(true)");
-	//	std::cout << "Send PT_Active(true)\n";
-	//}
-	//else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
-	//{
-	//	client.SetActiveState(false);
+		clog.Log("INFO", "Send PT_Active(true)");
+		std::cout << "Send PT_Active(true)\n";
+	}
+	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
+	{
+		client.SetActiveState(false);
 
-	//	pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+		client.MakeSendData<Packet_ActiveState>((pt), senddata, client.GetActiveState());
 
-	//	clog.Log("INFO", "Send PT_Active(false)");
-	//	std::cout << "Send PT_Active(false)\n";
-	//}
-	//else
-	//{
-	//	pt.SetData();
-	//}
+		clog.Log("INFO", "Send PT_Active(false)");
+		std::cout << "Send PT_Active(false)\n";
+	}
+	else
+	{
+		return retval;
+	}
 
-	//return client.ClientSend(pt);
+	retval = send(client.m_hSock, (const char*)senddata, pt->GetSize(), 0);
+	if (pt != nullptr)
+	{
+		delete pt;
+	}
+	if (senddata != nullptr)
+	{
+		free(senddata);
+	}
+	return retval;
 }
 
 //recv 스레드
