@@ -20,7 +20,7 @@ void CLog::SetPathFile()
 	sprintf_s(m_caPathName, MAX_PATHNAME_LEN, "%s%s%s", caPath, "\\log\\", SAVEFILENAME);	//그곳에 생성된 log폴더
 }
 
-void CLog::Log(const char * loglevel, const char* logmsg)
+void CLog::Log(const char * logtype, const char* logmsg)
 {
 	SYSTEMTIME t;
 	GetLocalTime(&t);
@@ -32,7 +32,7 @@ void CLog::Log(const char * loglevel, const char* logmsg)
 	fopen_s(&pFile, caFileName, "at");		//append text 모드
 	if (pFile)
 	{
-		fprintf_s(pFile, "[%02d:%02d:%02d.%03d][%s]\t%s\n", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds, loglevel, logmsg);
+		fprintf_s(pFile, "[%02d:%02d:%02d.%03d][%s]\t%s\n", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds, logtype, logmsg);
 									//로그 내용 작성
 		fclose(pFile);
 	}
@@ -42,13 +42,13 @@ void CLog::Log(const char * loglevel, const char* logmsg)
 	}
 }
 
-void CLog::MakeMsg(const char* format, ...)
+void CLog::MakeMsg(const char* logmsg, ...)
 {
 	va_list args;
-	va_start(args, format);
+	va_start(args, logmsg);
 
 	char msg[MAX_MESSAGE_LEN] = { 0, };
-	vsnprintf_s(msg, sizeof(msg), MAX_MESSAGE_LEN, format, args);
+	vsnprintf_s(msg, sizeof(msg), MAX_MESSAGE_LEN, logmsg, args);
 
 	va_end(args);
 

@@ -30,3 +30,156 @@
 [09:32:09.963][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
 [09:32:10.497][INFO]	Recv PT_ShotData
 [09:32:10.498][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:44:04.435][START]	==============================================
+[09:44:04.439][INFO]	SendThread ON
+[09:44:04.440][INFO]	Recv PT_ConnectCheck
+[09:44:09.433][INFO]	Send PT_TeeSetting
+[09:44:09.434][INFO]	Recv PT_TeeSettingRecv
+[09:44:09.435][INFO]	Recv PT_ConnectCheck
+[09:44:10.977][INFO]	Send PT_Active(true)
+[09:44:10.978][INFO]	Recv PT_ActiveStateRecv
+[09:44:12.000][INFO]	Recv PT_ConnectCheck
+[09:44:16.570][ERROR]	RecvThread ClientRecv error
+[09:44:16.571][END]	==============================================
+[09:44:34.895][START]	==============================================
+[09:44:34.899][INFO]	SendThread ON
+[09:44:34.900][INFO]	Recv PT_ConnectCheck
+[09:44:36.000][INFO]	Recv PT_ConnectCheck
+[09:44:38.000][INFO]	Recv PT_ConnectCheck
+[09:44:40.000][INFO]	Recv PT_ConnectCheck
+[09:44:42.000][INFO]	Recv PT_ConnectCheck
+[09:44:50.369][INFO]	Send PT_Active(true)
+[09:44:50.370][INFO]	Recv PT_ActiveStateRecv
+[09:44:50.371][INFO]	Recv PT_ConnectCheck
+[09:44:52.000][INFO]	Recv PT_ConnectCheck
+[09:44:54.000][INFO]	Recv PT_ConnectCheck
+[09:44:56.000][INFO]	Recv PT_ConnectCheck
+[09:44:58.000][INFO]	Recv PT_ConnectCheck
+[09:45:01.153][INFO]	Send PT_TeeSetting
+[09:45:01.154][INFO]	Recv PT_TeeSettingRecv
+[09:45:01.155][INFO]	Recv PT_ConnectCheck
+[09:45:03.000][INFO]	Recv PT_ConnectCheck
+[09:45:05.000][INFO]	Recv PT_ConnectCheck
+[09:45:07.000][INFO]	Recv PT_ConnectCheck
+[09:45:09.000][INFO]	Recv PT_ConnectCheck
+[09:45:10.545][INFO]	Send PT_Active(true)
+[09:45:10.547][INFO]	Recv PT_ActiveStateRecv
+[09:45:11.000][INFO]	Recv PT_ConnectCheck
+[09:45:13.000][INFO]	Recv PT_ConnectCheck
+[09:45:13.925][ERROR]	RecvThread ClientRecv error
+[09:45:13.926][END]	==============================================
+[09:45:48.160][START]	==============================================
+[09:45:48.164][INFO]	SendThread ON
+[09:45:48.166][INFO]	Recv PT_ConnectCheck
+[09:45:50.000][INFO]	Recv PT_ConnectCheck
+[09:45:52.000][INFO]	Recv PT_ConnectCheck
+[09:45:54.000][INFO]	Recv PT_ConnectCheck
+[09:45:56.000][INFO]	Recv PT_ConnectCheck
+[09:46:05.729][INFO]	Send PT_Active(true)
+[09:46:05.730][INFO]	Recv PT_ActiveStateRecv
+[09:46:05.730][INFO]	Recv PT_ShotData
+[09:46:05.732][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:46:05.732][INFO]	Recv PT_ShotData
+[09:46:05.735][INFO]	[phase218103808] : ballspeed[-134217728.000000], launchangle[-431602080.000000]launchdirection[-42201683186052843888412332559599403008.000000] headspeed[0.000000] backspin[503316480] sidespin[16454954]
+[09:46:05.735][INFO]	Recv PT_ActiveState
+[09:46:21.678][START]	==============================================
+[09:46:21.683][INFO]	RecvThread ON
+[09:46:21.684][INFO]	Recv PT_ConnectCheck
+[09:46:23.000][INFO]	Recv PT_ConnectCheck
+[09:46:23.929][INFO]	Recv PT_ShotData
+[09:46:23.931][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:46:25.000][INFO]	Recv PT_ConnectCheck
+[09:46:27.000][INFO]	Recv PT_ConnectCheck
+[09:46:29.000][INFO]	Recv PT_ConnectCheck
+[09:46:31.000][INFO]	Recv PT_ConnectCheck
+[09:46:33.000][INFO]	Recv PT_ConnectCheck
+[09:46:36.761][INFO]	Send PT_Active(true)
+[09:46:36.762][INFO]	Recv PT_ConnectCheck
+[09:46:36.762][INFO]	Recv PT_ActiveStateRecv
+[09:46:38.000][INFO]	Recv PT_ConnectCheck
+[09:46:40.000][INFO]	Recv PT_ConnectCheck
+[09:46:42.000][INFO]	Recv PT_ConnectCheck
+[09:46:42.745][INFO]	Send PT_TeeSetting
+[09:46:42.746][INFO]	Recv PT_TeeSettingRecv
+[09:46:44.000][INFO]	Recv PT_ConnectCheck
+[09:46:46.000][INFO]	Recv PT_ConnectCheck
+[09:46:48.000][INFO]	Recv PT_ConnectCheck
+[09:46:50.000][INFO]	Recv PT_ConnectCheck
+[09:46:52.000][INFO]	Recv PT_ConnectCheck
+[09:46:54.873][INFO]	Send PT_Active(true)
+[09:46:54.874][INFO]	Recv PT_ConnectCheck
+[09:46:54.875][INFO]	Recv PT_ActiveStateRecv
+[09:46:56.000][INFO]	Recv PT_ConnectCheck
+[09:46:58.000][INFO]	Recv PT_ConnectCheck
+[09:46:58.353][INFO]	Send PT_TeeSetting
+[09:46:58.355][INFO]	Recv PT_TeeSettingRecv
+[09:47:00.000][INFO]	Recv PT_ConnectCheck
+[09:47:00.458][INFO]	Recv PT_BallPlace
+[09:47:00.458][INFO]	OB
+[09:47:00.937][INFO]	Recv PT_ShotData
+[09:47:00.940][INFO]	[phase2] : ballspeed[0.000000], launchangle[-431602080.000000]launchdirection[-431602080.000000] headspeed[-42201683186052843888412332559599403008.000000] backspin[0] sidespin[-1753780860]
+[09:47:02.000][INFO]	Recv PT_ConnectCheck
+[09:47:04.000][INFO]	Recv PT_ConnectCheck
+[09:47:06.000][INFO]	Recv PT_ConnectCheck
+[09:47:23.762][START]	==============================================
+[09:47:23.766][INFO]	SendThread ON
+[09:47:23.767][INFO]	Recv PT_ConnectCheck
+[09:47:25.000][INFO]	Recv PT_ConnectCheck
+[09:47:27.081][INFO]	Recv PT_ShotData
+[09:47:27.082][INFO]	Send PT_TeeSetting
+[09:47:27.083][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:27.503][WARNING]	Recv ReadAddData unknown type
+[09:47:28.962][INFO]	Recv PT_BallPlace
+[09:47:28.962][INFO]	OB
+[09:47:29.362][INFO]	Recv PT_ShotData
+[09:47:29.364][INFO]	[phase2] : ballspeed[0.000000], launchangle[-431602080.000000]launchdirection[-431602080.000000] headspeed[-42201683186052843888412332559599403008.000000] backspin[0] sidespin[565457132]
+[09:47:30.426][INFO]	Recv PT_BallPlace
+[09:47:30.426][INFO]	OB
+[09:47:30.482][INFO]	Recv PT_ShotData
+[09:47:30.485][INFO]	[phase2] : ballspeed[0.000000], launchangle[-431602080.000000]launchdirection[-431602080.000000] headspeed[-42201683186052843888412332559599403008.000000] backspin[0] sidespin[565457132]
+[09:47:43.834][START]	==============================================
+[09:47:43.838][INFO]	SendThread ON
+[09:47:43.839][INFO]	Recv PT_ConnectCheck
+[09:47:44.825][INFO]	Recv PT_ShotData
+[09:47:44.827][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:45.498][INFO]	Recv PT_ShotData
+[09:47:45.499][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:46.001][INFO]	Recv PT_ShotData
+[09:47:46.003][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:46.282][INFO]	Recv PT_BallPlace
+[09:47:46.282][INFO]	OB
+[09:47:46.554][INFO]	Recv PT_ShotData
+[09:47:46.555][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:47.113][INFO]	Recv PT_BallPlace
+[09:47:47.114][INFO]	OB
+[09:47:47.298][INFO]	Recv PT_ActiveState
+[09:47:47.505][INFO]	Recv PT_ShotData
+[09:47:47.507][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:49.000][INFO]	Recv PT_ConnectCheck
+[09:47:49.457][INFO]	Recv PT_ShotData
+[09:47:49.459][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:50.218][INFO]	Recv PT_BallPlace
+[09:47:50.218][INFO]	OB
+[09:47:50.857][INFO]	Recv PT_ActiveState
+[09:47:51.794][INFO]	Recv PT_ShotData
+[09:47:51.795][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:47:52.537][INFO]	Send PT_Active(true)
+[09:47:52.539][INFO]	Recv PT_ActiveStateRecv
+[09:47:53.433][INFO]	Recv PT_ShotData
+[09:47:53.436][INFO]	[phase218103808] : ballspeed[-134217728.000000], launchangle[-431602080.000000]launchdirection[-42201683186052843888412332559599403008.000000] headspeed[0.000000] backspin[-1442833085] sidespin[12336306]
+[09:47:55.000][INFO]	Recv PT_ConnectCheck
+[09:48:15.586][START]	==============================================
+[09:48:15.589][INFO]	SendThread ON
+[09:48:15.590][INFO]	Recv PT_ConnectCheck
+[09:48:17.000][INFO]	Recv PT_ConnectCheck
+[09:48:19.000][INFO]	Recv PT_ConnectCheck
+[09:48:20.682][INFO]	Recv PT_ShotData
+[09:48:20.683][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:48:22.000][INFO]	Recv PT_ConnectCheck
+[09:48:24.000][INFO]	Recv PT_ConnectCheck
+[09:48:26.000][INFO]	Recv PT_ConnectCheck
+[09:48:26.538][INFO]	Send PT_Active(true)
+[09:48:26.539][INFO]	Recv PT_ActiveStateRecv
+[09:48:27.867][INFO]	Recv PT_ShotData
+[09:48:27.868][INFO]	[phase218103808] : ballspeed[-134217728.000000], launchangle[-431602080.000000]launchdirection[-42201683186052843888412332559599403008.000000] headspeed[144616565378121728.000000] backspin[1862290432] sidespin[26368]
+[09:48:29.000][INFO]	Recv PT_ConnectCheck

@@ -108,41 +108,51 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 
 	while (true)
 	{
-		if (MAXWaitingCount >= server.m_iWaitingCount)
-		{
-			Packet packet{ PACKETTYPE::PT_ConnectCheck };
 
-			time(&server.m_tNowTime);
-			if (1 == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		Packet packet{ PACKETTYPE::PT_ConnectCheck };
+
+		time(&server.m_tNowTime);
+		if (1 == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		{
+			if (SOCKET_ERROR == server.InputKey(_getch()))
 			{
-				if (SOCKET_ERROR == server.InputKey(_getch()))
-				{
-					clog.Log("ERROR", "SendThread InputKey error");
-					std::cout << "SendThread InputKey error\n";
-					break;
-				}
-				else
-				{
-				}
-				server.m_tBeforeTime = server.m_tNowTime;
-				server.m_iWaitingCount = 0;
+				clog.Log("ERROR", "SendThread InputKey error");
+				std::cout << "SendThread InputKey error\n";
+				break;
 			}
-			else	//유휴상태 추가
+			else
 			{
-				if (WaitingTime <= server.m_tNowTime - server.m_tBeforeTime)
+			}
+			server.m_tBeforeTime = server.m_tNowTime;
+			server.m_iWaitingCount = 0;
+		}
+		else
+		{
+			if (WaitingTime <= server.m_tNowTime - server.m_tBeforeTime)
+			{
+				packet.SetData();
+				server.ServerSend(packet);
+
+				server.m_tBeforeTime = server.m_tNowTime;
+
+
+				clog.Log("INFO", "PT_ConnectCheck");
+				std::cout << "Send PT_ConnectCheck\n";
+
+				++server.m_iWaitingCount;
+				if (MAXWaitingCount <= server.m_iWaitingCount)
 				{
-					packet.SetData();
-					server.ServerSend(packet);
-					server.m_tBeforeTime = server.m_tNowTime;
-					++server.m_iWaitingCount;
-					clog.Log("INFO", "PT_ConnectCheck");
-					std::cout << "Send PT_ConnectCheck\n";
+					SuspendThread(server.m_hSend);
 				}
 				else
 				{
 				}
+			}
+			else
+			{
 			}
 		}
+
 
 	}
 	return NULL;
@@ -204,6 +214,8 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 		else    //에러가 아니라면 데이터 읽기
 		{
 			server.m_iWaitingCount = 0;
+			ResumeThread(server.m_hSend);
+
 			if (PACKETHEADER == packet.GetSize())
 			{
 				server.ReadHeader(packet.GetType());
