@@ -203,7 +203,7 @@ int CServer::InputKey(const char input)
 		return retval;
 	}
 
-	retval = send(server.m_hClient, (const char*)senddata, pt->GetSize(), 0);
+	retval = ServerSend((const char*)senddata, pt->GetSize());
 	if (pt != nullptr)
 	{
 		delete pt;
@@ -287,11 +287,10 @@ void CServer::ReadHeader(const PACKETTYPE& type)
 int CServer::ReadAddData(Packet& packet)
 {
 	auto& server = CServer::Instance();
-	Packet recvpt{};
+	Packet recvpt{PACKETTYPE::PT_None};
 	char* senddata = nullptr;
 	int retval{ 0 };
 
-	//packet.SetData();
 	char* recvdata = (char*)malloc(packet.GetSize());
 	if (SOCKET_ERROR == server.ServerRecv(recvdata, packet.GetSize()))
 	{
@@ -329,24 +328,27 @@ int CServer::ReadAddData(Packet& packet)
 		}
 	}
 
-	senddata = (char*)malloc(PACKETHEADER);
-	memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
+	//정상적인 데이터 수령 후 응답용 send 부분
+	if (PACKETTYPE::PT_None != recvpt.GetType())
+	{
+		senddata = (char*)malloc(PACKETHEADER);
+		memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
 
-	retval = send(server.m_hClient, (const char*)senddata, PACKETHEADER, 0);
-
-	free(senddata);
+		retval = ServerSend((const char*)senddata, PACKETHEADER);
+		free(senddata);
+	}
+	
 	free(recvdata);
 
 	return retval;
 }
 
 //send
-int CServer::ServerSend(Packet& packet)
+int CServer::ServerSend(const char*data, const int& size)
 {
 	auto& server = CServer::Instance();
-	//return send(server.m_hClient, (const char*)packet, packet.GetSize(), 0);
-	return 1;
-}
+	return send(server.m_hClient, data, size, 0);
+	}
 
 //recv
 int CServer::ServerRecv(void* buf, const int len)

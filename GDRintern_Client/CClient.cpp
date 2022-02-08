@@ -165,8 +165,8 @@ int CClient::InputKey(const char input)
 	{
 		return retval;
 	}
+	retval = ClientSend((const char*)senddata, pt->GetSize());
 
-	retval = send(client.m_hSock, (const char*)senddata, pt->GetSize(), 0);
 	if (pt != nullptr)
 	{
 		delete pt;
@@ -255,10 +255,8 @@ int CClient::ReadAddData(Packet& packet)
 {
 	auto& client = CClient::Instance();
 	Packet recvpt{};
-	char* senddata = nullptr;
 	int retval{ 0 };
 
-	//packet.SetData();
 	char* recvdata = (char*)malloc(packet.GetSize());
 	if (SOCKET_ERROR == client.ClientRecv(recvdata, packet.GetSize()))
 	{
@@ -270,6 +268,7 @@ int CClient::ReadAddData(Packet& packet)
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
 			clog.Log("INFO", "Recv PT_BallPlace");
+
 			client.SetBallPlace(recvdata);
 			clog.Log("INFO", to_string(client.GetBallPlace()));
 			std::cout << "Recv PT_BallPlace // " << client.GetBallPlace() << "\n";
@@ -282,7 +281,6 @@ int CClient::ReadAddData(Packet& packet)
 
 			client.SetShotData(recvdata);
 			ShotData sd = client.GetShotData();
-
 			std::cout << "Recv PT_ShotData // " << sd << "\n";
 			clog.MakeMsg("[phase%d] : ballspeed[%f], launchangle[%f]"
 				"launchdirection[%f] headspeed[%f] backspin[%d] sidespin[%d]",
@@ -294,6 +292,7 @@ int CClient::ReadAddData(Packet& packet)
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
 			clog.Log("INFO", "Recv PT_ActiveState");
+
 			client.SetActiveState(recvdata);
 			std::cout << "Recv PT_ActiveState  // " << client.GetActiveState() << "\n";
 
@@ -306,23 +305,27 @@ int CClient::ReadAddData(Packet& packet)
 		}
 	}
 
-	senddata = (char*)malloc(PACKETHEADER);
-	memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
+	//정상적인 데이터 수령 후 응답용 send 부분
+	if (PACKETTYPE::PT_None != recvpt.GetType())
+	{
+		char* senddata = nullptr;
+		senddata = (char*)malloc(PACKETHEADER);
+		memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
 
-	retval = send(client.m_hSock, (const char*)senddata, PACKETHEADER, 0);
+		retval = ClientSend((const char*)senddata, PACKETHEADER);
+		free(senddata);
+	}
 	
-	free(senddata);
 	free(recvdata);
 
 	return retval;
 }
 
 //send
-int CClient::ClientSend(Packet& packet)
+int CClient::ClientSend(const char* data, const int& size)
 {
 	auto& client = CClient::Instance();
-	return 1;
-	//return send(client.m_hSock, (const char*)packet.GetData(), packet.GetSize(), 0);
+	return send(client.m_hSock, (const char*)data, size, 0);
 }
 
 //recv

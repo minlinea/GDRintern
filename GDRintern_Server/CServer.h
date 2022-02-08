@@ -54,7 +54,7 @@ public:
 	int InputKey(const char input);
 
 	//고정 + 가변 데이터 send
-	int ServerSend(Packet& packet);
+	int ServerSend(const char* data, const int& size);
 	
 	//서버로부터 오는 정보 recv
 	int ServerRecv(void* buf, const int len);
