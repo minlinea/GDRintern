@@ -672,3 +672,102 @@
 [17:19:09.246][INFO]	Recv PT_ShotDataRecv
 [17:19:09.252][INFO]	Send PT_BallPlace
 [17:19:09.253][INFO]	Recv PT_BallPlaceRecv
+[17:44:14.445][START]	==============================================
+[17:44:19.543][LOGIN]	127.0.0.1
+[17:44:19.544][INFO]	RecvThread ON
+[17:44:20.885][INFO]	Recv PT_TeeSetting
+[17:44:33.963][START]	==============================================
+[17:44:35.054][LOGIN]	127.0.0.1
+[17:44:35.057][INFO]	SendThread ON
+[17:44:36.645][INFO]	Recv PT_BallPlace
+[17:45:18.750][START]	==============================================
+[17:45:19.954][LOGIN]	127.0.0.1
+[17:45:19.956][INFO]	SendThread ON
+[17:45:21.703][INFO]	Recv PT_TeeSetting
+[17:45:22.535][INFO]	Recv PT_BallPlace
+[17:45:23.911][INFO]	Recv PT_TeeSetting
+[17:45:24.543][INFO]	Recv PT_TeeSetting
+[17:45:24.759][INFO]	Recv PT_BallPlace
+[17:45:25.754][ERROR]	RecvThread ServerRecv error
+[17:48:02.406][START]	==============================================
+[17:48:07.013][LOGIN]	127.0.0.1
+[17:48:07.015][INFO]	RecvThread ON
+[17:48:07.925][INFO]	Send PT_BallPlace
+[17:48:07.927][INFO]	Recv PT_BallPlaceRecv
+[17:48:08.813][INFO]	Send PT_ShotData
+[17:48:08.816][INFO]	Recv PT_ShotDataRecv
+[17:48:11.572][INFO]	Send PT_BallPlace
+[17:48:11.574][INFO]	Recv PT_BallPlaceRecv
+[17:48:11.829][INFO]	Send PT_ShotData
+[17:48:11.831][INFO]	Recv PT_ShotDataRecv
+[17:48:12.125][INFO]	Send PT_ActiveState(false)
+[17:48:12.126][INFO]	Recv PT_ActiveStateRecv
+[17:48:12.934][INFO]	Recv PT_TeeSetting
+[17:48:12.966][INFO]	Recv PT_BallPlace
+[17:48:13.421][INFO]	Recv PT_BallPlace
+[17:48:13.813][INFO]	Recv PT_TeeSetting
+[17:48:14.809][ERROR]	RecvThread ServerRecv error
+[17:52:26.607][START]	==============================================
+[17:52:32.385][LOGIN]	127.0.0.1
+[17:52:32.386][INFO]	RecvThread ON
+[17:52:33.342][INFO]	Send PT_BallPlace
+[17:52:33.344][INFO]	Recv PT_BallPlaceRecv
+[17:52:34.013][INFO]	Send PT_ShotData
+[17:52:34.016][INFO]	Recv PT_ShotDataRecv
+[17:52:35.670][INFO]	Send PT_ActiveState(false)
+[17:52:35.671][INFO]	Recv PT_ActiveStateRecv
+[17:52:36.766][INFO]	Send PT_BallPlace
+[17:52:36.768][INFO]	Recv PT_BallPlaceRecv
+[17:52:36.878][INFO]	Send PT_ShotData
+[17:52:36.880][INFO]	Recv PT_ShotDataRecv
+[17:52:37.694][INFO]	Send PT_BallPlace
+[17:52:37.696][INFO]	Recv PT_BallPlaceRecv
+[17:52:37.773][INFO]	Send PT_ShotData
+[17:52:37.775][INFO]	Recv PT_ShotDataRecv
+[17:52:38.165][INFO]	Send PT_ActiveState(false)
+[17:52:38.167][INFO]	Recv PT_ActiveStateRecv
+[17:52:38.775][INFO]	Recv PT_TeeSetting
+[17:52:39.151][INFO]	Recv PT_TeeSetting
+[17:52:39.495][INFO]	Recv PT_BallPlace
+[17:52:39.822][INFO]	Recv PT_BallPlace
+[17:52:40.894][INFO]	Recv PT_TeeSetting
+[17:52:41.087][INFO]	Recv PT_TeeSetting
+[17:52:41.214][INFO]	Recv PT_BallPlace
+[17:52:41.431][INFO]	Recv PT_BallPlace
+[17:52:42.647][ERROR]	RecvThread ServerRecv error
+[17:53:17.814][START]	==============================================
+[17:53:19.602][LOGIN]	127.0.0.1
+[17:53:19.604][INFO]	SendThread ON
+[17:53:21.168][INFO]	Send PT_ShotData
+[17:53:21.172][INFO]	Recv PT_ShotDataRecv
+[17:53:22.983][INFO]	Send PT_ShotData
+[17:53:22.986][INFO]	Recv PT_ShotDataRecv
+[17:53:23.384][INFO]	Recv PT_BallPlace
+[17:53:23.640][INFO]	Recv PT_TeeSetting
+[17:53:23.776][INFO]	Recv PT_BallPlace
+[17:53:24.495][INFO]	Send PT_BallPlace
+[17:53:24.497][INFO]	Recv PT_BallPlaceRecv
+[17:53:24.623][INFO]	Send PT_ShotData
+[17:53:24.626][INFO]	Recv PT_ShotDataRecv
+[17:53:26.296][INFO]	Send PT_ShotData
+[17:53:26.298][INFO]	Recv PT_ShotDataRecv
+[17:53:39.280][INFO]	Recv PT_TeeSetting
+[17:53:40.015][INFO]	Send PT_ShotData
+[17:53:40.018][INFO]	Recv PT_ShotDataRecv
+[17:53:41.169][ERROR]	RecvThread ServerRecv error
+[17:54:58.640][START]	==============================================
+[17:55:02.165][LOGIN]	127.0.0.1
+[17:55:02.166][INFO]	RecvThread ON
+[17:55:04.451][INFO]	Recv PT_BallPlace
+[17:55:05.147][INFO]	Send PT_BallPlace
+[17:55:05.148][INFO]	Recv PT_BallPlaceRecv
+[17:55:05.426][INFO]	Send PT_ShotData
+[17:55:05.429][INFO]	Recv PT_ShotDataRecv
+[17:55:06.011][INFO]	Recv PT_BallPlace
+[17:55:06.243][INFO]	Recv PT_TeeSetting
+[17:55:06.468][INFO]	Recv PT_BallPlace
+[17:55:06.875][INFO]	Send PT_BallPlace
+[17:55:06.877][INFO]	Recv PT_BallPlaceRecv
+[17:55:07.002][INFO]	Send PT_ShotData
+[17:55:07.005][INFO]	Recv PT_ShotDataRecv
+[17:55:08.430][ERROR]	RecvThread ServerRecv error

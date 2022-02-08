@@ -112,33 +112,24 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	return NULL;
 }
 
-template <class T1, class T2>
-void CClient::MakeSendData(Packet*& pt, char*& senddata, const T2& data)
-{
-	pt = new T1{ data };
-	senddata = (char*)malloc(pt->GetSize());
-	memcpy_s(senddata, pt->GetSize(), pt, pt->GetSize());
-}
-
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))
 int CClient::InputKey(const char input)
 {
 	auto& client = CClient::Instance();
 
-	Packet* pt{ nullptr };
-	char* senddata{ nullptr };
+	Packet* packet{ nullptr };
 	int retval{ 0 };
 
 	if ('q' == input)		//Club 세팅 전송
 	{
-		client.MakeSendData<Packet_ClubSetting>(pt, senddata, client.GetClubSetting());
+		packet = new Packet_ClubSetting(client.GetClubSetting());
 
 		clog.Log("INFO", "Send PT_Setting");
 		std::cout << "Send PT_Setting\n";
 	}
 	else if ('w' == input)		//Tee 세팅 전송
 	{
-		client.MakeSendData<Packet_TeeSetting>(pt, senddata, client.GetTeeSetting());
+		packet = new Packet_TeeSetting(client.GetTeeSetting());
 
 		clog.Log("INFO", "Send PT_TeeSetting");
 		std::cout << "Send PT_TeeSetting\n";
@@ -147,7 +138,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(true);
 
-		client.MakeSendData<Packet_ActiveState>(pt, senddata, client.GetActiveState());
+		packet = new Packet_ActiveState(client.GetActiveState());
 
 		clog.Log("INFO", "Send PT_Active(true)");
 		std::cout << "Send PT_Active(true)\n";
@@ -156,7 +147,7 @@ int CClient::InputKey(const char input)
 	{
 		client.SetActiveState(false);
 
-		client.MakeSendData<Packet_ActiveState>(pt, senddata, client.GetActiveState());
+		packet = new Packet_ActiveState(client.GetActiveState());
 
 		clog.Log("INFO", "Send PT_Active(false)");
 		std::cout << "Send PT_Active(false)\n";
@@ -165,16 +156,13 @@ int CClient::InputKey(const char input)
 	{
 		return retval;
 	}
-	retval = ClientSend((const char*)senddata, pt->GetSize());
 
-	if (pt != nullptr)
+	if (packet != nullptr)
 	{
-		delete pt;
+		retval = client.ClientSend(packet);
+		delete packet;
 	}
-	if (senddata != nullptr)
-	{
-		free(senddata);
-	}
+
 	return retval;
 }
 
@@ -305,15 +293,10 @@ int CClient::ReadAddData(Packet& packet)
 		}
 	}
 
-	//정상적인 데이터 수령 후 응답용 send 부분
+	//정상적인 데이터 recv 시 응답 send 진행
 	if (PACKETTYPE::PT_None != recvpt.GetType())
 	{
-		char* senddata = nullptr;
-		senddata = (char*)malloc(PACKETHEADER);
-		memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
-
-		retval = ClientSend((const char*)senddata, PACKETHEADER);
-		free(senddata);
+		retval = client.ClientSend(&recvpt);
 	}
 	
 	free(recvdata);
@@ -321,16 +304,26 @@ int CClient::ReadAddData(Packet& packet)
 	return retval;
 }
 
-//send
-int CClient::ClientSend(const char* data, const int& size)
-{
-	auto& client = CClient::Instance();
-	return send(client.m_hSock, (const char*)data, size, 0);
-}
-
 //recv
 int CClient::ClientRecv(void* buf, const int len)
 {
 	auto& client = CClient::Instance();
 	return recv(client.m_hSock, (char*)buf, len, 0);
+}
+
+//send
+int CClient::ClientSend(Packet* packet)
+{
+	auto& server = CClient::Instance();
+	int retval{ 0 };
+	int sendsize = packet->GetSize();
+	char* senddata = nullptr;
+
+	senddata = (char*)malloc(sendsize);
+	memcpy_s(senddata, sendsize, packet, sendsize);
+
+	retval = send(server.m_hSock, senddata, sendsize, 0);
+
+	free(senddata);
+	return retval;
 }

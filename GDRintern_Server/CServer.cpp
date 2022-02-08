@@ -158,33 +158,25 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	return NULL;
 }
 
-template <class T1, class T2>
-void CServer::MakeSendData(Packet*& pt, char*& senddata, const T2& data)
-{
-	pt = new T1{ data };
-	senddata = (char*)malloc(pt->GetSize());
-	memcpy_s(senddata, pt->GetSize(), pt, pt->GetSize());
-}
-
 //테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
 int CServer::InputKey(const char input)
 {
 	auto& server = CServer::Instance();
 
-	Packet* pt{ nullptr };
+	Packet* packet{ nullptr };
 	char* senddata{ nullptr };
 	int retval{ 0 };
 
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		server.MakeSendData<Packet_BallPlace>(pt, senddata, server.GetBallPlace());
+		packet = new Packet_BallPlace(server.GetBallPlace());
 
 		clog.Log("INFO", "Send PT_BallPlace");
 		std::cout << "Send PT_BallPlace\n";
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		server.MakeSendData<Packet_ShotData>(pt, senddata, server.GetShotData());
+		packet = new Packet_ShotData(server.GetShotData());
 
 		clog.Log("INFO", "Send PT_ShotData");
 		std::cout << "Send PT_ShotData\n";
@@ -193,7 +185,7 @@ int CServer::InputKey(const char input)
 	{
 		server.SetActiveState(false);
 
-		server.MakeSendData<Packet_ActiveState>((pt), senddata, server.GetActiveState());
+		packet = new Packet_ActiveState(server.GetActiveState());
 
 		clog.Log("INFO", "Send PT_ActiveState(false)");
 		std::cout << "Send PT_ActiveState(false)\n";
@@ -203,15 +195,12 @@ int CServer::InputKey(const char input)
 		return retval;
 	}
 
-	retval = ServerSend((const char*)senddata, pt->GetSize());
-	if (pt != nullptr)
+	if (packet != nullptr)
 	{
-		delete pt;
+		retval = server.ServerSend(packet);
+		delete packet;
 	}
-	if (senddata != nullptr)
-	{
-		free(senddata);
-	}
+
 	return retval;
 }
 
@@ -288,7 +277,6 @@ int CServer::ReadAddData(Packet& packet)
 {
 	auto& server = CServer::Instance();
 	Packet recvpt{PACKETTYPE::PT_None};
-	char* senddata = nullptr;
 	int retval{ 0 };
 
 	char* recvdata = (char*)malloc(packet.GetSize());
@@ -328,27 +316,16 @@ int CServer::ReadAddData(Packet& packet)
 		}
 	}
 
-	//정상적인 데이터 수령 후 응답용 send 부분
+	//정상적인 데이터 recv 시 응답 send 진행
 	if (PACKETTYPE::PT_None != recvpt.GetType())
 	{
-		senddata = (char*)malloc(PACKETHEADER);
-		memcpy_s(senddata, PACKETHEADER, &recvpt, PACKETHEADER);
-
-		retval = ServerSend((const char*)senddata, PACKETHEADER);
-		free(senddata);
+		retval = server.ServerSend(&recvpt);
 	}
-	
+
 	free(recvdata);
 
 	return retval;
 }
-
-//send
-int CServer::ServerSend(const char*data, const int& size)
-{
-	auto& server = CServer::Instance();
-	return send(server.m_hClient, data, size, 0);
-	}
 
 //recv
 int CServer::ServerRecv(void* buf, const int len)
@@ -358,3 +335,19 @@ int CServer::ServerRecv(void* buf, const int len)
 }
 
 
+//send
+int CServer::ServerSend(Packet* packet)
+{
+	auto& server = CServer::Instance();
+	int retval{ 0 };
+	int sendsize = packet->GetSize();
+	char* senddata = nullptr;
+
+	senddata = (char*)malloc(sendsize);
+	memcpy_s(senddata, sendsize, packet, sendsize);
+
+	retval = send(server.m_hClient, senddata, sendsize, 0);
+	
+	free(senddata);
+	return retval;
+}

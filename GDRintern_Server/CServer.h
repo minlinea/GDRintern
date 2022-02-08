@@ -46,15 +46,12 @@ public:
 	//recv 후 추가 data recv
 	int ReadAddData(Packet& type);
 
-	template <class T1, class T2>
-	void MakeSendData(Packet*& pt, char*& senddata, const T2& data);
-
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신(테스트 코드)
 	//w(공위치), e(샷정보), r(ballstate false)
 	int InputKey(const char input);
 
-	//고정 + 가변 데이터 send
-	int ServerSend(const char* data, const int& size);
+	//packet*가 들어오면 안에서 조립해서 보내보기
+	int ServerSend(Packet* packet);
 	
 	//서버로부터 오는 정보 recv
 	int ServerRecv(void* buf, const int len);
@@ -81,7 +78,7 @@ public:
 	void SetTeeSetting(char* tee)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		memcpy_s(&m_sdShotData, sizeof(TEESETTING), tee, sizeof(TEESETTING));
+		memcpy_s(&m_eTee, sizeof(TEESETTING), tee, sizeof(TEESETTING));
 
 	}
 	void SetClubSetting(const CLUBSETTING& club)
@@ -92,7 +89,7 @@ public:
 	void SetClubSetting(char* club)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		memcpy_s(&m_sdShotData, sizeof(CLUBSETTING), club, sizeof(CLUBSETTING));
+		memcpy_s(&m_eClub, sizeof(CLUBSETTING), club, sizeof(CLUBSETTING));
 	}
 	void SetBallPlace(const BALLPLACE& place)
 	{
