@@ -247,3 +247,71 @@ public:
 private:
 	ShotData data;
 };
+
+class Packet_BallPlace : public Packet
+{
+public:
+
+	Packet_BallPlace()
+	{
+		this->type = PACKETTYPE::PT_BallPlace;
+		this->size = sizeof(Packet) + sizeof(BALLPLACE);
+		this->data = BALLPLACE::OB;
+	}
+	Packet_BallPlace(const BALLPLACE& data)
+	{
+		this->type = PACKETTYPE::PT_BallPlace;
+		this->size = sizeof(Packet) + sizeof(BALLPLACE);
+		this->data = data;
+	}
+	~Packet_BallPlace() override
+	{
+
+	};
+
+	void SetData(const BALLPLACE& data)
+	{
+		this->data = data;
+	}
+	BALLPLACE& GetData()
+	{
+		return this->data;
+	}
+
+private:
+	BALLPLACE data;
+};
+
+class Packet_ActiveState : public Packet
+{
+public:
+
+	Packet_ActiveState()
+	{
+		this->type = PACKETTYPE::PT_ActiveState;
+		this->size = sizeof(Packet) + sizeof(bool);
+		this->data = false;
+	}
+	Packet_ActiveState(const bool& data)
+	{
+		this->type = PACKETTYPE::PT_ActiveState;
+		this->size = sizeof(Packet) + sizeof(bool);
+		this->data = data;
+	}
+	~Packet_ActiveState() override
+	{
+
+	};
+
+	void SetData(const bool& data)
+	{
+		this->data = data;
+	}
+	bool& GetData()
+	{
+		return this->data;
+	}
+
+private:
+	bool data;
+};

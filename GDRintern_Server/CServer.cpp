@@ -159,10 +159,9 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 }
 
 template <class T1, class T2>
-void CServer::MakeSendData(Packet*& pt, char*& senddata)
+void CServer::MakeSendData(Packet*& pt, char*& senddata, const T2& data)
 {
-	pt = new T1{};
-	dynamic_cast<T1*>(pt)->SetData(GetData<T2>());
+	pt = new T1{ data };
 	senddata = (char*)malloc(pt->GetSize());
 	memcpy_s(senddata, pt->GetSize(), pt, pt->GetSize());
 }
@@ -171,21 +170,21 @@ void CServer::MakeSendData(Packet*& pt, char*& senddata)
 int CServer::InputKey(const char input)
 {
 	auto& server = CServer::Instance();
+
 	Packet* pt{ nullptr };
 	char* senddata{ nullptr };
 	int retval{ 0 };
+
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		server.MakeSendData<Packet_ShotData, ShotData>((pt), senddata);
-		
-		//auto p = server.GetData<Packet_ShotData>();
-		//std::cout << p.GetData();
-		//clog.Log("INFO", "Send PT_ShotData");
-		//std::cout << "Send PT_ShotData\n";
+		server.MakeSendData<Packet_BallPlace, BALLPLACE>((pt), senddata, server.GetBallPlace());
+
+		clog.Log("INFO", "Send PT_BallPlace");
+		std::cout << "Send PT_BallPlace\n";
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		//.SetData(PACKETTYPE::PT_ShotData, server.GetShotData());
+		server.MakeSendData<Packet_ShotData, ShotData>((pt), senddata, server.GetShotData());
 
 		clog.Log("INFO", "Send PT_ShotData");
 		std::cout << "Send PT_ShotData\n";
@@ -194,20 +193,24 @@ int CServer::InputKey(const char input)
 	{
 		server.SetActiveState(false);
 
-		//pt.SetData(PACKETTYPE::PT_ActiveState, server.GetActiveState());
+		server.MakeSendData<Packet_ActiveState, bool>((pt), senddata, server.GetActiveState());
 
 		clog.Log("INFO", "Send PT_ActiveState(false)");
 		std::cout << "Send PT_ActiveState(false)\n";
 	}
 	else
 	{
-		//pt.SetData();
+		return retval;
 	}
 
 	retval = send(server.m_hClient, (const char*)senddata, pt->GetSize(), 0);
 	if (pt != nullptr)
 	{
 		delete pt;
+	}
+	if (senddata != nullptr)
+	{
+		free(senddata);
 	}
 	return retval;
 }

@@ -250,7 +250,7 @@ int CClient::ReadAddData(Packet& packet)
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
 			clog.Log("INFO", "Recv PT_BallPlace");
-			//client.SetBallPlace(packet.GetData());
+			client.SetBallPlace(recvdata);
 			clog.Log("INFO", to_string(client.GetBallPlace()));
 			std::cout << "Recv PT_BallPlace // " << client.GetBallPlace() << "\n";
 
@@ -274,7 +274,7 @@ int CClient::ReadAddData(Packet& packet)
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
 			clog.Log("INFO", "Recv PT_ActiveState");
-			//client.SetActiveState(packet.GetData());
+			client.SetActiveState(recvdata);
 			std::cout << "Recv PT_ActiveState  // " << client.GetActiveState() << "\n";
 
 			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);

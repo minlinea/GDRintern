@@ -466,3 +466,26 @@
 [14:33:32.876][START]	==============================================
 [14:33:34.092][LOGIN]	127.0.0.1
 [14:33:34.094][INFO]	RecvThread ON
+[16:24:29.090][START]	==============================================
+[16:24:36.350][LOGIN]	127.0.0.1
+[16:24:36.352][INFO]	RecvThread ON
+[16:24:37.200][INFO]	Send PT_ShotData
+[16:24:38.512][INFO]	Send PT_ShotData
+[16:25:17.934][START]	==============================================
+[16:25:48.865][START]	==============================================
+[16:25:51.935][LOGIN]	127.0.0.1
+[16:25:51.936][INFO]	RecvThread ON
+[16:25:52.699][INFO]	Send PT_ShotData
+[16:25:53.531][INFO]	Send PT_BallPlace
+[16:26:33.693][START]	==============================================
+[16:26:39.483][LOGIN]	127.0.0.1
+[16:26:39.485][INFO]	SendThread ON
+[16:26:40.486][INFO]	Send PT_BallPlace
+[16:26:41.325][INFO]	Send PT_ShotData
+[16:26:42.045][INFO]	Send PT_ActiveState(false)
+[16:26:42.733][INFO]	Send PT_ShotData
+[16:26:43.741][INFO]	Send PT_BallPlace
+[16:26:44.229][INFO]	Send PT_ActiveState(false)
+[16:26:44.589][INFO]	Send PT_BallPlace
+[16:26:44.861][INFO]	Send PT_ShotData
+[16:26:45.126][INFO]	Send PT_ActiveState(false)

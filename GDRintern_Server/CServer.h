@@ -47,7 +47,7 @@ public:
 	int ReadAddData(Packet& type);
 
 	template <class T1, class T2>
-	void MakeSendData(Packet*& pt, char*& senddata);
+	void MakeSendData(Packet*& pt, char*& senddata, const T2& data);
 
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신(테스트 코드)
 	//w(공위치), e(샷정보), r(ballstate false)
@@ -116,35 +116,6 @@ public:
 	}
 
 
-	template <class T>
-	T GetData()
-	{
-		/*
-		int t = 0;
-		if (t == 1)
-		{
-			return m_eBallPlace;
-		}
-		else if (t == 2)
-		{
-			return m_eTee;
-		}
-		else if (t == 3)
-		{
-			return m_eClub;
-		}
-		else if (t == 4)
-		{
-			return m_bActiveState;
-		}*/
-		if (typeid(ShotData).name() == typeid(T).name())
-		{
-			std::cout << "OK\n";
-		}
-		return this->GetShotData();
-	}
-
-
 	const TEESETTING GetTeeSetting()
 	{
 		return this->m_eTee;
@@ -155,15 +126,15 @@ public:
 	}
 	const ShotData GetShotData()
 	{
-		return m_sdShotData;
+		return this->m_sdShotData;
 	}
 	const BALLPLACE GetBallPlace()
 	{
-		return m_eBallPlace;
+		return this->m_eBallPlace;
 	}
 	const bool GetActiveState()
 	{
-		return m_bActiveState;
+		return this->m_bActiveState;
 	}
 
 private:
