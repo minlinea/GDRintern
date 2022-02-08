@@ -250,6 +250,7 @@ int CClient::ReadAddData(Packet& packet)
 			client.SetBallPlace(packet.GetData());
 			clog.Log("INFO", to_string(client.GetBallPlace()));
 			std::cout << "Recv PT_BallPlace // " << client.GetBallPlace() << "\n";
+
 			recvpt.SetType(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
@@ -257,8 +258,14 @@ int CClient::ReadAddData(Packet& packet)
 			clog.Log("INFO", "Recv PT_ShotData");
 
 			client.SetShotData(packet.GetData());
-			std::cout << "Recv PT_ShotData // " << client.GetShotData() << "\n";
-			clog.Log("INFO", to_string(client.GetShotData()));
+			ShotData sd = client.GetShotData();
+
+			std::cout << "Recv PT_ShotData // " << sd << "\n";
+			clog.MakeMsg("[phase%d] : ballspeed[%f], launchangle[%f]"
+				"launchdirection[%f] headspeed[%f] backspin[%d] sidespin[%d]",
+				sd.phase, sd.ballspeed, sd.launchangle, sd.launchdirection,
+				sd.headspeed, sd.backspin, sd.sidespin);
+
 			recvpt.SetType(PACKETTYPE::PT_ShotDataRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
@@ -266,6 +273,7 @@ int CClient::ReadAddData(Packet& packet)
 			clog.Log("INFO", "Recv PT_ActiveState");
 			client.SetActiveState(packet.GetData());
 			std::cout << "Recv PT_ActiveState  // " << client.GetActiveState() << "\n";
+
 			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else

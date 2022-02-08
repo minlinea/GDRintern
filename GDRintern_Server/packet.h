@@ -159,17 +159,6 @@ inline std::ostream& operator << (std::ostream& os, const ShotData& t)
 	return os;
 }
 
-inline const char* to_string(const ShotData& t);
-inline const char* to_string(const ShotData& t)
-{
-	std::string str;
-	str = "phase : " + std::to_string(t.phase) + "\nballspeed : " + std::to_string(t.ballspeed)
-		+ "  launchangle : " + std::to_string(t.launchangle) + "  launchdirection : " + std::to_string(t.launchdirection)
-		+ "\nheadspeed : " + std::to_string(t.headspeed) + "  backspin : " + std::to_string(t.backspin)
-		+ "  sidespin : " + std::to_string(t.sidespin);
-	return str.c_str();
-}
-
 /*
 Packet
 type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분

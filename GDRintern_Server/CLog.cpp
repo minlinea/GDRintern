@@ -25,19 +25,33 @@ void CLog::Log(const char * loglevel, const char* logmsg)
 	SYSTEMTIME t;
 	GetLocalTime(&t);
 
-	FILE* pFile = NULL;
-	char caFileName[MAX_PATHNAME_LEN] = { 0, };		//생성할 파일 경로 + 이름
-	sprintf_s(caFileName, "%s_%04d%02d%02d.log", m_caPathName, t.wYear, t.wMonth, t.wDay);
+	FILE* pfile = NULL;
+	char filename[MAX_PATHNAME_LEN] = { 0, };		//생성할 파일 경로 + 이름
+	sprintf_s(filename, "%s_%04d%02d%02d.log", m_caPathName, t.wYear, t.wMonth, t.wDay);
 
-	fopen_s(&pFile, caFileName, "at");		//append text 모드
-	if (pFile)
+	fopen_s(&pfile, filename, "at");		//append text 모드
+	if (pfile)
 	{
-		fprintf_s(pFile, "[%02d:%02d:%02d.%03d][%s]\t%s\n", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds, loglevel, logmsg);
+		fprintf_s(pfile, "[%02d:%02d:%02d.%03d][%s]\t%s\n", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds, loglevel, logmsg);
 									//로그 내용 작성
-		fclose(pFile);
+		fclose(pfile);
 	}
 	else
 	{
 		
 	}
+}
+
+void CLog::MakeMsg(const char* logmsg, ...)
+{
+	va_list args;
+
+	va_start(args, logmsg);
+
+	char msg[MAX_MESSAGE_LEN] = { 0, };
+	vsnprintf_s(msg, sizeof(msg), MAX_MESSAGE_LEN, logmsg, args);
+
+	va_end(args);
+
+	this->Log("INFO", msg);
 }
