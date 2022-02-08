@@ -109,9 +109,9 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	while (true)
 	{
 
-		Packet packet{ PACKETTYPE::PT_ConnectCheck };
+		//Packet packet{ PACKETTYPE::PT_ConnectCheck };
 
-		time(&server.m_tNowTime);
+		//time(&server.m_tNowTime);
 		if (1 == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
 		{
 			if (SOCKET_ERROR == server.InputKey(_getch()))
@@ -123,34 +123,34 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 			else
 			{
 			}
-			server.m_tBeforeTime = server.m_tNowTime;
-			server.m_iWaitingCount = 0;
+			//server.m_tBeforeTime = server.m_tNowTime;
+			//server.m_iWaitingCount = 0;
 		}
 		else
 		{
-			if (WaitingTime <= server.m_tNowTime - server.m_tBeforeTime)
-			{
-				packet.SetData();
-				server.ServerSend(packet);
+			//if (WaitingTime <= server.m_tNowTime - server.m_tBeforeTime)
+			//{
+			//	pt.SetData()
+			//	server.ServerSend(packet);
 
-				server.m_tBeforeTime = server.m_tNowTime;
+			//	server.m_tBeforeTime = server.m_tNowTime;
 
 
-				clog.Log("INFO", "PT_ConnectCheck");
-				std::cout << "Send PT_ConnectCheck\n";
+			//	clog.Log("INFO", "PT_ConnectCheck");
+			//	std::cout << "Send PT_ConnectCheck\n";
 
-				++server.m_iWaitingCount;
-				if (MAXWaitingCount <= server.m_iWaitingCount)
-				{
-					SuspendThread(server.m_hSend);
-				}
-				else
-				{
-				}
-			}
-			else
-			{
-			}
+			//	++server.m_iWaitingCount;
+			//	if (MAXWaitingCount <= server.m_iWaitingCount)
+			//	{
+			//		SuspendThread(server.m_hSend);
+			//	}
+			//	else
+			//	{
+			//	}
+			//}
+			//else
+			//{
+			//}
 		}
 
 
@@ -158,21 +158,34 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	return NULL;
 }
 
+template <class T1, class T2>
+void CServer::MakeSendData(Packet*& pt, char*& senddata)
+{
+	pt = new T1{};
+	dynamic_cast<T1*>(pt)->SetData(GetData<T2>());
+	senddata = (char*)malloc(pt->GetSize());
+	memcpy_s(senddata, pt->GetSize(), pt, pt->GetSize());
+}
+
 //테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
 int CServer::InputKey(const char input)
 {
 	auto& server = CServer::Instance();
-	Packet pt{};
+	Packet* pt{ nullptr };
+	char* senddata{ nullptr };
+	int retval{ 0 };
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		pt.SetData(PACKETTYPE::PT_BallPlace, server.GetBallPlace());
-
-		clog.Log("INFO", "Send PT_BallPlace");
-		std::cout << "Send PT_BallPlace\n";
+		server.MakeSendData<Packet_ShotData, ShotData>((pt), senddata);
+		
+		//auto p = server.GetData<Packet_ShotData>();
+		//std::cout << p.GetData();
+		//clog.Log("INFO", "Send PT_ShotData");
+		//std::cout << "Send PT_ShotData\n";
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		pt.SetData(PACKETTYPE::PT_ShotData, server.GetShotData());
+		//.SetData(PACKETTYPE::PT_ShotData, server.GetShotData());
 
 		clog.Log("INFO", "Send PT_ShotData");
 		std::cout << "Send PT_ShotData\n";
@@ -181,16 +194,22 @@ int CServer::InputKey(const char input)
 	{
 		server.SetActiveState(false);
 
-		pt.SetData(PACKETTYPE::PT_ActiveState, server.GetActiveState());
+		//pt.SetData(PACKETTYPE::PT_ActiveState, server.GetActiveState());
 
 		clog.Log("INFO", "Send PT_ActiveState(false)");
 		std::cout << "Send PT_ActiveState(false)\n";
 	}
 	else
 	{
-		pt.SetData();
+		//pt.SetData();
 	}
-	return server.ServerSend(pt);
+
+	retval = send(server.m_hClient, (const char*)senddata, pt->GetSize(), 0);
+	if (pt != nullptr)
+	{
+		delete pt;
+	}
+	return retval;
 }
 
 //recv 스레드
@@ -203,34 +222,34 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 
 	while (true)
 	{
-		Packet packet{};
+		//Packet packet{};
 
-		if (SOCKET_ERROR == server.ServerRecv(&packet, sizeof(packet)))
-		{
-			clog.Log("ERROR", "RecvThread ServerRecv error");
-			std::cout << "RecvThread ServerRecv error\n";
-			break;
-		}
-		else    //에러가 아니라면 데이터 읽기
-		{
-			server.m_iWaitingCount = 0;
-			ResumeThread(server.m_hSend);
+		//if (SOCKET_ERROR == server.ServerRecv(&packet, sizeof(packet)))
+		//{
+		//	clog.Log("ERROR", "RecvThread ServerRecv error");
+		//	std::cout << "RecvThread ServerRecv error\n";
+		//	break;
+		//}
+		//else    //에러가 아니라면 데이터 읽기
+		//{
+		//	server.m_iWaitingCount = 0;
+		//	ResumeThread(server.m_hSend);
 
-			if (PACKETHEADER == packet.GetSize())
-			{
-				server.ReadHeader(packet.GetType());
-			}
-			else
-			{
-				if (SOCKET_ERROR == server.ReadAddData(packet))
-				{
-					clog.Log("ERROR", "ServerRecv ReadAddData error");
-					std::cout << "ServerRecv ReadAddData error\n";
-					break;
-				}
-			}
-			server.m_tBeforeTime = server.m_tNowTime;
-		}
+		//	if (PACKETHEADER == packet.GetSize())
+		//	{
+		//		server.ReadHeader(packet.GetType());
+		//	}
+		//	else
+		//	{
+		//		if (SOCKET_ERROR == server.ReadAddData(packet))
+		//		{
+		//			clog.Log("ERROR", "ServerRecv ReadAddData error");
+		//			std::cout << "ServerRecv ReadAddData error\n";
+		//			break;
+		//		}
+		//	}
+		//	server.m_tBeforeTime = server.m_tNowTime;
+		//}
 
 	}
 	return NULL;
@@ -264,55 +283,60 @@ void CServer::ReadHeader(const PACKETTYPE& type)
 //추가 데이터 recv 시
 int CServer::ReadAddData(Packet& packet)
 {
-	auto& server = CServer::Instance();
-	Packet recvpt{};
+	//auto& server = CServer::Instance();
+	//Packet recvpt{};
 
-	packet.SetData();
-	if (SOCKET_ERROR == server.ServerRecv(packet.GetData(), packet.GetSize()))
-	{
-		clog.Log("ERROR", "ReadAddData SOCKET_ERROR");
-		std::cout << "ReadAddData SOCKET_ERROR\n";
-		return SOCKET_ERROR;
-	}
-	else
-	{
-		if (PACKETTYPE::PT_ClubSetting == packet.GetType())
-		{
-			clog.Log("INFO", "Recv PT_ClubSetting");
-			server.SetClubSetting(packet.GetData());
-			std::cout << "Recv PT_ClubSetting // " << server.GetClubSetting() << "\n";
-			recvpt.SetType(PACKETTYPE::PT_ClubSettingRecv);
-		}
-		else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
-		{
-			clog.Log("INFO", "Recv PT_TeeSetting");
-			server.SetTeeSetting(packet.GetData());
-			std::cout << "Recv PT_TeeSetting // " << server.GetTeeSetting() << "\n";
-			recvpt.SetType(PACKETTYPE::PT_TeeSettingRecv);
-		}
-		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
-		{
-			clog.Log("INFO", "Recv PT_BallPlace");
-			server.SetActiveState(packet.GetData());
-			std::cout << "Recv PT_BallPlace // " << server.GetBallPlace() << "\n";
-			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
-		}
-		else
-		{
-			clog.Log("WARNING", "Recv ReadAddData unknown type");
-			std::cout << "Recv ReadAddData unknown type\n";
-		}
-	}
+	////packet.SetData();
+	//char* recvdata = (char*)malloc(packet.GetSize());
+	//if (SOCKET_ERROR == server.ServerRecv(recvdata, packet.GetSize()))
+	//{
+	//	clog.Log("ERROR", "ReadAddData SOCKET_ERROR");
+	//	std::cout << "ReadAddData SOCKET_ERROR\n";
+	//	return SOCKET_ERROR;
+	//}
+	//else
+	//{
+	//	if (PACKETTYPE::PT_ClubSetting == packet.GetType())
+	//	{
+	//		clog.Log("INFO", "Recv PT_ClubSetting");
+	//		//server.SetClubSetting(packet.GetData());
+	//		//std::cout << "Recv PT_ClubSetting // " << server.GetClubSetting() << "\n";
+	//		recvpt.SetType(PACKETTYPE::PT_ClubSettingRecv);
+	//	}
+	//	else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
+	//	{
+	//		clog.Log("INFO", "Recv PT_TeeSetting");
+	//		//server.SetTeeSetting(packet.GetData());
+	//		//std::cout << "Recv PT_TeeSetting // " << server.GetTeeSetting() << "\n";
+	//		recvpt.SetType(PACKETTYPE::PT_TeeSettingRecv);
+	//	}
+	//	else if (PACKETTYPE::PT_ActiveState == packet.GetType())
+	//	{
+	//		clog.Log("INFO", "Recv PT_BallPlace");
+	//		//server.SetActiveState(packet.GetData());
+	//		//std::cout << "Recv PT_BallPlace // " << server.GetBallPlace() << "\n";
+	//		recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
+	//	}
+	//	else
+	//	{
+	//		clog.Log("WARNING", "Recv ReadAddData unknown type");
+	//		std::cout << "Recv ReadAddData unknown type\n";
+	//	}
+	//}
 
-	recvpt.SetData();
-	return server.ServerSend(recvpt);
+	////recvpt.SetData();
+	//free(recvdata);
+
+	return 1;
+	//return server.ServerSend(recvpt);
 }
 
 //send
 int CServer::ServerSend(Packet& packet)
 {
 	auto& server = CServer::Instance();
-	return send(server.m_hClient, (const char*)packet.GetData(), packet.GetSize(), 0);
+	//return send(server.m_hClient, (const char*)packet, packet.GetSize(), 0);
+	return 1;
 }
 
 //recv

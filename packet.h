@@ -172,36 +172,20 @@ public:
 	Packet()
 	{
 		this->type = PACKETTYPE::PT_None;
-		this->size = PACKETHEADER;
-		this->data = nullptr;
+		this->size = sizeof(Packet);
 	}
 
 	//type이 지정된 생성자(send응답(~~recv 패킷 사용))
 	Packet(const PACKETTYPE& type)
 	{
 		this->type = type;
-		this->size = PACKETHEADER;
-		this->data = nullptr;
+		this->size = sizeof(Packet);
 	}
 
-	//type, data 생성자(data 전달 시 사용)
-	template <class T>
-	Packet(const PACKETTYPE& type, const T& data)
+	virtual ~Packet()
 	{
-		this->size = sizeof(T) + sizeof(Packet);
-		this->data = nullptr;
-		this->SetData(this->type, data);
-	}
 
-	//	~Packet() = default;
-	~Packet()
-	{
-		if (this->data != nullptr)
-		{
-			free(this->data);
-		}
-		this->data = nullptr;
-	}
+	};
 
 	//type 변경 시
 	void SetType(const PACKETTYPE& type)
@@ -209,34 +193,10 @@ public:
 		this->type = type;
 	}
 
-	//size 변경 시(data 전달 시 사용) [패킷 + data크기]
+	//size 변경 시(data 전달 시 사용)
 	void SetSize(const unsigned int& size)
 	{
-		this->size = size + sizeof(Packet);
-	}
-
-	//Recv전 size만큼 데이터 공간 확보용
-	void SetData()
-	{
-		this->data = (char*)malloc(this->size);
-		memcpy_s(this->data, PACKETHEADER, this, PACKETHEADER);
-	}
-
-	//AddData도 전달 시 생성하는 data
-	template <class T>
-	void SetData(const PACKETTYPE type, const T& data)
-	{
-		if (this->data != nullptr)
-		{
-			free(this->data);
-		}
-		this->data = nullptr;
-		this->SetType(type);
-		this->SetSize(sizeof(T));
-
-		this->data = (char*)malloc(this->size);
-		memcpy_s(this->data, PACKETHEADER, this, PACKETHEADER);
-		memcpy_s(this->data + sizeof(Packet), sizeof(T), &data, sizeof(T));
+		this->size = size;
 	}
 
 	PACKETTYPE& GetType()
@@ -247,13 +207,43 @@ public:
 	{
 		return this->size;
 	}
-	char* GetData()
+
+protected:
+	PACKETTYPE type;
+	unsigned int size;
+};
+
+
+class Packet_ShotData : public Packet
+{
+public:
+
+	Packet_ShotData()
+	{
+		this->type = PACKETTYPE::PT_ShotData;
+		this->size = sizeof(Packet) + sizeof(ShotData);
+		this->data = ShotData{};
+	}
+	Packet_ShotData(const ShotData& data)
+	{
+		this->type = PACKETTYPE::PT_ShotData;
+		this->size = sizeof(Packet) + sizeof(ShotData);
+		this->data = data;
+	}
+	~Packet_ShotData() override
+	{
+
+	};
+
+	void SetData(const ShotData& data)
+	{
+		this->data = data;
+	}
+	ShotData& GetData()
 	{
 		return this->data;
 	}
 
 private:
-	PACKETTYPE type;
-	unsigned int size;
-	char* data = nullptr;
+	ShotData data;
 };

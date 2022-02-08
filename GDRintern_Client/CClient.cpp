@@ -115,47 +115,49 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))
 int CClient::InputKey(const char input)
 {
-	auto& client = CClient::Instance();
-	Packet pt{};
+	return 1;
 
-	if ('q' == input)		//Club 세팅 전송
-	{
-		pt.SetData(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
+	//auto& client = CClient::Instance();
+	//Packet pt{};
 
-		clog.Log("INFO", "Send PT_Setting");
-		std::cout << "Send PT_Setting\n";
-	}
-	else if ('w' == input)		//Tee 세팅 전송
-	{
-		pt.SetData(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
+	//if ('q' == input)		//Club 세팅 전송
+	//{
+	//	pt.SetData(PACKETTYPE::PT_ClubSetting, client.GetClubSetting());
 
-		clog.Log("INFO", "Send PT_TeeSetting");
-		std::cout << "Send PT_TeeSetting\n";
-	}
-	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
-	{
-		client.SetActiveState(true);
+	//	clog.Log("INFO", "Send PT_Setting");
+	//	std::cout << "Send PT_Setting\n";
+	//}
+	//else if ('w' == input)		//Tee 세팅 전송
+	//{
+	//	pt.SetData(PACKETTYPE::PT_TeeSetting, client.GetTeeSetting());
 
-		pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+	//	clog.Log("INFO", "Send PT_TeeSetting");
+	//	std::cout << "Send PT_TeeSetting\n";
+	//}
+	//else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
+	//{
+	//	client.SetActiveState(true);
 
-		clog.Log("INFO", "Send PT_Active(true)");
-		std::cout << "Send PT_Active(true)\n";
-	}
-	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
-	{
-		client.SetActiveState(false);
+	//	pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
-		pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
+	//	clog.Log("INFO", "Send PT_Active(true)");
+	//	std::cout << "Send PT_Active(true)\n";
+	//}
+	//else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
+	//{
+	//	client.SetActiveState(false);
 
-		clog.Log("INFO", "Send PT_Active(false)");
-		std::cout << "Send PT_Active(false)\n";
-	}
-	else
-	{
-		pt.SetData();
-	}
+	//	pt.SetData(PACKETTYPE::PT_ActiveState, client.GetActiveState());
 
-	return client.ClientSend(pt);
+	//	clog.Log("INFO", "Send PT_Active(false)");
+	//	std::cout << "Send PT_Active(false)\n";
+	//}
+	//else
+	//{
+	//	pt.SetData();
+	//}
+
+	//return client.ClientSend(pt);
 }
 
 //recv 스레드
@@ -236,8 +238,9 @@ int CClient::ReadAddData(Packet& packet)
 	auto& client = CClient::Instance();
 	Packet recvpt{};
 
-	packet.SetData();
-	if (SOCKET_ERROR == client.ClientRecv(packet.GetData(), packet.GetSize()))
+	//packet.SetData();
+	char* recvdata = (char*)malloc(packet.GetSize());
+	if (SOCKET_ERROR == client.ClientRecv(recvdata, packet.GetSize()))
 	{
 		clog.Log("ERROR", "ReadAddData SOCKET_ERROR");
 		std::cout << "ReadAddData SOCKET_ERROR\n";
@@ -247,7 +250,7 @@ int CClient::ReadAddData(Packet& packet)
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
 			clog.Log("INFO", "Recv PT_BallPlace");
-			client.SetBallPlace(packet.GetData());
+			//client.SetBallPlace(packet.GetData());
 			clog.Log("INFO", to_string(client.GetBallPlace()));
 			std::cout << "Recv PT_BallPlace // " << client.GetBallPlace() << "\n";
 
@@ -257,7 +260,7 @@ int CClient::ReadAddData(Packet& packet)
 		{
 			clog.Log("INFO", "Recv PT_ShotData");
 
-			client.SetShotData(packet.GetData());
+			client.SetShotData(recvdata);
 			ShotData sd = client.GetShotData();
 
 			std::cout << "Recv PT_ShotData // " << sd << "\n";
@@ -271,7 +274,7 @@ int CClient::ReadAddData(Packet& packet)
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
 			clog.Log("INFO", "Recv PT_ActiveState");
-			client.SetActiveState(packet.GetData());
+			//client.SetActiveState(packet.GetData());
 			std::cout << "Recv PT_ActiveState  // " << client.GetActiveState() << "\n";
 
 			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
@@ -283,7 +286,7 @@ int CClient::ReadAddData(Packet& packet)
 		}
 	}
 
-	recvpt.SetData();
+	//recvpt.SetData();
 	return client.ClientSend(recvpt);
 }
 
@@ -291,7 +294,8 @@ int CClient::ReadAddData(Packet& packet)
 int CClient::ClientSend(Packet& packet)
 {
 	auto& client = CClient::Instance();
-	return send(client.m_hSock, (const char*)packet.GetData(), packet.GetSize(), 0);
+	return 1;
+	//return send(client.m_hSock, (const char*)packet.GetData(), packet.GetSize(), 0);
 }
 
 //recv

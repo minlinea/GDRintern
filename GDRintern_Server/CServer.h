@@ -46,6 +46,9 @@ public:
 	//recv 후 추가 data recv
 	int ReadAddData(Packet& type);
 
+	template <class T1, class T2>
+	void MakeSendData(Packet*& pt, char*& senddata);
+
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신(테스트 코드)
 	//w(공위치), e(샷정보), r(ballstate false)
 	int InputKey(const char input);
@@ -111,6 +114,36 @@ public:
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		memcpy_s(&m_bActiveState, sizeof(bool), activestate, sizeof(bool));
 	}
+
+
+	template <class T>
+	T GetData()
+	{
+		/*
+		int t = 0;
+		if (t == 1)
+		{
+			return m_eBallPlace;
+		}
+		else if (t == 2)
+		{
+			return m_eTee;
+		}
+		else if (t == 3)
+		{
+			return m_eClub;
+		}
+		else if (t == 4)
+		{
+			return m_bActiveState;
+		}*/
+		if (typeid(ShotData).name() == typeid(T).name())
+		{
+			std::cout << "OK\n";
+		}
+		return this->GetShotData();
+	}
+
 
 	const TEESETTING GetTeeSetting()
 	{
