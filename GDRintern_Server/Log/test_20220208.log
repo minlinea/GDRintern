@@ -203,3 +203,171 @@
 [09:48:29.000][INFO]	PT_ConnectCheck
 [09:48:30.419][ERROR]	RecvThread ServerRecv error
 [09:48:31.000][INFO]	PT_ConnectCheck
+[09:51:12.581][START]	==============================================
+[09:51:16.452][LOGIN]	127.0.0.1
+[09:51:16.453][INFO]	RecvThread ON
+[09:51:16.453][INFO]	PT_ConnectCheck
+[09:51:18.000][INFO]	PT_ConnectCheck
+[09:51:18.246][INFO]	Recv PT_BallPlace
+[09:51:19.373][INFO]	Recv PT_BallPlace
+[09:51:19.965][INFO]	Recv PT_TeeSetting
+[09:51:21.000][INFO]	PT_ConnectCheck
+[09:51:21.357][INFO]	Recv PT_BallPlace
+[09:51:22.277][INFO]	Recv PT_TeeSetting
+[09:51:22.805][INFO]	Recv PT_BallPlace
+[09:51:23.846][INFO]	Recv PT_BallPlace
+[09:51:25.000][INFO]	PT_ConnectCheck
+[09:51:25.190][INFO]	Recv PT_TeeSetting
+[09:51:25.622][INFO]	Recv PT_ClubSetting
+[09:51:26.646][INFO]	Recv PT_ClubSetting
+[09:51:27.262][INFO]	Recv PT_TeeSetting
+[09:51:27.431][INFO]	Recv PT_BallPlace
+[09:51:28.182][INFO]	Send PT_ShotData
+[09:51:28.186][INFO]	Recv PT_ShotDataRecv
+[09:51:30.000][INFO]	PT_ConnectCheck
+[09:51:31.248][ERROR]	RecvThread ServerRecv error
+[09:51:32.000][INFO]	PT_ConnectCheck
+[09:51:35.462][START]	==============================================
+[09:51:39.488][LOGIN]	127.0.0.1
+[09:51:39.489][INFO]	RecvThread ON
+[09:51:39.489][INFO]	PT_ConnectCheck
+[09:51:40.920][INFO]	Send PT_ShotData
+[09:51:40.922][INFO]	Recv PT_ShotDataRecv
+[09:51:41.840][INFO]	Send PT_BallPlace
+[09:51:41.841][INFO]	Recv PT_BallPlaceRecv
+[09:51:42.369][INFO]	Send PT_ActiveState(false)
+[09:51:42.370][INFO]	Recv PT_ActiveStateRecv
+[09:51:43.472][INFO]	Send PT_BallPlace
+[09:51:43.474][INFO]	Recv PT_BallPlaceRecv
+[09:51:43.521][INFO]	Send PT_ShotData
+[09:51:43.523][INFO]	Recv PT_ShotDataRecv
+[09:51:43.992][INFO]	Send PT_ActiveState(false)
+[09:51:43.993][INFO]	Recv PT_ActiveStateRecv
+[09:51:45.000][INFO]	PT_ConnectCheck
+[09:51:45.193][INFO]	Recv PT_BallPlace
+[09:51:45.826][INFO]	Recv PT_TeeSetting
+[09:51:46.257][INFO]	Recv PT_ClubSetting
+[09:51:46.920][INFO]	Send PT_ShotData
+[09:51:46.924][INFO]	Recv PT_ShotDataRecv
+[09:51:48.000][INFO]	PT_ConnectCheck
+[09:51:49.505][INFO]	Send PT_BallPlace
+[09:51:49.506][INFO]	Recv PT_BallPlaceRecv
+[09:51:51.042][INFO]	Send PT_ActiveState(false)
+[09:51:51.043][INFO]	Recv PT_ActiveStateRecv
+[09:51:53.000][INFO]	PT_ConnectCheck
+[09:51:57.112][START]	==============================================
+[09:52:00.814][LOGIN]	127.0.0.1
+[09:52:00.815][INFO]	RecvThread ON
+[09:52:00.816][INFO]	PT_ConnectCheck
+[09:52:03.000][INFO]	PT_ConnectCheck
+[09:52:06.000][INFO]	PT_ConnectCheck
+[09:52:06.715][INFO]	Send PT_BallPlace
+[09:52:06.717][INFO]	Recv PT_BallPlaceRecv
+[09:52:07.644][INFO]	Send PT_ShotData
+[09:52:07.646][INFO]	Recv PT_ShotDataRecv
+[09:52:09.000][INFO]	PT_ConnectCheck
+[09:52:09.452][INFO]	Send PT_BallPlace
+[09:52:09.453][INFO]	Recv PT_BallPlaceRecv
+[09:52:09.813][INFO]	Send PT_ActiveState(false)
+[09:52:09.814][INFO]	Recv PT_ActiveStateRecv
+[09:52:11.000][INFO]	PT_ConnectCheck
+[09:52:11.077][INFO]	Recv PT_BallPlace
+[09:52:12.220][INFO]	Send PT_BallPlace
+[09:52:12.222][INFO]	Recv PT_BallPlaceRecv
+[09:52:14.000][INFO]	PT_ConnectCheck
+[09:52:14.349][INFO]	Send PT_ActiveState(false)
+[09:52:14.350][INFO]	Recv PT_ActiveStateRecv
+[09:52:16.000][INFO]	PT_ConnectCheck
+[09:52:17.095][INFO]	Send PT_ShotData
+[09:52:17.100][INFO]	Recv PT_ShotDataRecv
+[11:22:16.819][START]	==============================================
+[11:22:20.598][LOGIN]	127.0.0.1
+[11:22:20.599][INFO]	RecvThread ON
+[11:22:20.600][INFO]	PT_ConnectCheck
+[11:22:21.649][INFO]	Recv PT_BallPlace
+[11:22:22.257][INFO]	Recv PT_BallPlace
+[11:22:22.768][INFO]	Recv PT_BallPlace
+[11:22:23.345][INFO]	Recv PT_TeeSetting
+[11:22:24.193][INFO]	Recv PT_BallPlace
+[11:22:24.745][INFO]	Recv PT_BallPlace
+[11:22:25.242][INFO]	Recv PT_BallPlace
+[11:22:25.561][INFO]	Recv PT_BallPlace
+[11:22:26.065][INFO]	Recv PT_TeeSetting
+[11:22:27.169][INFO]	Send PT_ShotData
+[11:22:27.172][INFO]	Recv PT_ShotDataRecv
+[11:22:29.000][INFO]	PT_ConnectCheck
+[11:22:31.000][INFO]	PT_ConnectCheck
+[11:25:03.557][START]	==============================================
+[11:26:10.902][LOGIN]	127.0.0.1
+[11:26:10.903][INFO]	RecvThread ON
+[11:26:10.904][INFO]	PT_ConnectCheck
+[11:26:12.000][INFO]	PT_ConnectCheck
+[11:26:12.047][INFO]	Send PT_ShotData
+[11:26:12.049][INFO]	Recv PT_ShotDataRecv
+[11:26:12.807][INFO]	Send PT_ShotData
+[11:26:12.809][INFO]	Recv PT_ShotDataRecv
+[11:26:13.788][ERROR]	RecvThread ServerRecv error
+[11:26:14.000][INFO]	PT_ConnectCheck
+[11:27:09.620][START]	==============================================
+[11:27:13.042][LOGIN]	127.0.0.1
+[11:27:13.045][INFO]	RecvThread ON
+[11:27:13.046][INFO]	PT_ConnectCheck
+[11:27:14.027][INFO]	Recv PT_BallPlace
+[11:27:24.931][INFO]	Send PT_ShotData
+[11:27:26.728][INFO]	PT_ConnectCheck
+[11:27:28.000][INFO]	PT_ConnectCheck
+[11:27:30.000][INFO]	PT_ConnectCheck
+[11:27:32.000][INFO]	PT_ConnectCheck
+[11:27:34.000][INFO]	PT_ConnectCheck
+[11:27:48.495][ERROR]	RecvThread ServerRecv error
+[11:28:55.324][START]	==============================================
+[11:28:59.754][LOGIN]	127.0.0.1
+[11:28:59.756][INFO]	SendThread ON
+[11:28:59.758][INFO]	PT_ConnectCheck
+[11:29:00.587][INFO]	Send PT_ShotData
+[11:29:00.590][INFO]	Recv PT_ShotDataRecv
+[11:29:01.650][INFO]	Send PT_ShotData
+[11:29:01.653][INFO]	Recv PT_ShotDataRecv
+[11:29:02.371][INFO]	Recv PT_BallPlace
+[11:29:02.971][INFO]	Send PT_ShotData
+[11:29:02.977][INFO]	Recv PT_ShotDataRecv
+[11:29:04.000][INFO]	PT_ConnectCheck
+[11:29:04.780][ERROR]	RecvThread ServerRecv error
+[11:29:23.971][START]	==============================================
+[11:29:28.200][LOGIN]	127.0.0.1
+[11:29:28.209][INFO]	SendThread ON
+[11:29:28.213][INFO]	PT_ConnectCheck
+[11:29:29.415][INFO]	Recv PT_BallPlace
+[11:30:12.834][START]	==============================================
+[11:30:14.485][LOGIN]	127.0.0.1
+[11:30:14.490][INFO]	SendThread ON
+[11:30:14.518][INFO]	RecvThread ON
+[11:30:14.523][INFO]	PT_ConnectCheck
+[11:31:39.522][INFO]	Send PT_ShotData
+[11:31:39.523][INFO]	PT_ConnectCheck
+[11:31:40.954][INFO]	Recv PT_ShotDataRecv
+[11:31:42.000][INFO]	PT_ConnectCheck
+[11:31:43.002][INFO]	Recv PT_BallPlace
+[11:56:35.090][START]	==============================================
+[11:56:39.118][LOGIN]	127.0.0.1
+[11:56:39.119][INFO]	RecvThread ON
+[11:56:39.120][INFO]	PT_ConnectCheck
+[11:56:40.830][INFO]	Send PT_ShotData
+[11:56:40.833][INFO]	Recv PT_ShotDataRecv
+[11:56:41.646][INFO]	Recv PT_BallPlace
+[11:56:42.406][INFO]	Send PT_ShotData
+[11:56:42.409][INFO]	Recv PT_ShotDataRecv
+[11:56:43.526][INFO]	Recv PT_BallPlace
+[11:56:43.830][INFO]	Recv PT_TeeSetting
+[11:56:44.381][INFO]	Send PT_ActiveState(false)
+[11:56:44.382][INFO]	Recv PT_ActiveStateRecv
+[11:56:44.869][INFO]	Send PT_ShotData
+[11:56:44.871][INFO]	Recv PT_ShotDataRecv
+[11:56:45.798][INFO]	Recv PT_TeeSetting
+[11:56:46.229][INFO]	Recv PT_BallPlace
+[11:56:47.326][INFO]	Recv PT_TeeSetting
+[11:56:47.861][INFO]	Send PT_ShotData
+[11:56:47.863][INFO]	Recv PT_ShotDataRecv
+[11:56:48.709][INFO]	Send PT_ShotData
+[11:56:48.712][INFO]	Recv PT_ShotDataRecv
+[11:56:50.000][INFO]	PT_ConnectCheck

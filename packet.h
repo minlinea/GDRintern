@@ -235,7 +235,7 @@ public:
 		this->SetSize(sizeof(T));
 
 		this->data = (char*)malloc(this->size);
-		memcpy_s(this->data, sizeof(Packet), this, sizeof(Packet));
+		memcpy_s(this->data, PACKETHEADER, this, PACKETHEADER);
 		memcpy_s(this->data + sizeof(Packet), sizeof(T), &data, sizeof(T));
 	}
 

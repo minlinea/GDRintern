@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="헤더 파일\common">
+      <UniqueIdentifier>{a92c3fad-0d7d-432d-b77f-6dd97b6643e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client_main.cpp">
@@ -21,19 +24,19 @@
     <ClCompile Include="CClient.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CLog.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="..\CLog.cpp">
+      <Filter>헤더 파일\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CClient.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="packet.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="..\CLog.h">
+      <Filter>헤더 파일\common</Filter>
     </ClInclude>
-    <ClInclude Include="CLog.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="..\packet.h">
+      <Filter>헤더 파일\common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

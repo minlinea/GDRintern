@@ -1,10 +1,10 @@
 #pragma once
 #include <mutex>
 #include <winsock2.h>
-#include "CLog.h"
+#include "../CLog.h"
 #pragma comment(lib, "Ws2_32.lib")
 
-#include "packet.h"
+#include "../packet.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 // #define
@@ -78,7 +78,7 @@ public:
 	void SetTeeSetting(char* tee)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		memcpy_s(&m_sdShotData, sizeof(ShotData), tee, sizeof(ShotData));
+		memcpy_s(&m_sdShotData, sizeof(TEESETTING), tee, sizeof(TEESETTING));
 
 	}
 	void SetClubSetting(const CLUBSETTING& club)
@@ -89,7 +89,7 @@ public:
 	void SetClubSetting(char* club)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		memcpy_s(&m_sdShotData, sizeof(ShotData), club, sizeof(ShotData));
+		memcpy_s(&m_sdShotData, sizeof(CLUBSETTING), club, sizeof(CLUBSETTING));
 	}
 	void SetBallPlace(const BALLPLACE& place)
 	{
@@ -99,7 +99,7 @@ public:
 	void SetBallPlace(char* ballplace)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		memcpy_s(&m_eBallPlace, sizeof(ShotData), ballplace, sizeof(ShotData));
+		memcpy_s(&m_eBallPlace, sizeof(BALLPLACE), ballplace, sizeof(BALLPLACE));
 	}
 	void SetActiveState(const bool& activestate)
 	{
@@ -109,7 +109,7 @@ public:
 	void SetActiveState(char* activestate)
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
-		memcpy_s(&m_bActiveState, sizeof(ShotData), activestate, sizeof(ShotData));
+		memcpy_s(&m_bActiveState, sizeof(bool), activestate, sizeof(bool));
 	}
 
 	const TEESETTING GetTeeSetting()
