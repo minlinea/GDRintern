@@ -179,20 +179,20 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		}
 		else	//에러가 아니라면 데이터 읽기
 		{
-			if (PACKETHEADER == packet.GetSize())
-			{
-				Client.ReadHeader(packet.GetType());
-			}
-			else
-			{
-				if (SOCKET_ERROR == Client.ReadAddData(packet))
-				{
-					break;
-				}
-				else
-				{
-				}
-			}
+			//if (PACKETHEADER == packet.GetSize())
+			//{
+			//	Client.ReadHeader(packet.GetType());
+			//}
+			//else
+			//{
+			//	if (SOCKET_ERROR == Client.ReadAddData(packet))
+			//	{
+			//		break;
+			//	}
+			//	else
+			//	{
+			//	}
+			//}
 		}
 	}
 	return NULL;
