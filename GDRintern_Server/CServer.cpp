@@ -182,6 +182,13 @@ int CServer::InputKey(const char input)
 		clog.Log("INFO", "Send PT_ActiveState(false)");
 		std::cout << "Send PT_ActiveState(false)\n";
 	}
+	else if ('a' == input)		//샷 이후 activestate false 전달
+	{
+		packet = new Packet(PACKETTYPE::PT_ConnectCheck);
+
+		clog.Log("INFO", "Send PT_ConnectCheck");
+		std::cout << "Send PT_ConnectCheck\n";
+	}
 	else
 	{
 		return retval;
@@ -189,13 +196,13 @@ int CServer::InputKey(const char input)
 
 	if (packet != nullptr)					//키 입력이 정상적인 경우(w,e,r)
 	{
-		retval = Server.ServerSend(packet);
-		delete packet;
+		retval = Server.TestSend(packet);
 		if (SOCKET_ERROR == retval)
 		{
 			clog.Log("ERROR", "InputKey ServerSend SOCKET_ERROR");
 			std::cout << "InputKey ServerSend SOCKET_ERROR\n";
 		}
+		delete packet;
 	}
 	return retval;
 }
@@ -340,6 +347,28 @@ int CServer::ServerSend(Packet* packet)
 
 	retval = send(Server.m_hClient, senddata, sendsize, 0);
 	
+	free(senddata);
+	return retval;
+}
+
+//send
+int CServer::TestSend(Packet* packet)
+{
+	int retval{ 0 };
+	int sendsize = packet->GetSize();
+	char* senddata = nullptr;
+
+	senddata = (char*)malloc(sendsize);
+	memcpy_s(senddata, sizeof(PACKETTYPE), &packet->GetType(), sizeof(PACKETTYPE));
+	memcpy_s(senddata + sizeof(PACKETTYPE), sizeof(unsigned int), &packet->GetSize(), sizeof(unsigned int));
+
+	//if (PACKETHEADER == packet->GetSize())
+	//{
+	//	//memcpy_s(senddata, sizeof(T), packet->GetData(), sizeof(T));
+	//}
+
+	retval = send(Server.m_hClient, senddata, sendsize, 0);
+
 	free(senddata);
 	return retval;
 }

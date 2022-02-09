@@ -3709,3 +3709,18 @@
 [13:17:27.972][INFO]	Recv PT_ShotDataRecv
 [13:17:28.234][INFO]	Send PT_ActiveState(false)
 [13:17:28.235][INFO]	Recv PT_ActiveStateRecv
+[16:15:28.483][START]	==============================================
+[16:30:48.130][START]	==============================================
+[16:30:54.417][LOGIN]	127.0.0.1
+[16:30:54.418][INFO]	RecvThread ON
+[16:30:55.909][INFO]	Send PT_ConnectCheck
+[16:30:58.068][INFO]	Send PT_ConnectCheck
+[16:32:56.378][START]	==============================================
+[16:33:00.377][LOGIN]	127.0.0.1
+[16:33:00.385][INFO]	RecvThread ON
+[16:33:02.615][INFO]	Send PT_ConnectCheck
+[16:33:23.222][START]	==============================================
+[16:33:24.160][LOGIN]	127.0.0.1
+[16:33:24.161][INFO]	RecvThread ON
+[16:33:28.006][INFO]	Send PT_ConnectCheck
+[16:33:32.248][ERROR]	RecvThread ServerRecv SOCKET_ERROR
