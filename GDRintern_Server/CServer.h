@@ -73,7 +73,6 @@ public:
 	{
 		std::lock_guard<std::mutex> _hMutex(this->m_hMutex);
 		this->m_eTee = tee;
-
 	}
 	void SetTeeSetting(char* tee)
 	{
@@ -135,7 +134,6 @@ public:
 	}
 
 private:
-
 	//Tee, Club 데이터 관련
 	TEESETTING m_eTee;
 	CLUBSETTING m_eClub;
@@ -149,16 +147,17 @@ private:
 	//ShotData
 	ShotData m_sdShotData;
 
+	//유휴상태 관련
+	time_t m_tNowTime;
+	time_t m_tBeforeTime;
+	int m_iWaitingCount;
+
+	//통신관련
 	WSADATA m_wsaData;
 	SOCKET m_hListenSock;
 	SOCKADDR_IN m_tListenAddr;
 
 	std::mutex m_hMutex;
-
-	//유휴상태 관련
-	time_t m_tNowTime;
-	time_t m_tBeforeTime;
-	int m_iWaitingCount;
 
 	HANDLE m_hSend;
 	HANDLE m_hRecv;
@@ -166,3 +165,6 @@ private:
 	SOCKET m_hClient;
 };
 
+
+// CServer 클래스 인스턴스 매크로
+#define Server CServer::Instance()

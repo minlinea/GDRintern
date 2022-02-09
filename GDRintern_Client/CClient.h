@@ -142,3 +142,6 @@ private:
 	//ShotData
 	ShotData m_sdShotData;
 };
+
+// CClient 클래스 인스턴스 매크로
+#define Client CClient::Instance()
