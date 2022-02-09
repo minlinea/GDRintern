@@ -103,42 +103,45 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 
 	while (true)
 	{
-
-		Packet packet{ PACKETTYPE::PT_ConnectCheck };
-
 		time(&Server.m_tNowTime);
 		if (1 == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
 		{
 			if (SOCKET_ERROR == Server.InputKey(_getch()))
 			{
-				clog.Log("ERROR", "SendThread InputKey error");
-				std::cout << "SendThread InputKey error\n";
 				break;
 			}
 			else
 			{
-			}
-			Server.m_tBeforeTime = Server.m_tNowTime;
-			Server.m_iWaitingCount = 0;
-		}
-		else
-		{
-			if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)
-			{
-				Server.ServerSend(&packet);
-
 				Server.m_tBeforeTime = Server.m_tNowTime;
-
-				clog.Log("INFO", "PT_ConnectCheck");
-				std::cout << "Send PT_ConnectCheck\n";
-
-				++Server.m_iWaitingCount;
-				if (MAXWaitingCount <= Server.m_iWaitingCount)
+				Server.m_iWaitingCount = 0;
+			}
+		}
+		else					//대기 통신 시
+		{	//대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
+			Packet packet{ PACKETTYPE::PT_ConnectCheck };
+			if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
+			{
+				if (SOCKET_ERROR == Server.ServerSend(&packet))
 				{
-					SuspendThread(Server.m_hSend);
+					clog.Log("ERROR", "SendThread ServerSend SOCKET_ERROR");
+					std::cout << "SendThread ServerSend SOCKET_ERROR\n";
+					break;
 				}
 				else
 				{
+					clog.Log("INFO", "PT_ConnectCheck");
+					std::cout << "Send PT_ConnectCheck\n";
+
+					Server.m_tBeforeTime = Server.m_tNowTime;				//BeforeTime 갱신
+
+					++Server.m_iWaitingCount;								//count 누적
+					if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
+					{
+						SuspendThread(Server.m_hSend);						//스레드 일시정지
+					}
+					else
+					{
+					}
 				}
 			}
 			else
@@ -184,12 +187,16 @@ int CServer::InputKey(const char input)
 		return retval;
 	}
 
-	if (packet != nullptr)
+	if (packet != nullptr)					//키 입력이 정상적인 경우(w,e,r)
 	{
 		retval = Server.ServerSend(packet);
 		delete packet;
+		if (SOCKET_ERROR == retval)
+		{
+			clog.Log("ERROR", "InputKey ServerSend SOCKET_ERROR");
+			std::cout << "InputKey ServerSend SOCKET_ERROR\n";
+		}
 	}
-
 	return retval;
 }
 
@@ -205,8 +212,8 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 
 		if (SOCKET_ERROR == Server.ServerRecv(&packet, sizeof(packet)))
 		{
-			clog.Log("ERROR", "RecvThread ServerRecv error");
-			std::cout << "RecvThread ServerRecv error\n";
+			clog.Log("ERROR", "RecvThread ServerRecv SOCKET_ERROR");
+			std::cout << "RecvThread ServerRecv SOCKET_ERROR\n";
 			break;
 		}
 		else    //에러가 아니라면 데이터 읽기
@@ -222,8 +229,6 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == Server.ReadAddData(packet))
 				{
-					clog.Log("ERROR", "ServerRecv ReadAddData error");
-					std::cout << "ServerRecv ReadAddData error\n";
 					break;
 				}
 			}
@@ -253,8 +258,8 @@ void CServer::ReadHeader(const PACKETTYPE& type)
 	}
 	else
 	{
-		clog.Log("WARNING", "Recv ReadHeader unknown type");
-		std::cout << "Recv ReadHeader unknown type\n";
+		clog.Log("WARNING", "ReadHeader Recv unknown type");
+		std::cout << "ReadHeader Recv unknown type\n";
 	}
 }
 
@@ -267,8 +272,8 @@ int CServer::ReadAddData(Packet& packet)
 	char* recvdata = (char*)malloc(packet.GetSize());
 	if (SOCKET_ERROR == Server.ServerRecv(recvdata, packet.GetSize()))
 	{
-		clog.Log("ERROR", "ReadAddData SOCKET_ERROR");
-		std::cout << "ReadAddData SOCKET_ERROR\n";
+		clog.Log("ERROR", "ReadAddData ServerRecv SOCKET_ERROR");
+		std::cout << "ReadAddData ServerRecv SOCKET_ERROR\n";
 		return SOCKET_ERROR;
 	}
 	else
@@ -296,8 +301,8 @@ int CServer::ReadAddData(Packet& packet)
 		}
 		else
 		{
-			clog.Log("WARNING", "Recv ReadAddData unknown type");
-			std::cout << "Recv ReadAddData unknown type\n";
+			clog.Log("WARNING", "ReadAddData recv unknown type");
+			std::cout << "ReadAddData recv unknown type\n";
 		}
 	}
 
@@ -305,6 +310,11 @@ int CServer::ReadAddData(Packet& packet)
 	if (PACKETTYPE::PT_None != recvpt.GetType())
 	{
 		retval = Server.ServerSend(&recvpt);
+		if (SOCKET_ERROR == retval)
+		{
+			clog.Log("ERROR", "ReadAddData ServerSend SOCKET_ERROR");
+			std::cout << "ReadAddData ServerSend SOCKET_ERROR\n";
+		}
 	}
 
 	free(recvdata);
