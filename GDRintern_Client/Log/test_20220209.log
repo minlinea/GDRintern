@@ -129,3 +129,93 @@
 [09:31:08.527][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
 [09:31:09.745][ERROR]	RecvThread ClientRecv error
 [09:31:09.746][END]	==============================================
+[13:07:38.557][START]	==============================================
+[13:07:38.566][INFO]	RecvThread ON
+[13:07:38.573][WARNING]	ReadAddData Recv unknown type
+[13:07:42.972][WARNING]	ReadAddData Recv unknown type
+[13:07:43.018][INFO]	Send PT_Active(false)
+[13:07:44.905][INFO]	Send PT_Active(true)
+[13:07:45.673][INFO]	Send PT_TeeSetting
+[13:07:46.817][INFO]	Send PT_TeeSetting
+[13:07:47.130][INFO]	Send PT_Setting
+[13:07:51.458][INFO]	Send PT_Setting
+[13:07:51.858][INFO]	Send PT_TeeSetting
+[13:07:55.971][WARNING]	ReadAddData Recv unknown type
+[13:08:08.625][START]	==============================================
+[13:08:08.631][INFO]	RecvThread ON
+[13:08:09.971][WARNING]	ReadAddData Recv unknown type
+[13:08:10.323][INFO]	Send PT_TeeSetting
+[13:08:13.915][INFO]	Send PT_TeeSetting
+[13:08:14.955][INFO]	Send PT_Active(true)
+[13:08:16.634][WARNING]	ReadHeader Recv unknown type
+[13:08:17.110][WARNING]	ReadAddData Recv unknown type
+[13:08:18.532][WARNING]	ReadAddData Recv unknown type
+[13:08:18.533][WARNING]	ReadHeader Recv unknown type
+[13:08:24.971][WARNING]	ReadAddData Recv unknown type
+[13:08:27.731][ERROR]	RecvThread ClientRecv error
+[13:08:27.732][END]	==============================================
+[13:09:35.858][START]	==============================================
+[13:09:35.864][INFO]	RecvThread ON
+[13:09:37.008][INFO]	Send PT_Active(true)
+[13:09:41.569][WARNING]	ReadHeader Recv unknown type
+[13:09:41.930][WARNING]	ReadAddData Recv unknown type
+[13:10:22.332][START]	==============================================
+[13:10:22.449][INFO]	SendThread ON
+[13:10:29.291][INFO]	Send PT_Active(true)
+[13:10:38.923][START]	==============================================
+[13:10:38.990][INFO]	SendThread ON
+[13:10:41.224][WARNING]	ReadHeader Recv unknown type
+[13:12:01.471][START]	==============================================
+[13:12:01.635][INFO]	SendThread ON
+[13:12:05.160][WARNING]	ReadHeader Recv unknown type
+[13:12:37.931][START]	==============================================
+[13:12:37.939][INFO]	RecvThread ON
+[13:13:02.096][WARNING]	ReadHeader Recv unknown type
+[13:13:02.509][WARNING]	ReadAddData Recv unknown type
+[13:13:31.526][ERROR]	RecvThread ClientRecv error
+[13:13:31.527][END]	==============================================
+[13:13:52.173][START]	==============================================
+[13:13:52.242][INFO]	RecvThread ON
+[13:14:40.133][ERROR]	RecvThread ClientRecv error
+[13:15:14.721][START]	==============================================
+[13:15:14.725][INFO]	SendThread ON
+[13:15:14.727][INFO]	Recv PT_ConnectCheck
+[13:15:15.589][INFO]	Send PT_Active(true)
+[13:15:15.590][INFO]	Recv PT_ActiveStateRecv
+[13:15:16.517][INFO]	Send PT_TeeSetting
+[13:15:16.518][INFO]	Recv PT_TeeSettingRecv
+[13:15:17.125][INFO]	Send PT_Active(false)
+[13:15:17.126][INFO]	Recv PT_ActiveStateRecv
+[13:15:17.861][INFO]	Send PT_Setting
+[13:15:17.862][INFO]	Recv PT_TeeSettingRecv
+[13:15:18.517][INFO]	Send PT_TeeSetting
+[13:15:18.518][INFO]	Recv PT_TeeSettingRecv
+[13:15:18.637][INFO]	Send PT_Active(true)
+[13:15:18.638][INFO]	Recv PT_ActiveStateRecv
+[13:15:19.069][INFO]	Send PT_Active(false)
+[13:15:19.070][INFO]	Recv PT_ActiveStateRecv
+[13:15:19.809][ERROR]	RecvThread ClientRecv error
+[13:15:19.810][END]	==============================================
+[13:17:06.100][START]	==============================================
+[13:17:07.107][ERROR]	ClientConnect connect error
+[13:17:07.110][END]	==============================================
+[13:17:23.996][START]	==============================================
+[13:17:24.000][INFO]	SendThread ON
+[13:17:24.002][INFO]	Recv PT_ConnectCheck
+[13:17:24.978][INFO]	Recv PT_ShotData
+[13:17:24.985][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[13:17:26.106][INFO]	Recv PT_BallPlace
+[13:17:26.106][INFO]	OB
+[13:17:26.945][INFO]	Send PT_Setting
+[13:17:26.947][INFO]	Recv PT_TeeSettingRecv
+[13:17:27.017][INFO]	Send PT_TeeSetting
+[13:17:27.019][INFO]	Recv PT_TeeSettingRecv
+[13:17:27.065][INFO]	Send PT_Active(true)
+[13:17:27.067][INFO]	Recv PT_ActiveStateRecv
+[13:17:27.890][INFO]	Recv PT_BallPlace
+[13:17:27.891][INFO]	OB
+[13:17:27.971][INFO]	Recv PT_ShotData
+[13:17:27.971][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[13:17:28.234][INFO]	Recv PT_ActiveState
+[13:17:29.125][ERROR]	RecvThread ClientRecv error
+[13:17:29.126][END]	==============================================

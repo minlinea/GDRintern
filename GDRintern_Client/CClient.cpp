@@ -171,7 +171,7 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 	{
 		Packet packet{};
 
-		if (SOCKET_ERROR == Client.ClientRecv(&packet, sizeof(packet)))
+		if (SOCKET_ERROR == Client.ClientRecv(&packet, PACKETHEADER))
 		{
 			clog.Log("ERROR", "RecvThread ClientRecv error");
 			std::cout << "RecvThread ClientRecv error\n";

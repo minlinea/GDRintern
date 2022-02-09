@@ -118,9 +118,9 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 		}
 		else					//대기 통신 시
 		{	//대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
-			Packet packet{ PACKETTYPE::PT_ConnectCheck };
 			if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
 			{
+				Packet packet{ PACKETTYPE::PT_ConnectCheck };
 				if (SOCKET_ERROR == Server.ServerSend(&packet))
 				{
 					clog.Log("ERROR", "SendThread ServerSend SOCKET_ERROR");

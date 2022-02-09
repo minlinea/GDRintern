@@ -221,13 +221,13 @@ public:
 	Packet_ShotData()
 	{
 		this->type = PACKETTYPE::PT_ShotData;
-		this->size = sizeof(Packet) + sizeof(ShotData);
+		this->size = PACKETHEADER + sizeof(ShotData);
 		this->data = ShotData{};
 	}
 	Packet_ShotData(const ShotData& data)
 	{
 		this->type = PACKETTYPE::PT_ShotData;
-		this->size = sizeof(Packet) + sizeof(ShotData);
+		this->size = PACKETHEADER + sizeof(ShotData);
 		this->data = data;
 	}
 	~Packet_ShotData() override
@@ -255,13 +255,13 @@ public:
 	Packet_BallPlace()
 	{
 		this->type = PACKETTYPE::PT_BallPlace;
-		this->size = sizeof(Packet) + sizeof(BALLPLACE);
+		this->size = PACKETHEADER + sizeof(BALLPLACE);
 		this->data = BALLPLACE::OB;
 	}
 	Packet_BallPlace(const BALLPLACE& data)
 	{
 		this->type = PACKETTYPE::PT_BallPlace;
-		this->size = sizeof(Packet) + sizeof(BALLPLACE);
+		this->size = PACKETHEADER + sizeof(BALLPLACE);
 		this->data = data;
 	}
 	~Packet_BallPlace() override
@@ -289,13 +289,13 @@ public:
 	Packet_ActiveState()
 	{
 		this->type = PACKETTYPE::PT_ActiveState;
-		this->size = sizeof(Packet) + sizeof(bool);
+		this->size = PACKETHEADER + sizeof(bool);
 		this->data = false;
 	}
 	Packet_ActiveState(const bool& data)
 	{
 		this->type = PACKETTYPE::PT_ActiveState;
-		this->size = sizeof(Packet) + sizeof(bool);
+		this->size = PACKETHEADER + sizeof(bool);
 		this->data = data;
 	}
 	~Packet_ActiveState() override
@@ -323,13 +323,13 @@ public:
 	Packet_TeeSetting()
 	{
 		this->type = PACKETTYPE::PT_TeeSetting;
-		this->size = sizeof(Packet) + sizeof(TEESETTING);
+		this->size = PACKETHEADER + sizeof(TEESETTING);
 		this->data = TEESETTING::T40;
 	}
 	Packet_TeeSetting(const TEESETTING& data)
 	{
 		this->type = PACKETTYPE::PT_TeeSetting;
-		this->size = sizeof(Packet) + sizeof(TEESETTING);
+		this->size = PACKETHEADER + sizeof(TEESETTING);
 		this->data = data;
 	}
 	~Packet_TeeSetting() override
@@ -357,13 +357,13 @@ public:
 	Packet_ClubSetting()
 	{
 		this->type = PACKETTYPE::PT_TeeSetting;
-		this->size = sizeof(Packet) + sizeof(Packet_ClubSetting);
+		this->size = PACKETHEADER + sizeof(Packet_ClubSetting);
 		this->data = CLUBSETTING::DRIVER;
 	}
 	Packet_ClubSetting(const CLUBSETTING& data)
 	{
 		this->type = PACKETTYPE::PT_TeeSetting;
-		this->size = sizeof(Packet) + sizeof(TEESETTING);
+		this->size = PACKETHEADER + sizeof(TEESETTING);
 		this->data = data;
 	}
 	~Packet_ClubSetting() override
