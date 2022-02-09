@@ -15,7 +15,6 @@ CClient::~CClient()
 	closesocket(Client.m_hSock);
 	CloseHandle(Client.m_hSend);
 	CloseHandle(Client.m_hRecv);
-	//CloseHandle(Instance().m_hMutex);
 	WSACleanup();
 }
 
@@ -63,8 +62,8 @@ void CClient::ClientConnect()
 	int retval{ connect(Client.m_hSock, (SOCKADDR*)&Client.m_tAddr, sizeof(Client.m_tAddr)) };
 	if (retval == SOCKET_ERROR)
 	{
-		clog.Log("ERROR", "connect error");
-		std::cout << "connect error" << std::endl;
+		clog.Log("ERROR", "ClientConnect connect error");
+		std::cout << "ClientConnect connect error" << std::endl;
 	}
 	else
 	{
@@ -94,8 +93,6 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 		{
 			if (SOCKET_ERROR == Client.InputKey(_getch()))
 			{
-				clog.Log("ERROR", "SendThread InputKey error");
-				std::cout << "SendThread InputKey error\n";
 				break;
 			}
 		}
@@ -153,6 +150,11 @@ int CClient::InputKey(const char input)
 	if (packet != nullptr)
 	{
 		retval = Client.ClientSend(packet);
+		if (SOCKET_ERROR == retval)
+		{
+			clog.Log("ERROR", "InputKey ClientSend error");
+			std::cout << "InputKey ClientSend error\n";
+		}
 		delete packet;
 	}
 
@@ -185,8 +187,6 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == Client.ReadAddData(packet))
 				{
-					clog.Log("ERROR", "RecvThread ReadAddData error");
-					std::cout << "RecvThread ReadAddData error\n";
 					break;
 				}
 				else
@@ -223,8 +223,8 @@ void CClient::ReadHeader(const PACKETTYPE& type)
 	}
 	else
 	{
-		clog.Log("WARNING", "Recv ReadHeader unknown type");
-		std::cout << "Recv ReadHeader unknown type\n";
+		clog.Log("WARNING", "ReadHeader Recv unknown type");
+		std::cout << "ReadHeader Recv unknown type\n";
 	}
 }
 
@@ -237,8 +237,8 @@ int CClient::ReadAddData(Packet& packet)
 	char* recvdata = (char*)malloc(packet.GetSize());
 	if (SOCKET_ERROR == Client.ClientRecv(recvdata, packet.GetSize()))
 	{
-		clog.Log("ERROR", "ReadAddData SOCKET_ERROR");
-		std::cout << "ReadAddData SOCKET_ERROR\n";
+		clog.Log("ERROR", "ReadAddData ClientRecv SOCKET_ERROR");
+		std::cout << "ReadAddData ClientRecv SOCKET_ERROR\n";
 	}
 	else
 	{
@@ -277,8 +277,8 @@ int CClient::ReadAddData(Packet& packet)
 		}
 		else
 		{
-			clog.Log("WARNING", "Recv ReadAddData unknown type");
-			std::cout << "Recv ReadAddData unknown type\n";
+			clog.Log("WARNING", "ReadAddData Recv unknown type");
+			std::cout << "ReadAddData Recv unknown type\n";
 		}
 	}
 
@@ -286,6 +286,11 @@ int CClient::ReadAddData(Packet& packet)
 	if (PACKETTYPE::PT_None != recvpt.GetType())
 	{
 		retval = Client.ClientSend(&recvpt);
+		if (retval == SOCKET_ERROR)
+		{
+			clog.Log("ERROR", "ReadAddData ClientSend error");
+			std::cout << "ReadAddData ClientSend error\n";
+		}
 	}
 	
 	free(recvdata);
