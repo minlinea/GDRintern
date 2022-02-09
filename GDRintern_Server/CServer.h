@@ -44,7 +44,7 @@ public:
 	void ReadHeader(const PACKETTYPE& type);
 
 	//recv 후 추가 data recv
-	void ReadAddData(Packet& type);
+	int ReadAddData(Packet& type);
 
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신(테스트 코드)
 	//w(공위치), e(샷정보), r(ballstate false)
