@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // define
 
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "192.168.245.130"
 #define PORT 4567
 #define PACKETHEADER sizeof(Packet)
 
@@ -182,7 +182,7 @@ public:
 		this->size = PACKETHEADER;
 	}
 
-	virtual ~Packet()
+	~Packet()
 	{
 
 	};
@@ -230,10 +230,7 @@ public:
 		this->size = PACKETHEADER + sizeof(ShotData);
 		this->data = data;
 	}
-	~Packet_ShotData() override
-	{
-
-	};
+	~Packet_ShotData() = default;
 
 	void SetData(const ShotData& data)
 	{
@@ -264,10 +261,7 @@ public:
 		this->size = PACKETHEADER + sizeof(BALLPLACE);
 		this->data = data;
 	}
-	~Packet_BallPlace() override
-	{
-
-	};
+	~Packet_BallPlace() = default;
 
 	void SetData(const BALLPLACE& data)
 	{
@@ -298,10 +292,7 @@ public:
 		this->size = PACKETHEADER + sizeof(bool);
 		this->data = data;
 	}
-	~Packet_ActiveState() override
-	{
-
-	};
+	~Packet_ActiveState() = default;
 
 	void SetData(const bool& data)
 	{
@@ -332,10 +323,7 @@ public:
 		this->size = PACKETHEADER + sizeof(TEESETTING);
 		this->data = data;
 	}
-	~Packet_TeeSetting() override
-	{
-
-	};
+	~Packet_TeeSetting() = default;
 
 	void SetData(const TEESETTING& data)
 	{
@@ -357,19 +345,16 @@ public:
 	Packet_ClubSetting()
 	{
 		this->type = PACKETTYPE::PT_TeeSetting;
-		this->size = PACKETHEADER + sizeof(Packet_ClubSetting);
+		this->size = PACKETHEADER + sizeof(CLUBSETTING);
 		this->data = CLUBSETTING::DRIVER;
 	}
 	Packet_ClubSetting(const CLUBSETTING& data)
 	{
 		this->type = PACKETTYPE::PT_TeeSetting;
-		this->size = PACKETHEADER + sizeof(TEESETTING);
+		this->size = PACKETHEADER + sizeof(CLUBSETTING);
 		this->data = data;
 	}
-	~Packet_ClubSetting() override
-	{
-
-	};
+	~Packet_ClubSetting() = default;
 
 	void SetData(const CLUBSETTING& data)
 	{
