@@ -159,7 +159,22 @@ int CServer::InputKey(const char input)
 	char* senddata{ nullptr };
 	int retval{ 0 };
 
-	if ('w' == input)		//공위치 전달(enum)
+	if ('a' == input)
+	{
+		packet = new Packet(PACKETTYPE::PT_ConnectCheck);
+		clog.Log("INFO", "Test Send PT_ConnectCheck");
+		std::cout << "Test Send PT_ConnectCheck\n";
+		retval = Server.ServerSend(packet);
+	}
+	else if ('s' == input)		//샷정보 전달
+	{
+		packet = new Packet_ShotData(Server.GetShotData());
+
+		clog.Log("INFO", "Test Send PT_ShotData");
+		std::cout << "Test Send PT_ShotData\n";
+		retval = Server.ServerSend(static_cast<Packet_ShotData*>(packet));
+	}
+	else if ('w' == input)		//공위치 전달(enum)
 	{
 		packet = new Packet_BallPlace(Server.GetBallPlace());
 
@@ -187,16 +202,16 @@ int CServer::InputKey(const char input)
 		return retval;
 	}
 
-	if (packet != nullptr)					//키 입력이 정상적인 경우(w,e,r)
-	{
-		retval = Server.ServerSend(packet);
-		delete packet;
-		if (SOCKET_ERROR == retval)
-		{
-			clog.Log("ERROR", "InputKey ServerSend SOCKET_ERROR");
-			std::cout << "InputKey ServerSend SOCKET_ERROR\n";
-		}
-	}
+	//if (packet != nullptr)					//키 입력이 정상적인 경우(w,e,r)
+	//{
+	//	retval = Server.ServerSend(packet);
+	//	delete packet;
+	//	if (SOCKET_ERROR == retval)
+	//	{
+	//		clog.Log("ERROR", "InputKey ServerSend SOCKET_ERROR");
+	//		std::cout << "InputKey ServerSend SOCKET_ERROR\n";
+	//	}
+	//}
 	return retval;
 }
 
@@ -329,14 +344,23 @@ int CServer::ServerRecv(void* buf, const int len)
 }
 
 //send
-int CServer::ServerSend(Packet* packet)
+template <class T>
+int CServer::ServerSend(T* packet)
 {
 	int retval{ 0 };
-	int sendsize = packet->GetSize();
-	char* senddata = nullptr;
+	char* senddata{ nullptr };
+	unsigned int sendsize{ packet->GetSize() };
 
 	senddata = (char*)malloc(sendsize);
-	memcpy_s(senddata, sendsize, packet, sendsize);
+	
+	//패킷헤더 조립부
+	memcpy_s(senddata, PACKETHEADER, packet, PACKETHEADER);
+
+	//패킷바디 조립부
+	if (PACKETHEADER != sendsize)
+	{
+		memcpy_s(senddata + PACKETHEADER,  sendsize - PACKETHEADER, &packet->GetData(), sendsize - PACKETHEADER);
+	}
 
 	retval = send(Server.m_hClient, senddata, sendsize, 0);
 	

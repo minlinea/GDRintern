@@ -51,7 +51,8 @@ public:
 	int InputKey(const char input);
 
 	//packet*가 들어오면 안에서 조립해서 보내보기
-	int ServerSend(Packet* packet);
+	template <class T>
+	int ServerSend(T* packet);
 	
 	//서버로부터 오는 정보 recv
 	int ServerRecv(void* buf, const int len);

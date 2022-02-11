@@ -9,6 +9,7 @@
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
 #define PACKETHEADER sizeof(Packet)
+//#define PACKETHEADER sizeof(unsigned int) + sizeof(PACKETTYPE)
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +183,7 @@ public:
 		this->size = PACKETHEADER;
 	}
 
-	virtual ~Packet()
+	~Packet()
 	{
 
 	};
@@ -199,6 +200,11 @@ public:
 		this->size = size;
 	}
 
+	unsigned int& GetData()
+	{
+		return size;
+	}
+
 	PACKETTYPE& GetType()
 	{
 		return this->type;
@@ -209,8 +215,8 @@ public:
 	}
 
 protected:
-	PACKETTYPE type;
 	unsigned int size;
+	PACKETTYPE type;
 };
 
 
@@ -230,7 +236,7 @@ public:
 		this->size = PACKETHEADER + sizeof(ShotData);
 		this->data = data;
 	}
-	~Packet_ShotData() override
+	~Packet_ShotData()
 	{
 
 	};
@@ -264,7 +270,7 @@ public:
 		this->size = PACKETHEADER + sizeof(BALLPLACE);
 		this->data = data;
 	}
-	~Packet_BallPlace() override
+	~Packet_BallPlace()
 	{
 
 	};
@@ -298,7 +304,7 @@ public:
 		this->size = PACKETHEADER + sizeof(bool);
 		this->data = data;
 	}
-	~Packet_ActiveState() override
+	~Packet_ActiveState()
 	{
 
 	};
@@ -332,7 +338,7 @@ public:
 		this->size = PACKETHEADER + sizeof(TEESETTING);
 		this->data = data;
 	}
-	~Packet_TeeSetting() override
+	~Packet_TeeSetting()
 	{
 
 	};
@@ -366,7 +372,7 @@ public:
 		this->size = PACKETHEADER + sizeof(TEESETTING);
 		this->data = data;
 	}
-	~Packet_ClubSetting() override
+	~Packet_ClubSetting()
 	{
 
 	};

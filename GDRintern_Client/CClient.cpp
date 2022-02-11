@@ -91,10 +91,10 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	{
 		if (1 == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
 		{
-			if (SOCKET_ERROR == Client.InputKey(_getch()))
-			{
-				break;
-			}
+			//if (SOCKET_ERROR == Client.InputKey(_getch()))
+			//{
+			//	break;
+			//}
 		}
 		else
 		{
@@ -167,9 +167,10 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 	clog.Log("INFO", "RecvThread ON");
 	std::cout << "RecvThread ON\n";
 
+	Packet packet{};
 	while (true)
 	{
-		Packet packet{};
+		ZeroMemory(&packet, sizeof(Packet));
 
 		if (SOCKET_ERROR == Client.ClientRecv(&packet, PACKETHEADER))
 		{
@@ -179,20 +180,21 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		}
 		else	//에러가 아니라면 데이터 읽기
 		{
-			//if (PACKETHEADER == packet.GetSize())
-			//{
-			//	Client.ReadHeader(packet.GetType());
-			//}
-			//else
-			//{
-			//	if (SOCKET_ERROR == Client.ReadAddData(packet))
-			//	{
-			//		break;
-			//	}
-			//	else
-			//	{
-			//	}
-			//}
+			std::cout << packet.GetSize() << "    " << (unsigned int)packet.GetType() << "\n";
+			if (PACKETHEADER == packet.GetSize())
+			{
+				Client.ReadHeader(packet.GetType());
+			}
+			else
+			{
+				if (SOCKET_ERROR == Client.ReadAddData(packet))
+				{
+					break;
+				}
+				else
+				{
+				}
+			}
 		}
 	}
 	return NULL;
@@ -302,6 +304,7 @@ int CClient::ReadAddData(Packet& packet)
 int CClient::ClientRecv(void* buf, const int len)
 {
 	return recv(Client.m_hSock, (char*)buf, len, 0);
+	//return recvn(Client.m_hSock, (char*)buf, len, 0);
 }
 
 //send
@@ -318,4 +321,33 @@ int CClient::ClientSend(Packet* packet)
 
 	free(senddata);
 	return retval;
+}
+
+
+// 사용자 정의 데이터 수신 함수
+int CClient::recvn(SOCKET s, char* buf, int len, int flags)
+{
+	int received; // recv() 함수의 리턴 값을 저장할 변수
+	char* ptr = buf;// 응용 프로그램 버퍼의 시작 주소. 데이터를 읽을 때마다 ptr값을 증가 시킨다.
+	int left = len;// 아직 읽지 않은 데이터 크기다. 데이터를 읽을 때마다 left을 감소 한다.
+
+	while (left > 0) // 아직 읽지 않는 데이터가 있으면 계속 루프를 돈다. 
+	{
+		received = recv(Client.m_hSock, ptr, left, flags);
+		if (received == SOCKET_ERROR)
+		{
+			return SOCKET_ERROR;
+		}
+		// recv 함수를 호출해 오류가 발생하면 곧바로 에러 리턴한다.
+
+		else if (received == 0)
+			break;
+		//함수가 정상 종료하면 루프에서 나온다.
+
+		left -= received;
+		ptr += received;
+		//데이터를 읽을 때마다 증가 , 감소를 하면서 정확한 바이트 수를 리턴하기 위함.
+	}
+
+	return (len - left);//읽은 바이트 수를 리턴
 }

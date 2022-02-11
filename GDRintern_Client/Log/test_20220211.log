@@ -1,0 +1,77 @@
+[13:29:47.441][START]	==============================================
+[13:29:47.450][INFO]	SendThread ON
+[13:29:55.671][ERROR]	RecvThread ClientRecv error
+[13:29:55.673][END]	==============================================
+[13:30:24.977][START]	==============================================
+[13:30:24.980][INFO]	SendThread ON
+[13:30:28.400][START]	==============================================
+[13:30:28.565][INFO]	RecvThread ON
+[13:31:14.652][START]	==============================================
+[13:31:14.923][INFO]	SendThread ON
+[13:31:27.406][START]	==============================================
+[13:31:27.670][INFO]	SendThread ON
+[13:31:58.122][START]	==============================================
+[13:31:58.387][INFO]	RecvThread ON
+[13:32:41.751][START]	==============================================
+[13:32:41.755][INFO]	SendThread ON
+[13:32:44.155][ERROR]	RecvThread ClientRecv error
+[13:32:44.156][END]	==============================================
+[13:33:05.823][START]	==============================================
+[13:33:07.091][ERROR]	ClientConnect connect error
+[13:33:07.103][END]	==============================================
+[13:33:22.452][START]	==============================================
+[13:33:22.682][INFO]	RecvThread ON
+[13:33:54.053][ERROR]	RecvThread ClientRecv error
+[13:34:04.743][START]	==============================================
+[13:34:04.749][INFO]	RecvThread ON
+[13:34:04.750][INFO]	SendThread ON
+[13:37:06.857][START]	==============================================
+[13:37:06.862][INFO]	RecvThread ON
+[13:47:25.942][START]	==============================================
+[13:47:25.947][INFO]	RecvThread ON
+[13:47:29.267][ERROR]	RecvThread ClientRecv error
+[13:47:29.269][END]	==============================================
+[13:53:16.969][START]	==============================================
+[13:53:16.974][INFO]	SendThread ON
+[13:53:20.927][INFO]	Recv PT_ConnectCheck
+[13:53:24.471][ERROR]	RecvThread ClientRecv error
+[13:53:24.472][END]	==============================================
+[13:53:40.919][START]	==============================================
+[13:53:41.059][INFO]	SendThread ON
+[13:53:41.061][INFO]	RecvThread ON
+[13:53:45.064][INFO]	Recv PT_ConnectCheck
+[13:54:08.999][START]	==============================================
+[13:54:09.003][INFO]	RecvThread ON
+[13:54:09.003][INFO]	SendThread ON
+[13:54:10.616][INFO]	Recv PT_ConnectCheck
+[13:54:13.731][ERROR]	RecvThread ClientRecv error
+[13:54:13.732][END]	==============================================
+[13:54:23.907][START]	==============================================
+[13:54:24.120][INFO]	RecvThread ON
+[13:54:27.331][ERROR]	RecvThread ClientRecv error
+[13:54:59.834][START]	==============================================
+[13:54:59.997][INFO]	SendThread ON
+[14:03:37.668][START]	==============================================
+[14:03:37.673][INFO]	SendThread ON
+[14:03:59.491][START]	==============================================
+[14:03:59.498][INFO]	RecvThread ON
+[14:04:20.385][ERROR]	RecvThread ClientRecv error
+[14:04:20.386][END]	==============================================
+[14:04:46.482][START]	==============================================
+[14:04:46.492][INFO]	SendThread ON
+[14:04:49.351][INFO]	Recv PT_ShotData
+[14:04:49.357][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[14:05:04.954][START]	==============================================
+[14:05:04.959][INFO]	SendThread ON
+[14:05:07.375][INFO]	Recv PT_ConnectCheck
+[14:05:07.927][INFO]	Recv PT_ShotData
+[14:05:07.928][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[14:05:08.575][INFO]	Recv PT_ConnectCheck
+[14:05:08.854][INFO]	Recv PT_ShotData
+[14:05:08.855][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[14:05:09.535][INFO]	Recv PT_ConnectCheck
+[14:05:09.719][INFO]	Recv PT_ShotData
+[14:05:09.720][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[14:05:10.463][INFO]	Recv PT_ConnectCheck
+[14:05:10.686][INFO]	Recv PT_ShotData
+[14:05:10.688][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]

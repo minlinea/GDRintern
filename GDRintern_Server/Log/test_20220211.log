@@ -1,0 +1,103 @@
+[13:29:36.760][START]	==============================================
+[13:29:47.448][LOGIN]	127.0.0.1
+[13:29:49.909][INFO]	RecvThread ON
+[13:29:50.762][INFO]	Send PT_ConnectCheck
+[13:29:55.171][INFO]	Send PT_ConnectCheck
+[13:30:15.820][START]	==============================================
+[13:30:20.225][START]	==============================================
+[13:30:20.288][ERROR]	ServerInit bind fail
+[13:30:20.289][END]	==============================================
+[13:30:24.980][LOGIN]	127.0.0.1
+[13:30:24.981][INFO]	RecvThread ON
+[13:30:26.984][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[13:30:31.124][INFO]	Send PT_ConnectCheck
+[13:31:10.572][START]	==============================================
+[13:31:14.922][LOGIN]	127.0.0.1
+[13:31:14.924][INFO]	SendThread ON
+[13:31:14.924][INFO]	RecvThread ON
+[13:31:20.479][INFO]	Send PT_ConnectCheck
+[13:31:23.547][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[13:31:34.542][INFO]	Send PT_ConnectCheck
+[13:31:54.474][START]	==============================================
+[13:31:58.386][LOGIN]	127.0.0.1
+[13:31:58.387][INFO]	SendThread ON
+[13:32:09.785][INFO]	Send PT_ConnectCheck
+[13:32:11.616][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[13:32:37.804][START]	==============================================
+[13:32:41.755][LOGIN]	127.0.0.1
+[13:32:41.756][INFO]	RecvThread ON
+[13:32:42.538][INFO]	Send PT_ConnectCheck
+[13:33:14.584][START]	==============================================
+[13:33:22.680][LOGIN]	127.0.0.1
+[13:33:22.683][INFO]	SendThread ON
+[13:33:22.683][INFO]	RecvThread ON
+[13:33:45.165][INFO]	Send PT_ConnectCheck
+[13:34:03.821][START]	==============================================
+[13:34:04.749][LOGIN]	127.0.0.1
+[13:34:04.751][INFO]	RecvThread ON
+[13:34:06.405][INFO]	Send PT_ConnectCheck
+[13:34:09.382][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[13:37:01.859][START]	==============================================
+[13:37:06.862][LOGIN]	127.0.0.1
+[13:37:06.863][INFO]	RecvThread ON
+[13:37:08.555][INFO]	Send PT_ConnectCheck
+[13:37:12.811][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[13:45:54.638][START]	==============================================
+[13:46:41.855][START]	==============================================
+[13:47:18.561][START]	==============================================
+[13:47:25.946][LOGIN]	127.0.0.1
+[13:47:25.948][INFO]	RecvThread ON
+[13:47:25.948][INFO]	SendThread ON
+[13:47:26.721][INFO]	Test Send PT_ConnectCheck
+[13:53:11.330][START]	==============================================
+[13:53:16.974][LOGIN]	127.0.0.1
+[13:53:16.975][INFO]	RecvThread ON
+[13:53:20.926][INFO]	Test Send PT_ConnectCheck
+[13:53:22.046][INFO]	Test Send PT_ShotData
+[13:53:33.338][START]	==============================================
+[13:53:36.926][START]	==============================================
+[13:53:37.087][ERROR]	ServerInit bind fail
+[13:53:37.088][END]	==============================================
+[13:53:41.058][LOGIN]	127.0.0.1
+[13:53:41.060][INFO]	SendThread ON
+[13:53:45.063][INFO]	Test Send PT_ConnectCheck
+[13:53:46.951][INFO]	Test Send PT_ShotData
+[13:54:04.050][START]	==============================================
+[13:54:09.003][LOGIN]	127.0.0.1
+[13:54:09.006][INFO]	RecvThread ON
+[13:54:10.615][INFO]	Test Send PT_ConnectCheck
+[13:54:11.759][INFO]	Test Send PT_ShotData
+[13:54:17.425][START]	==============================================
+[13:54:24.119][LOGIN]	127.0.0.1
+[13:54:24.120][INFO]	SendThread ON
+[13:54:25.847][INFO]	Test Send PT_ShotData
+[13:54:53.859][START]	==============================================
+[13:54:59.996][LOGIN]	127.0.0.1
+[13:54:59.997][INFO]	RecvThread ON
+[13:55:01.759][INFO]	Test Send PT_ShotData
+[14:03:30.156][START]	==============================================
+[14:03:37.672][LOGIN]	127.0.0.1
+[14:03:37.674][INFO]	RecvThread ON
+[14:03:38.901][INFO]	Test Send PT_ShotData
+[14:03:50.200][START]	==============================================
+[14:03:59.496][LOGIN]	127.0.0.1
+[14:03:59.504][INFO]	RecvThread ON
+[14:03:59.504][INFO]	SendThread ON
+[14:04:03.597][INFO]	Test Send PT_ShotData
+[14:04:45.798][START]	==============================================
+[14:04:46.488][LOGIN]	127.0.0.1
+[14:04:46.496][INFO]	RecvThread ON
+[14:04:49.349][INFO]	Test Send PT_ShotData
+[14:04:58.510][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[14:05:01.707][START]	==============================================
+[14:05:04.959][LOGIN]	127.0.0.1
+[14:05:04.960][INFO]	SendThread ON
+[14:05:07.373][INFO]	Test Send PT_ConnectCheck
+[14:05:07.925][INFO]	Test Send PT_ShotData
+[14:05:08.573][INFO]	Test Send PT_ConnectCheck
+[14:05:08.853][INFO]	Test Send PT_ShotData
+[14:05:09.534][INFO]	Test Send PT_ConnectCheck
+[14:05:09.717][INFO]	Test Send PT_ShotData
+[14:05:10.461][INFO]	Test Send PT_ConnectCheck
+[14:05:10.685][INFO]	Test Send PT_ShotData
+[14:05:13.441][ERROR]	RecvThread ServerRecv SOCKET_ERROR
