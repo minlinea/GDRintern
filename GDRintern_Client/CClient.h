@@ -36,13 +36,9 @@ public:
 
 	//packet*가 들어오면 안에서 조립해서 보내보기
 	int ClientSend(Packet* packet);
-	//packet*가 들어오면 안에서 조립해서 보내보기
-	int TestSend(Packet* packet);
 
 	//서버로부터 오는 정보 recv
 	int ClientRecv(void* buf, int len);
-	//packet*가 들어오면 안에서 조립해서 보내보기
-	int TestRecv(Packet* packet);
 
 	static DWORD WINAPI RecvThread(LPVOID socket);
 	static DWORD WINAPI SendThread(LPVOID socket);

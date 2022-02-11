@@ -8,7 +8,7 @@
 
 #define SERVER_IP "127.0.0.1"
 #define PORT 4567
-#define PACKETHEADER 8
+#define PACKETHEADER sizeof(Packet)
 
 
 //////////////////////////////////////////////////////////////////////////////////

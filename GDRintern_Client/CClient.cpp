@@ -169,41 +169,31 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 
 	while (true)
 	{
-		Packet* packet = new Packet();
-		if (SOCKET_ERROR == Client.TestRecv(packet))
+		Packet packet{};
+
+		if (SOCKET_ERROR == Client.ClientRecv(&packet, PACKETHEADER))
 		{
-			clog.Log("ERROR", "RecvThread TestRecv error");
-			std::cout << "RecvThread TestRecv error\n";
+			clog.Log("ERROR", "RecvThread ClientRecv error");
+			std::cout << "RecvThread ClientRecv error\n";
 			break;
 		}
-		else
+		else	//에러가 아니라면 데이터 읽기
 		{
-			std::cout << (unsigned int)packet->GetType() << "\t" << packet->GetSize() << "\n";
+			//if (PACKETHEADER == packet.GetSize())
+			//{
+			//	Client.ReadHeader(packet.GetType());
+			//}
+			//else
+			//{
+			//	if (SOCKET_ERROR == Client.ReadAddData(packet))
+			//	{
+			//		break;
+			//	}
+			//	else
+			//	{
+			//	}
+			//}
 		}
-		delete packet;
-		//if (SOCKET_ERROR == Client.ClientRecv(&packet, PACKETHEADER))
-		//{
-		//	clog.Log("ERROR", "RecvThread ClientRecv error");
-		//	std::cout << "RecvThread ClientRecv error\n";
-		//	break;
-		//}
-		//else	//에러가 아니라면 데이터 읽기
-		//{
-		//	//if (PACKETHEADER == packet.GetSize())
-		//	//{
-		//	//	Client.ReadHeader(packet.GetType());
-		//	//}
-		//	//else
-		//	//{
-		//	//	if (SOCKET_ERROR == Client.ReadAddData(packet))
-		//	//	{
-		//	//		break;
-		//	//	}
-		//	//	else
-		//	//	{
-		//	//	}
-		//	//}
-		//}
 	}
 	return NULL;
 }
@@ -327,34 +317,5 @@ int CClient::ClientSend(Packet* packet)
 	retval = send(Client.m_hSock, senddata, sendsize, 0);
 
 	free(senddata);
-	return retval;
-}
-
-//send
-int CClient::TestRecv(Packet* packet)
-{
-	char* recvdata{ nullptr };
-	int retval{ 0 };
-	
-	recvdata = (char*)malloc(PACKETHEADER);
-
-	retval = recv(Client.m_hSock, recvdata, PACKETHEADER, 0);
-	if (SOCKET_ERROR == retval)
-	{
-		//Socket Error
-	}
-	else
-	{
-		PACKETTYPE type;
-		unsigned int size;
-
-		memcpy_s(&type, sizeof(PACKETTYPE), recvdata, sizeof(PACKETTYPE));
-		memcpy_s(&size, sizeof(unsigned int), recvdata + sizeof(PACKETTYPE), sizeof(unsigned int));
-
-		packet->SetType(type);
-		packet->SetSize(size);
-
-		free(recvdata);
-	}
 	return retval;
 }
