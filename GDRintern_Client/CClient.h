@@ -34,6 +34,11 @@ public:
 	//q:ClubSetting, w:TeeSetting, e:active(true), r:active(false)
 	int InputKey(const char input);
 
+	//실제 동작용 함수
+	int SendClubSetting();
+	int SendTeeSetting();
+	int SendActiveState();
+
 	//packet*가 들어오면 안에서 조립해서 보내보기
 	int ClientSend(Packet* packet);
 

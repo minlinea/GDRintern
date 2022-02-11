@@ -152,52 +152,92 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	return NULL;
 }
 
+//공 위치 전송
+int CServer::SendBallPlace()
+{
+	int retval{ 0 };
+	Packet_BallPlace* packet{ nullptr };
+
+	packet = new Packet_BallPlace(Server.GetBallPlace());
+
+	clog.Log("INFO", "Send PT_BallPlace");
+	std::cout << "Send PT_BallPlace\n";
+
+	retval = Server.ServerSend(packet);
+	if (SOCKET_ERROR == retval)
+	{
+		clog.Log("ERROR", "SendBallPlace ServerSend SOCKET_ERROR");
+		std::cout << "SendBallPlace ServerSend SOCKET_ERROR\n";
+	}
+	delete packet;
+
+	return retval;
+}
+
+//ShotData 전송
+int CServer::SendShotData()
+{
+	int retval{ 0 };
+	Packet_ShotData* packet{ nullptr };
+
+	packet = new Packet_ShotData(Server.GetShotData());
+
+	clog.Log("INFO", "Send PT_ShotData");
+	std::cout << "Send PT_ShotData\n";
+
+	retval = Server.ServerSend(packet);
+	if (SOCKET_ERROR == retval)
+	{
+		clog.Log("ERROR", "SendShotData ServerSend SOCKET_ERROR");
+		std::cout << "SendShotData ServerSend SOCKET_ERROR\n";
+	}
+	delete packet;
+
+	return retval;
+}
+
+//샷 가능 여부 전송 (샷 이후 센서 inactive 상황 시)
+int CServer::SendActiveState()
+{
+	int retval{ 0 };
+	Packet_ActiveState* packet{ nullptr };
+
+	packet = new Packet_ActiveState(Server.GetActiveState());
+
+	clog.Log("INFO", "Send PT_ActiveState");
+	std::cout << "Send PT_ActiveState\n";
+
+	retval = Server.ServerSend(packet);
+	if (SOCKET_ERROR == retval)
+	{
+		clog.Log("ERROR", "SendActiveState ServerSend SOCKET_ERROR");
+		std::cout << "SendActiveState ServerSend SOCKET_ERROR\n";
+	}
+	delete packet;
+
+	return retval;
+}
+
 //테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
 int CServer::InputKey(const char input)
 {
-	Packet* packet{ nullptr };
-	char* senddata{ nullptr };
-	int retval{ 0 };
-
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		packet = new Packet_BallPlace(Server.GetBallPlace());
-
-		clog.Log("INFO", "Send PT_BallPlace");
-		std::cout << "Send PT_BallPlace\n";
+		return Server.SendBallPlace();
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		packet = new Packet_ShotData(Server.GetShotData());
-
-		clog.Log("INFO", "Send PT_ShotData");
-		std::cout << "Send PT_ShotData\n";
+		return Server.SendShotData();
 	}
 	else if ('r' == input)		//샷 이후 activestate false 전달
 	{
-		Server.SetActiveState(false);
-
-		packet = new Packet_ActiveState(Server.GetActiveState());
-
-		clog.Log("INFO", "Send PT_ActiveState(false)");
-		std::cout << "Send PT_ActiveState(false)\n";
+		
+		return Server.SendActiveState();
 	}
 	else
 	{
-		return retval;
+		return 0;
 	}
-
-	if (packet != nullptr)					//키 입력이 정상적인 경우(w,e,r)
-	{
-		retval = Server.ServerSend(packet);
-		delete packet;
-		if (SOCKET_ERROR == retval)
-		{
-			clog.Log("ERROR", "InputKey ServerSend SOCKET_ERROR");
-			std::cout << "InputKey ServerSend SOCKET_ERROR\n";
-		}
-	}
-	return retval;
 }
 
 //recv 스레드
@@ -206,9 +246,11 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 	clog.Log("INFO", "RecvThread ON");
 	std::cout << "RecvThread ON\n";
 
+
+	Packet packet{};
 	while (true)
 	{
-		Packet packet{};
+		ZeroMemory(&packet, sizeof(Packet));
 
 		if (SOCKET_ERROR == Server.ServerRecv(&packet, sizeof(packet)))
 		{
@@ -294,9 +336,9 @@ int CServer::ReadAddData(Packet& packet)
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
-			clog.Log("INFO", "Recv PT_BallPlace");
+			clog.Log("INFO", "Recv PT_ActiveState");
 			Server.SetActiveState(recvdata);
-			std::cout << "Recv PT_BallPlace // " << Server.GetBallPlace() << "\n";
+			std::cout << "Recv PT_ActiveState // " << Server.GetActiveState() << "\n";
 			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
