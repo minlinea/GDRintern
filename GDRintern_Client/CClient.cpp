@@ -5,6 +5,9 @@
 //로그
 CLog clog;
 
+//테스트용 임시 bool변수
+bool queuelock = false;
+
 CClient::CClient()
 {
 	DataInit();
@@ -89,27 +92,26 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 
 	while (true)
 	{
-		//if (SOCKET_ERROR == Client.InputKey(_getch()))
-		//{
-		//	break;
-		//}
-		//else
-		//{
-		//}
+		Client.InputKey(_getch());
 
-		Client.SendClubSetting();
-		if (true != Client.m_qPacket.empty())
+		if (true != queuelock)
 		{
-			if (SOCKET_ERROR == Client.ClientSend(Client.m_qPacket.front()))
+			if (true != Client.m_qPacket.empty())
 			{
-				clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
-				std::cout << "SendThread ClientSend SOCKET_ERROR\n";
-				break;
+				for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
+				{
+					p = Client.m_qPacket.front();
+					if (SOCKET_ERROR == Client.ClientSend(p))
+					{
+						clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
+						std::cout << "SendThread ClientSend SOCKET_ERROR\n";
+						break;
+					}
+					delete p;
+					Client.m_qPacket.pop();
+				}
+				
 			}
-			delete Client.m_qPacket.front();
-			Client.m_qPacket.pop();
-
-			SuspendThread(Client.m_hSend);
 		}
 	}
 	return NULL;
@@ -118,8 +120,6 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 //Club 세팅 전송
 void CClient::SendClubSetting()
 {
-	int retval{ 0 };
-
 	m_qPacket.push(new Packet_ClubSetting(Client.GetClubSetting()));
 
 	clog.Log("INFO", "Send PT_ClubSetting");
@@ -127,74 +127,47 @@ void CClient::SendClubSetting()
 }
 
 //Tee 세팅 전송
-int CClient::SendTeeSetting()
+void CClient::SendTeeSetting()
 {
-	int retval{ 0 };
-	Packet_TeeSetting* packet{ nullptr };
-
-	packet = new Packet_TeeSetting(Client.GetTeeSetting());
+	m_qPacket.push(new Packet_TeeSetting(Client.GetTeeSetting()));
 
 	clog.Log("INFO", "Send PT_TeeSetting");
 	std::cout << "Send PT_TeeSetting\n";
-
-	retval = Client.ClientSend(packet);
-	if (SOCKET_ERROR == retval)
-	{
-		clog.Log("ERROR", "SendTeeSetting ClientSend SOCKET_ERROR");
-		std::cout << "SendTeeSetting ClientSend SOCKET_ERROR\n";
-	}
-	delete packet;
-
-	return retval;
 }
 
 //샷 가능 여부 전송 (샷 이후 센서 inactive 상황)
-int CClient::SendActiveState()
+void CClient::SendActiveState()
 {
-	int retval{ 0 };
-	Packet_ActiveState* packet{ nullptr };
-
-	packet = new Packet_ActiveState(Client.GetActiveState());
+	m_qPacket.push(new Packet_ActiveState(Client.GetActiveState()));
 
 	clog.Log("INFO", "Send PT_ActiveState");
 	std::cout << "Send PT_ActiveState\n";
-
-	retval = Client.ClientSend(packet);
-	if (SOCKET_ERROR == retval)
-	{
-		clog.Log("ERROR", "SendActiveState ClientSend SOCKET_ERROR");
-		std::cout << "SendActiveState ClientSend SOCKET_ERROR\n";
-	}
-	delete packet;
-
-	return retval;
 }
 
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))
-int CClient::InputKey(const char input)
+void CClient::InputKey(const char input)
 {
 	if ('q' == input)		//Club 세팅 전송
 	{
 		Client.SendClubSetting();
-		return 0;
 	}
 	else if ('w' == input)		//Tee 세팅 전송
 	{
-		return Client.SendTeeSetting();
+		Client.SendTeeSetting();
 	}
 	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
 	{
 		Client.SetActiveState(true);
-		return Client.SendActiveState();
+		Client.SendActiveState();
 	}
 	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
 	{
 		Client.SetActiveState(false);
-		return Client.SendActiveState();
+		Client.SendActiveState();
 	}
-	else
+	else if ('t' == input)
 	{
-		return 0;
+		queuelock = true;
 	}
 }
 

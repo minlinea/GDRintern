@@ -1599,3 +1599,128 @@
 [16:55:59.000][INFO]	PT_ConnectCheck
 [16:56:04.000][INFO]	PT_ConnectCheck
 [16:56:39.880][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:14:30.497][START]	==============================================
+[17:16:14.776][START]	==============================================
+[17:16:23.733][LOGIN]	192.168.206.126
+[17:16:23.735][INFO]	SendThread ON
+[17:16:23.735][INFO]	RecvThread ON
+[17:16:23.736][INFO]	PT_ConnectCheck
+[17:16:26.404][INFO]	Recv PT_TeeSetting
+[17:16:28.080][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:16:31.000][ERROR]	SendThread ServerSend SOCKET_ERROR
+[17:16:31.000][LOGOUT]	192.168.206.126
+[17:16:39.707][START]	==============================================
+[17:16:42.159][LOGIN]	192.168.206.126
+[17:16:42.162][INFO]	RecvThread ON
+[17:16:44.014][INFO]	PT_ConnectCheck
+[17:16:49.000][INFO]	PT_ConnectCheck
+[17:16:50.847][INFO]	Recv PT_TeeSetting
+[17:16:55.000][INFO]	PT_ConnectCheck
+[17:17:00.000][INFO]	PT_ConnectCheck
+[17:17:05.000][INFO]	PT_ConnectCheck
+[17:17:07.827][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:17:10.000][ERROR]	SendThread ServerSend SOCKET_ERROR
+[17:17:10.000][LOGOUT]	192.168.206.126
+[17:18:00.956][START]	==============================================
+[17:18:00.959][ERROR]	ServerInit bind fail
+[17:18:00.960][END]	==============================================
+[17:18:05.702][START]	==============================================
+[17:18:08.086][LOGIN]	192.168.206.126
+[17:18:08.088][INFO]	SendThread ON
+[17:18:08.088][INFO]	RecvThread ON
+[17:18:10.000][INFO]	PT_ConnectCheck
+[17:18:15.000][INFO]	PT_ConnectCheck
+[17:18:20.000][INFO]	PT_ConnectCheck
+[17:18:25.000][INFO]	PT_ConnectCheck
+[17:18:30.000][INFO]	PT_ConnectCheck
+[17:18:35.000][INFO]	PT_ConnectCheck
+[17:18:40.000][INFO]	PT_ConnectCheck
+[17:18:45.000][INFO]	PT_ConnectCheck
+[17:18:47.420][INFO]	Recv PT_TeeSetting
+[17:18:52.000][INFO]	PT_ConnectCheck
+[17:18:57.000][INFO]	PT_ConnectCheck
+[17:19:02.000][INFO]	PT_ConnectCheck
+[17:19:07.000][INFO]	PT_ConnectCheck
+[17:19:12.000][INFO]	PT_ConnectCheck
+[17:19:17.000][INFO]	PT_ConnectCheck
+[17:19:22.000][INFO]	PT_ConnectCheck
+[17:19:27.000][INFO]	PT_ConnectCheck
+[17:19:32.000][INFO]	PT_ConnectCheck
+[17:19:37.000][INFO]	PT_ConnectCheck
+[17:19:51.253][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:20:17.986][START]	==============================================
+[17:20:21.860][LOGIN]	192.168.206.126
+[17:20:21.862][INFO]	SendThread ON
+[17:20:22.000][INFO]	PT_ConnectCheck
+[17:20:26.293][INFO]	Recv PT_TeeSetting
+[17:20:26.294][INFO]	Recv PT_TeeSetting
+[17:20:26.295][INFO]	Recv PT_ActiveState
+[17:20:31.000][INFO]	PT_ConnectCheck
+[17:20:31.278][ERROR]	ReadAddData ServerRecv SOCKET_ERROR
+[17:21:02.966][START]	==============================================
+[17:21:05.415][LOGIN]	192.168.206.126
+[17:21:05.417][INFO]	RecvThread ON
+[17:21:09.210][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:21:51.920][START]	==============================================
+[17:21:56.566][LOGIN]	192.168.206.126
+[17:21:56.571][INFO]	SendThread ON
+[17:22:04.752][INFO]	Recv PT_TeeSetting
+[17:22:17.474][INFO]	Recv PT_TeeSetting
+[17:22:26.737][INFO]	Recv PT_ActiveState
+[17:22:30.301][INFO]	Recv PT_ActiveState
+[17:22:36.312][INFO]	Recv PT_TeeSetting
+[17:22:43.687][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:22:49.618][START]	==============================================
+[17:22:51.605][LOGIN]	192.168.206.126
+[17:22:51.606][INFO]	RecvThread ON
+[17:22:58.722][INFO]	Recv PT_TeeSetting
+[17:23:00.709][INFO]	Recv PT_TeeSetting
+[17:23:01.733][INFO]	Recv PT_ActiveState
+[17:23:03.058][INFO]	Recv PT_ActiveState
+[17:23:30.073][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:24:00.394][START]	==============================================
+[17:24:04.161][LOGIN]	192.168.206.126
+[17:24:04.163][INFO]	SendThread ON
+[17:24:05.483][INFO]	Recv PT_TeeSetting
+[17:24:05.484][INFO]	Recv PT_TeeSetting
+[17:24:05.485][WARNING]	ReadAddData recv unknown type
+[17:24:08.383][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:24:12.975][START]	==============================================
+[17:24:15.412][LOGIN]	192.168.206.126
+[17:24:15.413][INFO]	RecvThread ON
+[17:24:19.368][INFO]	Recv PT_TeeSetting
+[17:24:23.746][INFO]	Recv PT_TeeSetting
+[17:24:25.990][INFO]	Recv PT_ActiveState
+[17:24:29.199][INFO]	Recv PT_ActiveState
+[17:24:40.238][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:24:41.993][START]	==============================================
+[17:24:44.019][LOGIN]	192.168.206.126
+[17:24:44.022][INFO]	RecvThread ON
+[17:24:44.023][INFO]	SendThread ON
+[17:24:45.637][INFO]	Recv PT_TeeSetting
+[17:24:45.638][INFO]	Recv PT_TeeSetting
+[17:24:48.143][ERROR]	ReadAddData ServerRecv SOCKET_ERROR
+[17:24:57.898][START]	==============================================
+[17:24:59.573][LOGIN]	192.168.206.126
+[17:24:59.574][INFO]	RecvThread ON
+[17:25:00.949][INFO]	Recv PT_TeeSetting
+[17:25:00.950][INFO]	Recv PT_TeeSetting
+[17:25:00.951][INFO]	Recv PT_ActiveState
+[17:25:06.888][ERROR]	ReadAddData ServerRecv SOCKET_ERROR
+[17:25:47.276][START]	==============================================
+[17:25:50.615][LOGIN]	192.168.206.126
+[17:25:50.617][INFO]	RecvThread ON
+[17:25:51.128][INFO]	Recv PT_TeeSetting
+[17:25:51.303][INFO]	Recv PT_TeeSetting
+[17:25:51.616][INFO]	Recv PT_ActiveState
+[17:25:52.175][INFO]	Recv PT_TeeSetting
+[17:25:52.383][INFO]	Recv PT_TeeSetting
+[17:25:52.479][INFO]	Recv PT_ActiveState
+[17:25:52.887][INFO]	Recv PT_ActiveState
+[17:25:53.279][INFO]	Recv PT_TeeSetting
+[17:25:53.591][INFO]	Recv PT_ActiveState
+[17:25:53.599][INFO]	Recv PT_ActiveState
+[17:25:53.807][INFO]	Recv PT_TeeSetting
+[17:25:53.943][INFO]	Recv PT_TeeSetting
+[17:25:54.023][INFO]	Recv PT_ActiveState
+[17:25:55.056][ERROR]	RecvThread ServerRecv SOCKET_ERROR
