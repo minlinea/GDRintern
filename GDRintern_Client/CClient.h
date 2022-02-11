@@ -1,6 +1,7 @@
 #pragma once
 #include <mutex>
 #include <winsock2.h>
+#include <queue>
 #include "../CLog.h"
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -35,7 +36,7 @@ public:
 	int InputKey(const char input);
 
 	//실제 동작용 함수
-	int SendClubSetting();
+	void SendClubSetting();
 	int SendTeeSetting();
 	int SendActiveState();
 
@@ -146,6 +147,8 @@ private:
 
 	//ShotData
 	ShotData m_sdShotData;
+
+	std::queue<Packet*> m_qPacket;
 };
 
 // CClient 클래스 인스턴스 매크로

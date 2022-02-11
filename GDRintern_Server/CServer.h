@@ -1,6 +1,7 @@
 #pragma once
 #include <mutex>
 #include <winsock2.h>
+#include <queue>
 #include "../CLog.h"
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -139,6 +140,8 @@ public:
 	}
 
 private:
+
+	
 	//Tee, Club 데이터 관련
 	TEESETTING m_eTee;
 	CLUBSETTING m_eClub;
@@ -168,6 +171,8 @@ private:
 	HANDLE m_hRecv;
 	HANDLE m_hListen;
 	SOCKET m_hClient;
+
+	std::queue<Packet*> m_qPacket;
 };
 
 

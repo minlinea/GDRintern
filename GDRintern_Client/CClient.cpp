@@ -89,41 +89,41 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 
 	while (true)
 	{
-		if (1 == _kbhit())		//패킷 테스트를 위한 인풋 키 입력
+		//if (SOCKET_ERROR == Client.InputKey(_getch()))
+		//{
+		//	break;
+		//}
+		//else
+		//{
+		//}
+
+		Client.SendClubSetting();
+		if (true != Client.m_qPacket.empty())
 		{
-			if (SOCKET_ERROR == Client.InputKey(_getch()))
+			if (SOCKET_ERROR == Client.ClientSend(Client.m_qPacket.front()))
 			{
+				clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
+				std::cout << "SendThread ClientSend SOCKET_ERROR\n";
 				break;
 			}
-		}
-		else
-		{
-		}
+			delete Client.m_qPacket.front();
+			Client.m_qPacket.pop();
 
+			SuspendThread(Client.m_hSend);
+		}
 	}
 	return NULL;
 }
 
 //Club 세팅 전송
-int CClient::SendClubSetting()
+void CClient::SendClubSetting()
 {
 	int retval{ 0 };
-	Packet_ClubSetting* packet{ nullptr };
 
-	packet = new Packet_ClubSetting(Client.GetClubSetting());
+	m_qPacket.push(new Packet_ClubSetting(Client.GetClubSetting()));
 
 	clog.Log("INFO", "Send PT_ClubSetting");
 	std::cout << "Send PT_ClubSetting\n";
-
-	retval = Client.ClientSend(packet);
-	if (SOCKET_ERROR == retval)
-	{
-		clog.Log("ERROR", "SendClubSetting ClientSend SOCKET_ERROR");
-		std::cout << "SendClubSetting ClientSend SOCKET_ERROR\n";
-	}
-	delete packet;
-
-	return retval;
 }
 
 //Tee 세팅 전송
@@ -175,7 +175,8 @@ int CClient::InputKey(const char input)
 {
 	if ('q' == input)		//Club 세팅 전송
 	{
-		return Client.SendClubSetting();
+		Client.SendClubSetting();
+		return 0;
 	}
 	else if ('w' == input)		//Tee 세팅 전송
 	{
@@ -222,6 +223,7 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 			}
 			else
 			{
+				ResumeThread(Client.m_hSend);
 				if (SOCKET_ERROR == Client.ReadAddData(packet))
 				{
 					break;
