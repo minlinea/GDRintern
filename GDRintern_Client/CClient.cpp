@@ -91,37 +91,31 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	{
 		Client.InputKey();
 
-		if (true != Client.m_qPacket.empty())
+		for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
 		{
-			for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
+			p = Client.m_qPacket.front();
+			if (SOCKET_ERROR == Client.ClientSend(p))
 			{
-				p = Client.m_qPacket.front();
-				if (SOCKET_ERROR == Client.ClientSend(p))
-				{
-					clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
-					std::cout << "SendThread ClientSend SOCKET_ERROR\n";
-					break;
-				}
-				clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
-				std::cout << "Send : " << to_string(p->GetType()) << "\n";
-				delete p;
-				Client.m_qPacket.pop();
+				clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
+				std::cout << "SendThread ClientSend SOCKET_ERROR\n";
+				break;
 			}
+			clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
+			std::cout << "Send : " << to_string(p->GetType()) << "\n";
+			delete p;
+			Client.m_qPacket.pop();
 		}
-		
+
 	}
 	return NULL;
 }
 
+//class P : 전송하고자 하는 Packet 또는 Packet하위클래스
+//PACKETDATA : Packet인 경우 PACKETTYPE // Packet하위클래스인 경우 전송하고자 하는 데이터
 template <class P, class PACKETDATA>
-void CClient::SendAddData(PACKETDATA data)
+void CClient::SendData(PACKETDATA data)
 {
 	m_qPacket.push(new P(data));
-}
-
-void CClient::SendNoneAddData(PACKETTYPE type)
-{
-	m_qPacket.push(new Packet(type));
 }
 
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))
@@ -132,21 +126,21 @@ void CClient::InputKey()
 		char input = _getch();
 		if ('q' == input)		//Club 세팅 전송
 		{
-			Client.SendAddData<PacketClubSetting>(Client.GetClubSetting());
+			Client.SendData<PacketClubSetting>(Client.GetClubSetting());
 		}
 		else if ('w' == input)		//Tee 세팅 전송
 		{
-			Client.SendAddData<PacketTeeSetting>(Client.GetTeeSetting());
+			Client.SendData<PacketTeeSetting>(Client.GetTeeSetting());
 		}
 		else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
 		{
 			Client.SetActiveState(true);
-			Client.SendAddData<PacketActiveState>(Client.GetActiveState());
+			Client.SendData<PacketActiveState>(Client.GetActiveState());
 		}
 		else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
 		{
 			Client.SetActiveState(false);
-			Client.SendAddData<PacketActiveState>(Client.GetActiveState());
+			Client.SendData<PacketActiveState>(Client.GetActiveState());
 		}
 	}
 }
@@ -242,7 +236,7 @@ int CClient::ReadAddData(Packet& packet)
 			clog.MakeMsg("INFO", "BallPalce : %s", to_string(Client.GetBallPlace()));
 			std::cout << "Recv PT_BallPlace // " << Client.GetBallPlace() << "\n";
 
-			Client.SendNoneAddData(PACKETTYPE::PT_BallPlaceRecv);
+			Client.SendData<Packet>(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
@@ -256,7 +250,7 @@ int CClient::ReadAddData(Packet& packet)
 				sd.phase, sd.ballspeed, sd.launchangle, sd.launchdirection,
 				sd.headspeed, sd.backspin, sd.sidespin);
 
-			Client.SendNoneAddData(PACKETTYPE::PT_ShotDataRecv);
+			Client.SendData<Packet>(PACKETTYPE::PT_ShotDataRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
@@ -266,7 +260,7 @@ int CClient::ReadAddData(Packet& packet)
 			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Client.GetActiveState()));
 			std::cout << "Recv PT_ActiveState  // " << Client.GetActiveState() << "\n";
 
-			Client.SendNoneAddData(PACKETTYPE::PT_ActiveStateRecv);
+			Client.SendData<Packet>(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{

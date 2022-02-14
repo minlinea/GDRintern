@@ -35,10 +35,10 @@ public:
 	//q:ClubSetting, w:TeeSetting, e:active(true), r:active(false)
 	void InputKey();
 
-	//실제 동작용 함수
+	//class P : 전송하고자 하는 Packet 또는 Packet하위클래스
+	//PACKETDATA : Packet인 경우 PACKETTYPE // Packet하위클래스인 경우 전송하고자 하는 데이터
 	template <class P, class PACKETDATA>
-	void SendAddData(PACKETDATA data);
-	void SendNoneAddData(PACKETTYPE type);
+	void SendData(PACKETDATA data);
 
 	//packet*가 들어오면 안에서 조립해서 보내보기
 	int ClientSend(Packet* packet);

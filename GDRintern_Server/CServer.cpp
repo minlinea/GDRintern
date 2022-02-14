@@ -110,28 +110,26 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 		//대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
 		if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
 		{
-			Server.SendNoneAddData(PACKETTYPE::PT_ConnectCheck);
+			Server.SendData<Packet>(PACKETTYPE::PT_ConnectCheck);
 			Server.m_tBeforeTime = Server.m_tNowTime;				//BeforeTime 갱신
 			++Server.m_iWaitingCount;								//count 누적
 		}
 
-		if (true != Server.m_qPacket.empty())
+		for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
 		{
-			for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
+			p = Server.m_qPacket.front();
+			if (SOCKET_ERROR == Server.ServerSend(p))
 			{
-				p = Server.m_qPacket.front();
-				if (SOCKET_ERROR == Server.ServerSend(p))
-				{
-					clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
-					std::cout << "SendThread ClientSend SOCKET_ERROR\n";
-					break;
-				}
-				clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
-				std::cout << "Send : " << to_string(p->GetType()) << "\n";
-				delete p;
-				Server.m_qPacket.pop();
+				clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
+				std::cout << "SendThread ClientSend SOCKET_ERROR\n";
+				break;
 			}
+			clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
+			std::cout << "Send : " << to_string(p->GetType()) << "\n";
+			delete p;
+			Server.m_qPacket.pop();
 		}
+
 
 		if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
 		{
@@ -141,15 +139,12 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	return NULL;
 }
 
+//class P : 전송하고자 하는 Packet 또는 Packet하위클래스
+//PACKETDATA : Packet인 경우 PACKETTYPE // Packet하위클래스인 경우 전송하고자 하는 데이터
 template <class P, class PACKETDATA>
-void CServer::SendAddData(PACKETDATA data)
+void CServer::SendData(PACKETDATA data)
 {
 	m_qPacket.push(new P(data));
-}
-
-void CServer::SendNoneAddData(PACKETTYPE type)
-{
-	m_qPacket.push(new Packet(type));
 }
 
 //테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
@@ -160,15 +155,15 @@ void CServer::InputKey()
 		char input = _getch();
 		if ('w' == input)		//공위치 전달(enum)
 		{
-			Server.SendAddData<PacketBallPlace>(Server.GetBallPlace());
+			Server.SendData<PacketBallPlace>(Server.GetBallPlace());
 		}
 		else if ('e' == input)		//샷정보 전달
 		{
-			Server.SendAddData<PacketShotData>(Server.GetShotData());
+			Server.SendData<PacketShotData>(Server.GetShotData());
 		}
 		else if ('r' == input)		//샷 이후 activestate false 전달
 		{
-			Server.SendAddData<PacketActiveState>(Server.GetActiveState());
+			Server.SendData<PacketActiveState>(Server.GetActiveState());
 		}
 	}
 }
@@ -264,7 +259,7 @@ int CServer::ReadAddData(Packet& packet)
 			clog.MakeMsg("INFO", "ClubSetting : %s", to_string(Server.GetClubSetting()));
 			std::cout << "Recv PT_ClubSetting // " << Server.GetClubSetting() << "\n";
 			
-			Server.SendNoneAddData(PACKETTYPE::PT_ClubSettingRecv);
+			Server.SendData<Packet>(PACKETTYPE::PT_ClubSettingRecv);
 		}
 		else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
 		{
@@ -274,7 +269,7 @@ int CServer::ReadAddData(Packet& packet)
 			std::cout << "Recv PT_TeeSetting // " << Server.GetTeeSetting() << "\n";
 			clog.MakeMsg("INFO", "TeeSetting : %s", to_string(Server.GetTeeSetting()));
 
-			Server.SendNoneAddData(PACKETTYPE::PT_TeeSettingRecv);
+			Server.SendData<Packet>(PACKETTYPE::PT_TeeSettingRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
@@ -284,7 +279,7 @@ int CServer::ReadAddData(Packet& packet)
 			std::cout << "Recv PT_ActiveState // " << Server.GetActiveState() << "\n";
 			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Server.GetActiveState()));
 
-			Server.SendNoneAddData(PACKETTYPE::PT_ActiveStateRecv);
+			Server.SendData<Packet>(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{

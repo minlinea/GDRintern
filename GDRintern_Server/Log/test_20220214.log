@@ -2175,3 +2175,62 @@
 [13:37:10.100][INFO]	Send PT_ActiveState
 [13:37:10.102][INFO]	Recv PT_ActiveStateRecv
 [13:37:11.334][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[14:01:05.450][START]	==============================================
+[14:05:36.720][START]	==============================================
+[14:05:43.848][LOGIN]	192.168.206.126
+[14:05:43.849][INFO]	RecvThread ON
+[14:05:43.849][INFO]	Send PT_ConnectCheck
+[14:05:45.767][INFO]	Send PT_ConnectCheck
+[14:05:46.551][INFO]	Send PT_ConnectCheck
+[14:05:46.806][INFO]	Send PT_BallPlace
+[14:05:46.808][INFO]	Recv PT_BallPlaceRecv
+[14:05:46.887][INFO]	Send PT_ShotData
+[14:05:46.888][INFO]	Recv PT_ShotDataRecv
+[14:05:47.327][INFO]	Send PT_ConnectCheck
+[14:05:47.639][INFO]	Send PT_BallPlace
+[14:05:47.640][INFO]	Recv PT_BallPlaceRecv
+[14:05:47.727][INFO]	Send PT_ShotData
+[14:05:47.728][INFO]	Recv PT_ShotDataRecv
+[14:05:48.215][INFO]	Send PT_ConnectCheck
+[14:05:49.640][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[14:09:28.498][START]	==============================================
+[14:10:03.105][LOGIN]	192.168.206.126
+[14:10:03.106][INFO]	RecvThread ON
+[14:10:03.106][INFO]	Send PT_ConnectCheck
+[14:10:04.118][INFO]	Recv PT_TeeSetting
+[14:10:04.118][INFO]	TeeSetting : T40
+[14:10:04.119][INFO]	Send PT_TeeSettingRecv
+[14:10:04.549][INFO]	Recv PT_ActiveState
+[14:10:04.550][INFO]	ActiveState : TRUE
+[14:10:04.550][INFO]	Send PT_ActiveStateRecv
+[14:10:05.326][INFO]	Recv PT_TeeSetting
+[14:10:05.327][INFO]	TeeSetting : T40
+[14:10:05.327][INFO]	Send PT_TeeSettingRecv
+[14:10:05.469][INFO]	Recv PT_ActiveState
+[14:10:05.469][INFO]	ActiveState : TRUE
+[14:10:05.470][INFO]	Send PT_ActiveStateRecv
+[14:10:05.933][INFO]	Recv PT_ClubSetting
+[14:10:05.933][INFO]	ClubSetting : WOOD
+[14:10:05.934][INFO]	Send PT_ClubSettingRecv
+[14:10:06.534][INFO]	Send PT_BallPlace
+[14:10:06.535][INFO]	Recv PT_BallPlaceRecv
+[14:10:06.901][INFO]	Send PT_BallPlace
+[14:10:06.902][INFO]	Recv PT_BallPlaceRecv
+[14:10:06.957][INFO]	Send PT_ShotData
+[14:10:06.958][INFO]	Recv PT_ShotDataRecv
+[14:10:07.709][INFO]	Recv PT_ActiveState
+[14:10:07.709][INFO]	ActiveState : TRUE
+[14:10:07.710][INFO]	Send PT_ActiveStateRecv
+[14:10:07.813][INFO]	Recv PT_TeeSetting
+[14:10:07.814][INFO]	TeeSetting : T40
+[14:10:07.814][INFO]	Send PT_TeeSettingRecv
+[14:10:07.973][INFO]	Recv PT_ClubSetting
+[14:10:07.974][INFO]	ClubSetting : WOOD
+[14:10:07.974][INFO]	Send PT_ClubSettingRecv
+[14:10:08.661][INFO]	Send PT_BallPlace
+[14:10:08.662][INFO]	Recv PT_BallPlaceRecv
+[14:10:08.725][INFO]	Send PT_ShotData
+[14:10:08.727][INFO]	Recv PT_ShotDataRecv
+[14:10:09.317][INFO]	Send PT_ActiveState
+[14:10:09.318][INFO]	Recv PT_ActiveStateRecv
+[14:10:10.671][ERROR]	RecvThread ServerRecv SOCKET_ERROR

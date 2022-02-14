@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // define
 
-#define SERVER_IP "192.168.245.130"
+#define SERVER_IP "192.168.206.126"
 #define PORT 4567
 #define PACKETHEADER sizeof(Packet)
 
