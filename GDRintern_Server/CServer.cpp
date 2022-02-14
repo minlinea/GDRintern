@@ -81,7 +81,7 @@ void CServer::ServerAccept()
 		int iCIntSize = sizeof(tCIntAddr);
 		Server.m_hClient = accept(Server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
 
-		Server.PrintLog("LOGIN", inet_ntoa(tCIntAddr.sin_addr));
+		Server.PrintLog("LOGIN", "login : %s", inet_ntoa(tCIntAddr.sin_addr));
 
 		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
 		Server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Server.RecvThread, (LPVOID)Server.m_hClient, 0, &dwRecvThreadID);
@@ -89,7 +89,10 @@ void CServer::ServerAccept()
 
 		WaitForSingleObject(Server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
 		
-		Server.PrintLog("LOGOUT", inet_ntoa(tCIntAddr.sin_addr));
+		TerminateThread(Server.m_hRecv, 0);
+		TerminateThread(Server.m_hRecv, 0);
+
+		Server.PrintLog("LOGOUT", "logout : %s", inet_ntoa(tCIntAddr.sin_addr));
 	}
 	closesocket(Server.m_hClient);
 	return;
@@ -116,8 +119,9 @@ void CServer::PrintLog(const char* logtype, const char* logmsg, ...)
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
 	Server.PrintLog("INFO", "SendThread ON");
+	bool connect{ true };
 
-	while (true)
+	while (connect)
 	{
 		time(&Server.m_tNowTime);
 
@@ -139,7 +143,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 				if (SOCKET_ERROR == Server.ServerSend(p))
 				{
 					Server.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
-					break;
+					connect = false;
 				}
 				Server.PrintLog("INFO", "Send : %s", to_string(p->GetType()));
 				delete p;

@@ -98,10 +98,10 @@ void CClient::PrintLog(const char* logtype, const char* logmsg, ...)
 //send ½º·¹µå
 DWORD WINAPI CClient::SendThread(LPVOID socket)
 {
-	clog.Log("INFO", "SendThread ON");
-	std::cout << "SendThread ON\n";
+	Client.PrintLog("INFO", "SendThread ON");
+	bool connect{ true };
 
-	while (true)
+	while (connect)
 	{
 		Client.InputKey();
 
@@ -113,6 +113,7 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 				if (SOCKET_ERROR == Client.ClientSend(p))
 				{
 					Client.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
+					connect = false;
 					break;
 				}
 				Client.PrintLog("INFO", "Send %s", to_string(p->GetType()));
