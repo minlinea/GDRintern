@@ -131,23 +131,26 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 			++Server.m_iWaitingCount;								//count 누적
 		}
 
-		for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
+		if (true != Server.m_qPacket.empty())
 		{
-			p = Server.m_qPacket.front();
-			if (SOCKET_ERROR == Server.ServerSend(p))
+			for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
 			{
-				Server.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
-				break;
+				p = Server.m_qPacket.front();
+				if (SOCKET_ERROR == Server.ServerSend(p))
+				{
+					Server.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
+					break;
+				}
+				Server.PrintLog("INFO", "Send : %s", to_string(p->GetType()));
+				delete p;
+				Server.m_qPacket.pop();
 			}
-			Server.PrintLog("INFO", "Send : %s", to_string(p->GetType()));
-			delete p;
-			Server.m_qPacket.pop();
-		}
 
 
-		if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
-		{
-			SuspendThread(Server.m_hSend);						//스레드 일시정지
+			if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
+			{
+				SuspendThread(Server.m_hSend);						//스레드 일시정지
+			}
 		}
 	}
 	return NULL;

@@ -105,18 +105,21 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	{
 		Client.InputKey();
 
-		for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
+		if (true != Client.m_qPacket.empty())
 		{
-			p = Client.m_qPacket.front();
-			if (SOCKET_ERROR == Client.ClientSend(p))
+			for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
 			{
-				Client.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
-				break;
-			}
-			Client.PrintLog("INFO", "Send %s", to_string(p->GetType()));
+				p = Client.m_qPacket.front();
+				if (SOCKET_ERROR == Client.ClientSend(p))
+				{
+					Client.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
+					break;
+				}
+				Client.PrintLog("INFO", "Send %s", to_string(p->GetType()));
 
-			delete p;
-			Client.m_qPacket.pop();
+				delete p;
+				Client.m_qPacket.pop();
+			}
 		}
 	}
 	return NULL;
