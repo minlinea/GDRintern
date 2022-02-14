@@ -89,7 +89,7 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 
 	while (true)
 	{
-		Client.InputKey(_getch());
+		Client.InputKey();
 
 		if (true != Client.m_qPacket.empty())
 		{
@@ -103,6 +103,7 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 					break;
 				}
 				clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
+				std::cout << "Send : " << to_string(p->GetType()) << "\n";
 				delete p;
 				Client.m_qPacket.pop();
 			}
@@ -130,25 +131,29 @@ void CClient::SendNoneAddData(PACKETTYPE type)
 }
 
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))
-void CClient::InputKey(const char input)
+void CClient::InputKey()
 {
-	if ('q' == input)		//Club 세팅 전송
+	if (true == _kbhit())
 	{
-		Client.SendAddData<PacketClubSetting>(Client.GetClubSetting());
-	}
-	else if ('w' == input)		//Tee 세팅 전송
-	{
-		Client.SendAddData<PacketTeeSetting>(Client.GetTeeSetting());
-	}
-	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
-	{
-		Client.SetActiveState(true);
-		Client.SendAddData<PacketActiveState>(Client.GetActiveState());
-	}
-	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
-	{
-		Client.SetActiveState(false);
-		Client.SendAddData<PacketActiveState>(Client.GetActiveState());
+		char input = _getch();
+		if ('q' == input)		//Club 세팅 전송
+		{
+			Client.SendAddData<PacketClubSetting>(Client.GetClubSetting());
+		}
+		else if ('w' == input)		//Tee 세팅 전송
+		{
+			Client.SendAddData<PacketTeeSetting>(Client.GetTeeSetting());
+		}
+		else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
+		{
+			Client.SetActiveState(true);
+			Client.SendAddData<PacketActiveState>(Client.GetActiveState());
+		}
+		else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
+		{
+			Client.SetActiveState(false);
+			Client.SendAddData<PacketActiveState>(Client.GetActiveState());
+		}
 	}
 }
 

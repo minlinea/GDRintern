@@ -33,7 +33,7 @@ public:
 
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신
 	//q:ClubSetting, w:TeeSetting, e:active(true), r:active(false)
-	void InputKey(const char input);
+	void InputKey();
 
 	//실제 동작용 함수
 	template <class PACKET, class PACKETDATA>

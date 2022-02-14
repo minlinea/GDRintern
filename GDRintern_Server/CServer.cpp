@@ -105,7 +105,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	{
 		time(&Server.m_tNowTime);
 
-		Server.InputKey(_getch());
+		Server.InputKey();
 		if (true != Server.m_qPacket.empty())
 		{
 			for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
@@ -118,14 +118,16 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 					break;
 				}
 				clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
+				std::cout << "Send : " << to_string(p->GetType()) << "\n";
 				delete p;
 				Server.m_qPacket.pop();
 			}
+			//서버가 동작했다면 대기시간 초기화
+			Server.m_tBeforeTime = Server.m_tNowTime;
+			Server.m_iWaitingCount = 0;
 		}
 
-		//대기 시간 체크
-		Server.m_tBeforeTime = Server.m_tNowTime;
-		Server.m_iWaitingCount = 0;
+
 
 		//대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
 		if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
@@ -160,19 +162,23 @@ void CServer::SendNoneAddData(PACKETTYPE type)
 }
 
 //테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
-void CServer::InputKey(const char input)
+void CServer::InputKey()
 {
-	if ('w' == input)		//공위치 전달(enum)
+	if (_kbhit())
 	{
-		Server.SendAddData<PacketBallPlace>(Server.GetBallPlace());
-	}
-	else if ('e' == input)		//샷정보 전달
-	{
-		Server.SendAddData<PacketShotData>(Server.GetShotData());
-	}
-	else if ('r' == input)		//샷 이후 activestate false 전달
-	{
-		Server.SendAddData<PacketActiveState>(Server.GetActiveState());
+		char input = _getch();
+		if ('w' == input)		//공위치 전달(enum)
+		{
+			Server.SendAddData<PacketBallPlace>(Server.GetBallPlace());
+		}
+		else if ('e' == input)		//샷정보 전달
+		{
+			Server.SendAddData<PacketShotData>(Server.GetShotData());
+		}
+		else if ('r' == input)		//샷 이후 activestate false 전달
+		{
+			Server.SendAddData<PacketActiveState>(Server.GetActiveState());
+		}
 	}
 }
 
