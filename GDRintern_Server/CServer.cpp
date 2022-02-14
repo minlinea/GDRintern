@@ -252,7 +252,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 	{
 		ZeroMemory(&packet, sizeof(Packet));
 
-		if (SOCKET_ERROR == Server.ServerRecv(&packet, sizeof(packet)))
+		if (SOCKET_ERROR == Server.ServerRecv(&packet, PACKETHEADER))
 		{
 			clog.Log("ERROR", "RecvThread ServerRecv SOCKET_ERROR");
 			std::cout << "RecvThread ServerRecv SOCKET_ERROR\n";
@@ -260,10 +260,13 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 		}
 		else    //에러가 아니라면 데이터 읽기
 		{
+			std::cout << packet.GetSize() << "\t" << (unsigned int)packet.GetType() << "\n";
+
+
 			Server.m_iWaitingCount = 0;
 			ResumeThread(Server.m_hSend);
 
-			if (sizeof(Packet) == packet.GetSize())
+			if (PACKETHEADER == packet.GetSize())
 			{
 				Server.ReadHeader(packet.GetType());
 			}
@@ -311,8 +314,9 @@ int CServer::ReadAddData(Packet& packet)
 	Packet recvpt{PACKETTYPE::PT_None};
 	int retval{ 0 };
 
-	char* recvdata = (char*)malloc(packet.GetSize());
-	if (SOCKET_ERROR == Server.ServerRecv(recvdata, packet.GetSize()))
+	unsigned int recvsize{ packet.GetSize() - PACKETHEADER };
+	char* recvdata = (char*)malloc(recvsize);
+	if (SOCKET_ERROR == Server.ServerRecv(recvdata, recvsize))
 	{
 		clog.Log("ERROR", "ReadAddData ServerRecv SOCKET_ERROR");
 		std::cout << "ReadAddData ServerRecv SOCKET_ERROR\n";
@@ -347,6 +351,7 @@ int CServer::ReadAddData(Packet& packet)
 			std::cout << "ReadAddData recv unknown type\n";
 		}
 	}
+	free(recvdata);
 
 	//정상적인 데이터 recv 시 응답 send 진행
 	if (PACKETTYPE::PT_None != recvpt.GetType())
@@ -359,7 +364,7 @@ int CServer::ReadAddData(Packet& packet)
 		}
 	}
 
-	free(recvdata);
+
 
 	return retval;
 }

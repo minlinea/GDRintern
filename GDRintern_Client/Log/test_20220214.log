@@ -1,0 +1,334 @@
+[09:14:46.654][START]	==============================================
+[09:14:46.673][INFO]	SendThread ON
+[09:14:46.677][INFO]	RecvThread ON
+[09:14:48.761][INFO]	Send PT_ClubSetting
+[09:14:48.763][INFO]	Recv PT_TeeSettingRecv
+[09:14:48.841][INFO]	Send PT_TeeSetting
+[09:14:48.842][INFO]	Recv PT_TeeSettingRecv
+[09:14:48.969][INFO]	Send PT_ActiveState
+[09:14:48.971][INFO]	Recv PT_ActiveStateRecv
+[09:14:49.179][INFO]	Send PT_ActiveState
+[09:14:49.180][INFO]	Recv PT_ActiveStateRecv
+[09:14:52.554][INFO]	Recv PT_BallPlace
+[09:14:52.555][INFO]	OB
+[09:14:52.682][INFO]	Recv PT_ShotData
+[09:14:52.686][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:14:52.924][INFO]	Recv PT_ActiveState
+[09:15:16.052][START]	==============================================
+[09:15:16.059][INFO]	RecvThread ON
+[09:15:17.676][INFO]	Send PT_ClubSetting
+[09:15:18.007][INFO]	Send PT_TeeSetting
+[09:15:18.313][INFO]	Send PT_ActiveState
+[09:15:18.578][INFO]	Send PT_ActiveState
+[09:15:20.036][INFO]	Send PT_ClubSetting
+[09:15:20.576][INFO]	Recv PT_TeeSettingRecv
+[09:15:20.577][INFO]	Recv PT_TeeSettingRecv
+[09:15:58.056][START]	==============================================
+[09:15:58.071][INFO]	SendThread ON
+[09:16:17.930][START]	==============================================
+[09:16:17.935][INFO]	RecvThread ON
+[09:16:17.938][INFO]	SendThread ON
+[09:16:21.362][INFO]	Send PT_ClubSetting
+[09:16:21.539][INFO]	Send PT_TeeSetting
+[09:16:21.661][INFO]	Send PT_ActiveState
+[09:16:21.877][INFO]	Send PT_ActiveState
+[09:16:23.957][INFO]	Recv PT_TeeSettingRecv
+[09:16:23.962][INFO]	Recv PT_TeeSettingRecv
+[09:16:44.113][START]	==============================================
+[09:16:44.118][INFO]	RecvThread ON
+[09:16:44.119][INFO]	SendThread ON
+[09:16:49.241][INFO]	Recv PT_BallPlace
+[09:16:49.242][INFO]	OB
+[09:16:55.198][INFO]	Send PT_ClubSetting
+[09:16:55.384][INFO]	Send PT_TeeSetting
+[09:16:55.512][INFO]	Send PT_ActiveState
+[09:16:55.730][INFO]	Send PT_ActiveState
+[09:16:56.013][INFO]	Recv PT_TeeSettingRecv
+[09:17:23.343][ERROR]	RecvThread ClientRecv error
+[09:17:23.346][END]	==============================================
+[09:17:35.705][START]	==============================================
+[09:17:35.714][INFO]	RecvThread ON
+[09:17:46.081][INFO]	Send PT_ClubSetting
+[09:17:46.083][INFO]	Recv PT_TeeSettingRecv
+[09:20:06.266][START]	==============================================
+[09:20:06.271][INFO]	RecvThread ON
+[09:20:06.272][INFO]	SendThread ON
+[09:20:07.805][INFO]	Send PT_ClubSetting
+[09:20:07.806][INFO]	Recv PT_ClubSettingRecv
+[09:20:07.948][INFO]	Send PT_TeeSetting
+[09:20:07.949][INFO]	Recv PT_TeeSettingRecv
+[09:20:08.076][INFO]	Send PT_ActiveState
+[09:20:08.078][INFO]	Recv PT_ActiveStateRecv
+[09:20:08.293][INFO]	Send PT_ActiveState
+[09:20:08.293][INFO]	Recv PT_ActiveStateRecv
+[09:20:09.660][INFO]	Send PT_TeeSetting
+[09:20:09.662][INFO]	Recv PT_TeeSettingRecv
+[09:20:09.773][INFO]	Send PT_ActiveState
+[09:20:09.774][INFO]	Recv PT_ActiveStateRecv
+[09:20:11.045][INFO]	Recv PT_BallPlace
+[09:20:11.045][INFO]	OB
+[09:20:11.133][INFO]	Recv PT_ShotData
+[09:20:11.134][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:20:11.861][INFO]	Recv PT_ActiveState
+[09:20:14.820][INFO]	Send PT_ClubSetting
+[09:20:14.822][INFO]	Recv PT_ClubSettingRecv
+[09:20:15.628][INFO]	Send PT_TeeSetting
+[09:20:15.630][INFO]	Recv PT_TeeSettingRecv
+[09:20:17.452][INFO]	Send PT_TeeSetting
+[09:20:17.454][INFO]	Recv PT_TeeSettingRecv
+[09:20:17.876][INFO]	Send PT_ActiveState
+[09:20:17.878][INFO]	Recv PT_ActiveStateRecv
+[09:20:19.053][INFO]	Recv PT_BallPlace
+[09:20:19.054][INFO]	OB
+[09:20:19.365][INFO]	Recv PT_ShotData
+[09:20:19.367][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[09:20:21.646][ERROR]	RecvThread ClientRecv error
+[09:20:21.647][END]	==============================================
+[09:20:36.427][START]	==============================================
+[09:20:36.434][INFO]	SendThread ON
+[09:20:36.435][INFO]	RecvThread ON
+[09:20:37.461][INFO]	Send PT_ClubSetting
+[09:20:37.509][INFO]	Send PT_TeeSetting
+[09:20:37.612][INFO]	Send PT_ActiveState
+[09:20:37.828][INFO]	Send PT_ActiveState
+[09:20:38.877][INFO]	Recv PT_ClubSettingRecv
+[09:20:38.878][INFO]	Recv PT_TeeSettingRecv
+[09:21:07.680][START]	==============================================
+[09:21:07.686][INFO]	RecvThread ON
+[09:21:07.692][INFO]	SendThread ON
+[09:21:17.285][INFO]	Send PT_ClubSetting
+[09:21:17.564][INFO]	Send PT_TeeSetting
+[09:21:17.813][INFO]	Send PT_ActiveState
+[09:21:18.020][INFO]	Send PT_ActiveState
+[09:21:18.510][INFO]	Recv PT_ClubSettingRecv
+[09:21:24.058][INFO]	Recv PT_TeeSettingRecv
+[09:21:33.840][ERROR]	RecvThread ClientRecv error
+[09:21:33.841][END]	==============================================
+[09:21:36.908][START]	==============================================
+[09:21:37.915][ERROR]	ClientConnect connect error
+[09:21:37.915][END]	==============================================
+[09:21:41.146][START]	==============================================
+[09:21:41.176][INFO]	RecvThread ON
+[09:21:48.141][INFO]	Send PT_ClubSetting
+[09:21:48.781][INFO]	Send PT_TeeSetting
+[09:21:49.052][INFO]	Send PT_ActiveState
+[09:21:49.340][INFO]	Send PT_ActiveState
+[09:21:49.677][INFO]	Recv PT_ClubSettingRecv
+[09:22:12.671][INFO]	Recv PT_TeeSettingRecv
+[09:23:03.139][ERROR]	RecvThread ClientRecv error
+[09:23:03.140][END]	==============================================
+[09:23:05.502][START]	==============================================
+[09:23:06.508][ERROR]	ClientConnect connect error
+[09:23:06.509][END]	==============================================
+[09:23:09.668][START]	==============================================
+[09:23:09.673][INFO]	SendThread ON
+[09:23:13.356][INFO]	Send PT_ActiveState
+[09:23:13.557][INFO]	Send PT_ActiveState
+[09:23:13.756][INFO]	Send PT_TeeSetting
+[09:23:13.909][INFO]	Send PT_ClubSetting
+[09:23:14.365][INFO]	Recv PT_ActiveStateRecv
+[09:23:14.366][INFO]	Recv PT_ActiveStateRecv
+[09:24:15.580][START]	==============================================
+[09:24:15.587][INFO]	SendThread ON
+[09:24:15.591][INFO]	RecvThread ON
+[09:24:16.949][INFO]	Send PT_ClubSetting
+[09:24:17.085][INFO]	Send PT_TeeSetting
+[09:24:17.228][INFO]	Send PT_ActiveState
+[09:24:17.445][INFO]	Send PT_ActiveState
+[09:24:18.638][INFO]	Recv PT_ClubSettingRecv
+[09:24:18.639][INFO]	Recv PT_TeeSettingRecv
+[09:25:07.350][START]	==============================================
+[09:25:08.358][ERROR]	ClientConnect connect error
+[09:25:08.359][END]	==============================================
+[09:25:28.744][START]	==============================================
+[09:25:28.750][INFO]	RecvThread ON
+[09:25:28.758][INFO]	SendThread ON
+[09:25:33.196][INFO]	Send PT_ClubSetting
+[09:25:33.340][INFO]	Send PT_TeeSetting
+[09:25:33.461][INFO]	Send PT_ActiveState
+[09:25:33.684][INFO]	Send PT_ActiveState
+[09:25:34.350][INFO]	Recv PT_ClubSettingRecv
+[09:25:34.351][INFO]	Recv PT_ActiveStateRecv
+[09:37:30.593][START]	==============================================
+[09:37:30.597][INFO]	RecvThread ON
+[09:37:30.598][INFO]	SendThread ON
+[09:37:37.413][INFO]	Send PT_ClubSetting
+[09:37:37.477][INFO]	Send PT_TeeSetting
+[09:37:37.589][INFO]	Send PT_ActiveState
+[09:37:37.797][INFO]	Send PT_ActiveState
+[09:37:38.039][INFO]	Recv PT_ClubSettingRecv
+[09:38:18.746][ERROR]	RecvThread ClientRecv error
+[09:38:18.749][END]	==============================================
+[09:39:45.112][START]	==============================================
+[09:39:45.119][INFO]	SendThread ON
+[09:39:45.121][INFO]	RecvThread ON
+[09:39:46.189][INFO]	Send PT_ClubSetting
+[09:39:46.253][INFO]	Send PT_TeeSetting
+[09:39:46.342][INFO]	Send PT_ActiveState
+[09:39:46.517][INFO]	Send PT_ActiveState
+[09:39:46.711][INFO]	Recv PT_ClubSettingRecv
+[09:39:46.712][INFO]	Recv PT_ActiveStateRecv
+[09:40:16.731][START]	==============================================
+[09:40:16.736][INFO]	RecvThread ON
+[09:40:16.740][INFO]	SendThread ON
+[09:40:17.885][INFO]	Send PT_ClubSetting
+[09:40:17.909][INFO]	Send PT_TeeSetting
+[09:40:17.989][INFO]	Send PT_ActiveState
+[09:40:18.173][INFO]	Send PT_ActiveState
+[09:40:48.825][ERROR]	RecvThread ClientRecv error
+[09:40:48.826][END]	==============================================
+[09:41:02.237][START]	==============================================
+[09:41:03.246][ERROR]	ClientConnect connect error
+[09:41:03.246][END]	==============================================
+[09:41:07.810][START]	==============================================
+[09:41:07.816][INFO]	RecvThread ON
+[09:41:09.054][INFO]	Send PT_ClubSetting
+[09:41:09.078][INFO]	Send PT_TeeSetting
+[09:41:09.189][INFO]	Send PT_ActiveState
+[09:41:09.365][INFO]	Send PT_ActiveState
+[09:41:09.679][INFO]	Recv PT_ClubSettingRecv
+[09:41:11.901][ERROR]	RecvThread ClientRecv error
+[09:41:11.902][END]	==============================================
+[09:41:20.995][START]	==============================================
+[09:41:21.003][INFO]	RecvThread ON
+[09:41:22.133][INFO]	Send PT_ClubSetting
+[09:41:22.190][INFO]	Send PT_TeeSetting
+[09:41:22.272][INFO]	Send PT_ActiveState
+[09:41:22.453][INFO]	Send PT_ActiveState
+[09:43:13.426][INFO]	Recv PT_ClubSettingRecv
+[09:43:31.454][ERROR]	RecvThread ClientRecv error
+[09:43:31.461][END]	==============================================
+[09:44:06.443][START]	==============================================
+[09:44:06.449][INFO]	SendThread ON
+[09:44:08.283][INFO]	Send PT_ClubSetting
+[09:44:08.343][INFO]	Send PT_TeeSetting
+[09:44:08.442][INFO]	Send PT_ActiveState
+[09:44:08.659][INFO]	Send PT_ActiveState
+[09:44:56.500][ERROR]	RecvThread ClientRecv error
+[09:44:56.510][END]	==============================================
+[09:46:07.103][START]	==============================================
+[09:46:08.112][ERROR]	ClientConnect connect error
+[09:46:08.113][END]	==============================================
+[09:46:12.755][START]	==============================================
+[09:46:12.763][INFO]	RecvThread ON
+[09:46:14.587][INFO]	Send PT_ClubSetting
+[09:46:14.643][INFO]	Send PT_TeeSetting
+[09:46:14.723][INFO]	Send PT_ActiveState
+[09:46:14.930][INFO]	Send PT_ActiveState
+[09:46:48.248][ERROR]	RecvThread ClientRecv error
+[09:46:48.250][END]	==============================================
+[09:46:52.109][START]	==============================================
+[09:46:52.116][INFO]	RecvThread ON
+[09:46:52.615][INFO]	Send PT_ClubSetting
+[09:46:52.647][INFO]	Send PT_TeeSetting
+[09:46:52.767][INFO]	Send PT_ActiveState
+[09:46:52.959][INFO]	Send PT_ActiveState
+[09:47:34.291][ERROR]	RecvThread ClientRecv error
+[09:47:34.297][END]	==============================================
+[09:49:18.278][START]	==============================================
+[09:49:18.286][INFO]	RecvThread ON
+[09:49:18.291][INFO]	SendThread ON
+[09:49:19.787][INFO]	Send PT_ClubSetting
+[09:49:19.819][INFO]	Send PT_TeeSetting
+[09:49:19.923][INFO]	Send PT_ActiveState
+[09:49:20.139][INFO]	Send PT_ActiveState
+[09:49:22.373][ERROR]	RecvThread ClientRecv error
+[09:49:22.375][END]	==============================================
+[09:52:24.118][START]	==============================================
+[09:52:24.124][INFO]	RecvThread ON
+[09:52:25.324][INFO]	Send PT_ClubSetting
+[09:52:25.339][INFO]	Send PT_TeeSetting
+[09:52:25.460][INFO]	Send PT_ActiveState
+[09:52:25.649][INFO]	Send PT_ActiveState
+[09:52:37.350][ERROR]	RecvThread ClientRecv error
+[09:52:37.353][END]	==============================================
+[09:53:48.496][START]	==============================================
+[09:53:48.502][INFO]	RecvThread ON
+[09:53:48.512][INFO]	SendThread ON
+[09:53:49.515][INFO]	Send PT_ClubSetting
+[09:53:49.555][INFO]	Send PT_TeeSetting
+[09:53:49.651][INFO]	Send PT_ActiveState
+[09:53:49.835][INFO]	Send PT_ActiveState
+[09:53:50.029][INFO]	Recv PT_ClubSettingRecv
+[09:53:50.030][INFO]	Recv PT_TeeSettingRecv
+[09:53:50.031][INFO]	Recv PT_ActiveStateRecv
+[09:53:50.032][INFO]	Recv PT_ActiveStateRecv
+[09:54:01.739][INFO]	Send PT_TeeSetting
+[09:54:01.741][INFO]	Recv PT_TeeSettingRecv
+[09:54:01.755][INFO]	Send PT_ClubSetting
+[09:54:01.757][INFO]	Recv PT_ClubSettingRecv
+[09:54:01.803][INFO]	Send PT_ActiveState
+[09:54:01.805][INFO]	Recv PT_ActiveStateRecv
+[09:54:01.995][INFO]	Send PT_TeeSetting
+[09:54:01.997][INFO]	Recv PT_TeeSettingRecv
+[09:54:02.011][INFO]	Send PT_ClubSetting
+[09:54:02.012][INFO]	Recv PT_ClubSettingRecv
+[09:54:02.155][INFO]	Send PT_ActiveState
+[09:54:02.158][INFO]	Recv PT_ActiveStateRecv
+[09:54:03.235][INFO]	Send PT_TeeSetting
+[09:54:03.237][INFO]	Recv PT_TeeSettingRecv
+[09:54:03.243][INFO]	Send PT_ClubSetting
+[09:54:03.246][INFO]	Recv PT_ClubSettingRecv
+[09:54:03.315][INFO]	Send PT_ActiveState
+[09:54:03.318][INFO]	Recv PT_ActiveStateRecv
+[09:54:08.424][START]	==============================================
+[09:54:08.429][INFO]	RecvThread ON
+[09:54:08.430][INFO]	SendThread ON
+[09:54:08.947][INFO]	Send PT_ClubSetting
+[09:54:08.955][INFO]	Send PT_TeeSetting
+[09:54:09.035][INFO]	Send PT_ActiveState
+[09:54:09.139][INFO]	Send PT_ClubSetting
+[09:54:09.147][INFO]	Send PT_TeeSetting
+[09:54:09.220][INFO]	Send PT_ActiveState
+[09:54:09.299][INFO]	Send PT_ClubSetting
+[09:54:09.419][INFO]	Send PT_ActiveState
+[09:54:09.427][INFO]	Send PT_ActiveState
+[09:54:09.507][INFO]	Send PT_ClubSetting
+[09:54:09.947][INFO]	Send PT_ClubSetting
+[09:54:09.979][INFO]	Send PT_TeeSetting
+[09:54:10.075][INFO]	Send PT_ActiveState
+[09:54:10.155][INFO]	Send PT_TeeSetting
+[09:54:10.179][INFO]	Send PT_ClubSetting
+[09:54:10.348][INFO]	Send PT_ActiveState
+[09:54:10.547][INFO]	Send PT_ActiveState
+[09:54:10.643][INFO]	Send PT_ActiveState
+[09:54:10.740][INFO]	Send PT_TeeSetting
+[09:54:10.907][INFO]	Send PT_ActiveState
+[09:54:11.003][INFO]	Send PT_ClubSetting
+[09:54:11.019][INFO]	Send PT_TeeSetting
+[09:54:12.131][INFO]	Send PT_ClubSetting
+[09:54:12.139][INFO]	Send PT_TeeSetting
+[09:54:12.204][INFO]	Send PT_ActiveState
+[09:54:12.307][INFO]	Send PT_ClubSetting
+[09:54:12.467][INFO]	Send PT_ActiveState
+[09:54:12.531][INFO]	Send PT_ClubSetting
+[09:54:12.901][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.903][INFO]	Recv PT_TeeSettingRecv
+[09:54:12.904][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.905][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.907][INFO]	Recv PT_TeeSettingRecv
+[09:54:12.910][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.911][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.912][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.914][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.915][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.917][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.919][INFO]	Recv PT_TeeSettingRecv
+[09:54:12.922][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.922][INFO]	Recv PT_TeeSettingRecv
+[09:54:12.923][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.923][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.924][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.926][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.928][INFO]	Recv PT_TeeSettingRecv
+[09:54:12.929][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.931][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.932][INFO]	Recv PT_TeeSettingRecv
+[09:54:12.933][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.934][INFO]	Recv PT_TeeSettingRecv
+[09:54:12.935][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.937][INFO]	Recv PT_ClubSettingRecv
+[09:54:12.939][INFO]	Recv PT_ActiveStateRecv
+[09:54:12.941][INFO]	Recv PT_ClubSettingRecv
+[09:54:15.951][ERROR]	RecvThread ClientRecv error
+[09:54:15.955][END]	==============================================

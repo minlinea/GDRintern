@@ -344,13 +344,13 @@ public:
 
 	Packet_ClubSetting()
 	{
-		this->type = PACKETTYPE::PT_TeeSetting;
+		this->type = PACKETTYPE::PT_ClubSetting;
 		this->size = PACKETHEADER + sizeof(CLUBSETTING);
 		this->data = CLUBSETTING::DRIVER;
 	}
 	Packet_ClubSetting(const CLUBSETTING& data)
 	{
-		this->type = PACKETTYPE::PT_TeeSetting;
+		this->type = PACKETTYPE::PT_ClubSetting;
 		this->size = PACKETHEADER + sizeof(CLUBSETTING);
 		this->data = data;
 	}

@@ -5,9 +5,6 @@
 //로그
 CLog clog;
 
-//테스트용 임시 bool변수
-bool queuelock = false;
-
 CClient::CClient()
 {
 	DataInit();
@@ -26,7 +23,7 @@ void CClient::DataInit()
 {
 	this->m_eTee = TEESETTING::T40;
 
-	this->m_eClub = CLUBSETTING::DRIVER;
+	this->m_eClub = CLUBSETTING::WOOD;
 
 	this->m_eBallPlace = BALLPLACE::OB;
 
@@ -94,25 +91,26 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	{
 		Client.InputKey(_getch());
 
-		if (true != queuelock)
+		if (true != Client.m_qPacket.empty())
 		{
-			if (true != Client.m_qPacket.empty())
+			for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
 			{
-				for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
+				p = Client.m_qPacket.front();
+
+				std::cout << p->GetSize() << "\t" << (unsigned int)p->GetType() << "\n";
+
+				if (SOCKET_ERROR == Client.ClientSend(p))
 				{
-					p = Client.m_qPacket.front();
-					if (SOCKET_ERROR == Client.ClientSend(p))
-					{
-						clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
-						std::cout << "SendThread ClientSend SOCKET_ERROR\n";
-						break;
-					}
-					delete p;
-					Client.m_qPacket.pop();
+					clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
+					std::cout << "SendThread ClientSend SOCKET_ERROR\n";
+					break;
 				}
-				
+				delete p;
+				Client.m_qPacket.pop();
 			}
+
 		}
+		
 	}
 	return NULL;
 }
@@ -164,10 +162,6 @@ void CClient::InputKey(const char input)
 	{
 		Client.SetActiveState(false);
 		Client.SendActiveState();
-	}
-	else if ('t' == input)
-	{
-		queuelock = true;
 	}
 }
 
