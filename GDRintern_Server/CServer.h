@@ -173,6 +173,8 @@ private:
 	HANDLE m_hListen;
 	SOCKET m_hClient;
 
+	bool m_bConnect;
+
 	std::queue<Packet*> m_qPacket;
 };
 

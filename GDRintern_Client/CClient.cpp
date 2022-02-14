@@ -30,6 +30,8 @@ void CClient::DataInit()
 	this->m_bActiveState = false;
 
 	this->m_sdShotData = ShotData{};
+
+	this->m_bConnect = true;
 }
 
 //통신관련 초기화
@@ -57,6 +59,7 @@ bool CClient::ClientInit()
 //서버연결
 void CClient::ClientConnect()
 {
+
 	int retval{ connect(Client.m_hSock, (SOCKADDR*)&Client.m_tAddr, sizeof(Client.m_tAddr)) };
 	if (retval == SOCKET_ERROR)
 	{
@@ -72,6 +75,12 @@ void CClient::ClientConnect()
 		Client.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Client.RecvThread, (LPVOID)Client.m_hSock, 0, &dwRecvThreadID);
 
 		WaitForSingleObject(Client.m_hRecv, INFINITE);
+
+		Client.m_bConnect = false;
+
+		TerminateThread(Client.m_hSend, 0);
+		TerminateThread(Client.m_hRecv, 0);
+
 	}
 	closesocket(Client.m_hSock);
 

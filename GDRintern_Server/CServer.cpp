@@ -31,6 +31,8 @@ void CServer::DataInit()
 	
 	this->m_sdShotData = ShotData{ 0,1,2,3,4,5,6 };
 	
+	this->m_bConnect = true;
+
 	time(&m_tNowTime);
 	this->m_tBeforeTime = m_tNowTime;
 	this->m_iWaitingCount = 0;
@@ -83,12 +85,17 @@ void CServer::ServerAccept()
 
 		Server.PrintLog("LOGIN", "login : %s", inet_ntoa(tCIntAddr.sin_addr));
 
+		Server.m_bConnect = true;
+		Server.m_tBeforeTime = Server.m_tNowTime = time(NULL);
+
 		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
 		Server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Server.RecvThread, (LPVOID)Server.m_hClient, 0, &dwRecvThreadID);
 		Server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Server.SendThread, (LPVOID)Server.m_hClient, 0, &dwSendThreadID);
 
 		WaitForSingleObject(Server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
 		
+		Server.m_bConnect = false;
+
 		TerminateThread(Server.m_hRecv, 0);
 		TerminateThread(Server.m_hRecv, 0);
 
@@ -119,9 +126,8 @@ void CServer::PrintLog(const char* logtype, const char* logmsg, ...)
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
 	Server.PrintLog("INFO", "SendThread ON");
-	bool connect{ true };
 
-	while (connect)
+	while (true == Server.m_bConnect)
 	{
 		time(&Server.m_tNowTime);
 
@@ -143,7 +149,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 				if (SOCKET_ERROR == Server.ServerSend(p))
 				{
 					Server.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
-					connect = false;
+					Server.m_bConnect = false;
 				}
 				Server.PrintLog("INFO", "Send : %s", to_string(p->GetType()));
 				delete p;
@@ -195,14 +201,14 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 	Server.PrintLog("INFO", "RecvThread ON");
 
 	Packet packet{};
-	while (true)
+	while (true == Server.m_bConnect)
 	{
 		ZeroMemory(&packet, sizeof(Packet));
 
 		if (SOCKET_ERROR == Server.ServerRecv(&packet, PACKETHEADER))
 		{
 			Server.PrintLog("ERROR", "RecvThread ServerRecv SOCKET_ERROR");
-			break;
+			Server.m_bConnect = false;;
 		}
 		else    //에러가 아니라면 데이터 읽기
 		{
@@ -218,7 +224,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 				if (SOCKET_ERROR == Server.ReadAddData(packet))
 				{
 					Server.PrintLog("ERROR", "RecvThread ReadAddData SOCKET_ERROR");
-					break;
+					Server.m_bConnect = false;
 				}
 			}
 		}

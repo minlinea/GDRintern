@@ -150,6 +150,7 @@ private:
 	//ShotData
 	ShotData m_sdShotData;
 
+	bool m_bConnect;
 	std::queue<Packet*> m_qPacket;
 };
 
