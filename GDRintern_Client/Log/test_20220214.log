@@ -264,3 +264,112 @@
 [14:23:42.467][INFO]	Send PT_ActiveStateRecv
 [14:23:43.725][ERROR]	RecvThread ClientRecv error
 [14:23:43.726][END]	==============================================
+[14:36:09.946][START]	==============================================
+[14:36:09.949][INFO]	SendThread ON
+[14:36:09.950][INFO]	Recv : PT_ConnectCheck
+[14:36:10.729][INFO]	Send PT_TeeSetting
+[14:36:10.730][INFO]	Recv : PT_TeeSettingRecv
+[14:36:11.161][INFO]	Send PT_ActiveState
+[14:36:11.162][INFO]	Recv : PT_ActiveStateRecv
+[14:36:11.521][INFO]	Send PT_ActiveState
+[14:36:11.522][INFO]	Recv : PT_ActiveStateRecv
+[14:36:15.999][INFO]	Recv : PT_ConnectCheck
+[14:36:21.000][INFO]	Recv : PT_ConnectCheck
+[14:36:24.033][INFO]	Recv : PT_BallPlace
+[14:36:24.034][INFO]	BallPalce : OB
+[14:36:24.034][INFO]	Send PT_BallPlaceRecv
+[14:36:24.448][INFO]	Recv : PT_ShotData
+[14:36:24.449][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[14:36:24.449][INFO]	Send PT_ShotDataRecv
+[14:36:28.999][INFO]	Recv : PT_ConnectCheck
+[14:36:33.999][INFO]	Recv : PT_ConnectCheck
+[14:36:38.999][INFO]	Recv : PT_ConnectCheck
+[14:36:41.241][ERROR]	RecvThread ClientRecv error
+[14:36:41.242][END]	==============================================
+[14:43:44.722][START]	==============================================
+[14:43:44.725][INFO]	SendThread ON
+[14:43:44.727][INFO]	Recv : PT_ConnectCheck
+[14:43:45.516][INFO]	Send PT_TeeSetting
+[14:43:45.517][INFO]	Recv : PT_TeeSettingRecv
+[14:43:45.900][INFO]	Send PT_ActiveState
+[14:43:45.901][INFO]	Recv : PT_ActiveStateRecv
+[14:43:46.436][INFO]	Send PT_ActiveState
+[14:43:46.437][INFO]	Recv : PT_ActiveStateRecv
+[14:43:47.051][INFO]	Send PT_ClubSetting
+[14:43:47.052][INFO]	Recv : PT_ClubSettingRecv
+[14:43:47.356][INFO]	Send PT_TeeSetting
+[14:43:47.357][INFO]	Recv : PT_TeeSettingRecv
+[14:43:47.540][INFO]	Send PT_ActiveState
+[14:43:47.541][INFO]	Recv : PT_ActiveStateRecv
+[14:43:48.828][INFO]	Send PT_TeeSetting
+[14:43:48.829][INFO]	Recv : PT_TeeSettingRecv
+[14:43:49.148][INFO]	Send PT_TeeSetting
+[14:43:49.149][INFO]	Recv : PT_TeeSettingRecv
+[14:43:49.180][INFO]	Send PT_ActiveState
+[14:43:49.181][INFO]	Recv : PT_ActiveStateRecv
+[14:43:49.532][INFO]	Send PT_ActiveState
+[14:43:49.533][INFO]	Recv : PT_ActiveStateRecv
+[14:43:49.620][INFO]	Send PT_ClubSetting
+[14:43:49.621][INFO]	Recv : PT_ClubSettingRecv
+[14:43:54.000][INFO]	Recv : PT_ConnectCheck
+[14:43:59.000][INFO]	Recv : PT_ConnectCheck
+[14:44:03.999][INFO]	Recv : PT_ConnectCheck
+[14:44:06.499][INFO]	Send PT_ActiveState
+[14:44:06.501][INFO]	Recv : PT_ActiveStateRecv
+[14:44:07.052][INFO]	Send PT_TeeSetting
+[14:44:07.053][INFO]	Recv : PT_TeeSettingRecv
+[14:44:07.836][INFO]	Recv : PT_ShotData
+[14:44:07.837][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[14:44:07.838][INFO]	Send PT_ShotDataRecv
+[14:44:11.999][INFO]	Recv : PT_ConnectCheck
+[14:44:16.999][INFO]	Recv : PT_ConnectCheck
+[14:44:21.999][INFO]	Recv : PT_ConnectCheck
+[14:44:24.392][ERROR]	RecvThread ClientRecv error
+[14:44:24.393][END]	==============================================
+[15:36:42.692][START]	==============================================
+[15:36:42.697][INFO]	SendThread ON
+[15:36:42.698][INFO]	RecvThread ON
+[15:36:42.699][INFO]	Recv : PT_ConnectCheck
+[15:36:44.073][INFO]	Send PT_TeeSetting
+[15:36:44.074][INFO]	Recv : PT_TeeSettingRecv
+[15:36:44.601][INFO]	Send PT_ActiveState
+[15:36:44.602][INFO]	Recv : PT_ActiveStateRecv
+[15:36:45.025][INFO]	Send PT_ActiveState
+[15:36:45.027][INFO]	Recv : PT_ActiveStateRecv
+[15:36:45.753][INFO]	Recv : PT_BallPlace
+[15:36:45.753][INFO]	BallPalce : OB
+[15:36:45.754][INFO]	Send PT_BallPlaceRecv
+[15:36:45.897][INFO]	Recv : PT_ShotData
+[15:36:45.897][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[15:36:45.898][INFO]	Send PT_ShotDataRecv
+[15:36:46.129][INFO]	Recv : PT_ActiveState
+[15:36:46.129][INFO]	ActiveState : FALSE
+[15:36:46.130][INFO]	Send PT_ActiveStateRecv
+[15:36:46.889][INFO]	Send PT_ClubSetting
+[15:36:46.890][INFO]	Recv : PT_ClubSettingRecv
+[15:36:47.241][INFO]	Send PT_TeeSetting
+[15:36:47.242][INFO]	Recv : PT_TeeSettingRecv
+[15:36:59.115][START]	==============================================
+[15:36:59.120][INFO]	SendThread ON
+[15:36:59.122][INFO]	Recv : PT_ConnectCheck
+[15:36:59.729][INFO]	Send PT_TeeSetting
+[15:36:59.730][INFO]	Recv : PT_TeeSettingRecv
+[15:37:04.000][INFO]	Recv : PT_ConnectCheck
+[15:37:08.999][INFO]	Recv : PT_ConnectCheck
+[15:37:09.666][INFO]	Recv : PT_BallPlace
+[15:37:09.666][INFO]	BallPalce : OB
+[15:37:09.667][INFO]	Send PT_BallPlaceRecv
+[15:37:11.033][INFO]	Recv : PT_ShotData
+[15:37:11.033][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[15:37:11.034][INFO]	Send PT_ShotDataRecv
+[15:37:12.377][INFO]	Recv : PT_ActiveState
+[15:37:12.378][INFO]	ActiveState : FALSE
+[15:37:12.378][INFO]	Send PT_ActiveStateRecv
+[15:37:14.193][INFO]	Send PT_TeeSetting
+[15:37:14.194][INFO]	Recv : PT_TeeSettingRecv
+[15:37:18.865][INFO]	Send PT_ActiveState
+[15:37:18.866][INFO]	Recv : PT_ActiveStateRecv
+[15:37:22.929][INFO]	Send PT_ActiveState
+[15:37:22.930][INFO]	Recv : PT_ActiveStateRecv
+[15:37:25.138][ERROR]	RecvThread ClientRecv error
+[15:37:25.139][END]	==============================================

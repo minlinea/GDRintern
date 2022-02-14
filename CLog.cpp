@@ -41,17 +41,3 @@ void CLog::Log(const char * logtype, const char* logmsg)
 		
 	}
 }
-
-void CLog::MakeMsg(const char* logtype, const char* logmsg, ...)
-{
-	va_list args;
-
-	va_start(args, logmsg);
-
-	char msg[MAX_MESSAGE_LEN] = { 0, };
-	vsnprintf_s(msg, sizeof(msg), MAX_MESSAGE_LEN, logmsg, args);
-
-	va_end(args);
-
-	this->Log(logtype, msg);
-}

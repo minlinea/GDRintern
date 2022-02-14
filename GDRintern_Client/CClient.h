@@ -25,6 +25,8 @@ public:
 	bool ClientInit();
 	void ClientConnect();
 
+
+
 	//recv 후 추가 data recv
 	int ReadAddData(Packet& header);
 
@@ -120,6 +122,9 @@ public:
 	{
 		return m_bActiveState;
 	}
+
+	//로그 출력용
+	void PrintLog(const char* logtype, const char* logmsg, ...);
 
 private:
 

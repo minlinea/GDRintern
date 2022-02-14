@@ -41,14 +41,14 @@ bool CServer::ServerInit()
 {
 	if (0 != WSAStartup(MAKEWORD(2, 2), &Server.m_wsaData))
 	{
-		clog.Log("ERROR", "ServerInit WSAStartup fail");
+		Server.PrintLog("ERROR", "ServerInit WSAStartup fail");
 		return false;
 	}
 
 	Server.m_hListenSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (INVALID_SOCKET == Server.m_hListenSock)
 	{
-		clog.Log("ERROR", "ServerInit ListenSocket fail");
+		Server.PrintLog("ERROR", "ServerInit ListenSocket fail");
 		return false;
 	}
 
@@ -58,13 +58,14 @@ bool CServer::ServerInit()
 
 	if (SOCKET_ERROR == bind(Server.m_hListenSock, (SOCKADDR*)&Server.m_tListenAddr, sizeof(Server.m_tListenAddr)))
 	{
+		Server.PrintLog("ERROR", "ServerInit bind fail");
 		clog.Log("ERROR", "ServerInit bind fail");
 		return false;
 	}
 
 	if (SOCKET_ERROR == listen(Server.m_hListenSock, SOMAXCONN))
 	{
-		clog.Log("ERROR", "ServerInit listen fail");
+		Server.PrintLog("ERROR", "ServerInit listen fail");
 		return false;
 	}
 
@@ -80,26 +81,41 @@ void CServer::ServerAccept()
 		int iCIntSize = sizeof(tCIntAddr);
 		Server.m_hClient = accept(Server.m_hListenSock, (SOCKADDR*)&tCIntAddr, &iCIntSize);
 
-		clog.Log("LOGIN", inet_ntoa(tCIntAddr.sin_addr));
-		std::cout << "[login]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;//accept 성공 시
+		Server.PrintLog("LOGIN", inet_ntoa(tCIntAddr.sin_addr));
 
 		DWORD dwSendThreadID, dwRecvThreadID;		//send, recv 스레드 생성
 		Server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Server.RecvThread, (LPVOID)Server.m_hClient, 0, &dwRecvThreadID);
 		Server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Server.SendThread, (LPVOID)Server.m_hClient, 0, &dwSendThreadID);
 
 		WaitForSingleObject(Server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
-		clog.Log("LOGOUT", inet_ntoa(tCIntAddr.sin_addr));
-		std::cout << "[logout]Client IP : " << inet_ntoa(tCIntAddr.sin_addr) << std::endl;
+		
+		Server.PrintLog("LOGOUT", inet_ntoa(tCIntAddr.sin_addr));
 	}
 	closesocket(Server.m_hClient);
 	return;
 }
 
+//로그 출력 관련
+void CServer::PrintLog(const char* logtype, const char* logmsg, ...)
+{
+	va_list args;
+
+	va_start(args, logmsg);
+
+	char msg[MAX_MESSAGE_LEN] = { 0, };
+	vsnprintf_s(msg, sizeof(msg), MAX_MESSAGE_LEN, logmsg, args);
+
+	va_end(args);
+
+	std::cout << msg << "\n";
+
+	clog.Log(logtype, msg);
+}
+
 //send 스레드
 DWORD WINAPI CServer::SendThread(LPVOID socket)
 {
-	clog.Log("INFO", "SendThread ON");
-	std::cout << "SendThread ON\n";
+	Server.PrintLog("INFO", "SendThread ON");
 
 	while (true)
 	{
@@ -120,12 +136,10 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 			p = Server.m_qPacket.front();
 			if (SOCKET_ERROR == Server.ServerSend(p))
 			{
-				clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
-				std::cout << "SendThread ClientSend SOCKET_ERROR\n";
+				Server.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
 				break;
 			}
-			clog.MakeMsg("INFO", "Send : %s", to_string(p->GetType()));
-			std::cout << "Send : " << to_string(p->GetType()) << "\n";
+			Server.PrintLog("INFO", "Send : %s", to_string(p->GetType()));
 			delete p;
 			Server.m_qPacket.pop();
 		}
@@ -171,8 +185,7 @@ void CServer::InputKey()
 //recv 스레드
 DWORD WINAPI CServer::RecvThread(LPVOID socket)
 {
-	clog.Log("INFO", "RecvThread ON");
-	std::cout << "RecvThread ON\n";
+	Server.PrintLog("INFO", "RecvThread ON");
 
 	Packet packet{};
 	while (true)
@@ -181,14 +194,12 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 
 		if (SOCKET_ERROR == Server.ServerRecv(&packet, PACKETHEADER))
 		{
-			clog.Log("ERROR", "RecvThread ServerRecv SOCKET_ERROR");
-			std::cout << "RecvThread ServerRecv SOCKET_ERROR\n";
+			Server.PrintLog("ERROR", "RecvThread ServerRecv SOCKET_ERROR");
 			break;
 		}
 		else    //에러가 아니라면 데이터 읽기
 		{
-			clog.MakeMsg("INFO", "Recv : %s", to_string(packet.GetType()));
-			std::cout << "Recv : " << to_string(packet.GetType()) << "\n";
+			Server.PrintLog("INFO", "Recv : %s", to_string(packet.GetType()));
 
 			//무언가 입력을 받은 경우 대기 카운트 초기화
 			Server.m_iWaitingCount = 0;
@@ -199,8 +210,7 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == Server.ReadAddData(packet))
 				{
-					clog.Log("ERROR", "ReadAddData ServerRecv SOCKET_ERROR");
-					std::cout << "ReadAddData ServerRecv SOCKET_ERROR\n";
+					Server.PrintLog("ERROR", "RecvThread ReadAddData SOCKET_ERROR");
 					break;
 				}
 			}
@@ -218,27 +228,22 @@ int CServer::ReadAddData(Packet& packet)
 	char* recvdata = (char*)malloc(recvsize);
 	retval = Server.ServerRecv(recvdata, recvsize);
 
-	if (SOCKET_ERROR == retval)
+	if (SOCKET_ERROR != retval)
 	{
-		return SOCKET_ERROR;
-	}
-	else
-	{
+
 		if (PACKETTYPE::PT_ClubSetting == packet.GetType())
 		{
 			Server.SetClubSetting(recvdata);
 
-			std::cout << "ClubSetting : " << Server.GetClubSetting() << "\n";
-			clog.MakeMsg("INFO", "ClubSetting : %s", to_string(Server.GetClubSetting()));
-			
+			Server.PrintLog("INFO", "ClubSetting : %s", to_string(Server.GetClubSetting()));
+
 			Server.SendPacket<Packet>(PACKETTYPE::PT_ClubSettingRecv);
 		}
 		else if (PACKETTYPE::PT_TeeSetting == packet.GetType())
 		{
 			Server.SetTeeSetting(recvdata);
 
-			std::cout << "TeeSetting : " << Server.GetTeeSetting() << "\n";
-			clog.MakeMsg("INFO", "TeeSetting : %s", to_string(Server.GetTeeSetting()));
+			Server.PrintLog("INFO", "TeeSetting : %s", to_string(Server.GetTeeSetting()));
 
 			Server.SendPacket<Packet>(PACKETTYPE::PT_TeeSettingRecv);
 		}
@@ -246,15 +251,13 @@ int CServer::ReadAddData(Packet& packet)
 		{
 			Server.SetActiveState(recvdata);
 
-			std::cout << "ActiveState : " << Server.GetActiveState() << "\n";
-			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Server.GetActiveState()));
+			Server.PrintLog("INFO", "ActiveState : %s", to_string(Server.GetActiveState()));
 
 			Server.SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{
-			clog.Log("WARNING", "ReadAddData recv unknown type");
-			std::cout << "ReadAddData recv unknown type\n";
+			Server.PrintLog("WARNING", "ReadAddData recv unknown type");
 		}
 	}
 	free(recvdata);

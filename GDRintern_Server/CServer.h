@@ -137,6 +137,9 @@ public:
 		return this->m_bActiveState;
 	}
 
+	//로그 출력 관련
+	void PrintLog(const char* logtype, const char* logmsg, ...);
+
 private:
 
 	

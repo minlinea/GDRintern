@@ -37,16 +37,14 @@ bool CClient::ClientInit()
 {
 	if (0 != WSAStartup(MAKEWORD(2, 2), &Client.m_wsaData))
 	{
-		clog.Log("ERROR", "ClientInit WSAStartup fail");
-		std::cout << "ClientInit WSAStartup fail\n";
+		Client.PrintLog("ERROR", "ClientInit WSAStartup fail");
 		return false;
 	}
 
 	Client.m_hSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (INVALID_SOCKET == Client.m_hSock)
 	{
-		clog.Log("ERROR", "ClientInit ListenSocket fail");
-		std::cout << "ClientInit ListenSocket fail\n";
+		Client.PrintLog("ERROR", "ClientInit ListenSocket fail");
 		return false;
 	}
 
@@ -62,8 +60,7 @@ void CClient::ClientConnect()
 	int retval{ connect(Client.m_hSock, (SOCKADDR*)&Client.m_tAddr, sizeof(Client.m_tAddr)) };
 	if (retval == SOCKET_ERROR)
 	{
-		clog.Log("ERROR", "ClientConnect connect error");
-		std::cout << "ClientConnect connect error" << std::endl;
+		Client.PrintLog("ERROR", "ClientConnect connect error");
 	}
 	else
 	{
@@ -81,6 +78,23 @@ void CClient::ClientConnect()
 	return;
 }
 
+//로그 출력 관련
+void CClient::PrintLog(const char* logtype, const char* logmsg, ...)
+{
+	va_list args;
+
+	va_start(args, logmsg);
+
+	char msg[MAX_MESSAGE_LEN] = { 0, };
+	vsnprintf_s(msg, sizeof(msg), MAX_MESSAGE_LEN, logmsg, args);
+
+	va_end(args);
+
+	std::cout << msg << "\n";
+
+	clog.Log(logtype, msg);
+}
+
 //send 스레드
 DWORD WINAPI CClient::SendThread(LPVOID socket)
 {
@@ -96,16 +110,14 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 			p = Client.m_qPacket.front();
 			if (SOCKET_ERROR == Client.ClientSend(p))
 			{
-				clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
-				std::cout << "SendThread ClientSend SOCKET_ERROR\n";
+				Client.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
 				break;
 			}
-			clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
-			std::cout << "Send : " << to_string(p->GetType()) << "\n";
+			Client.PrintLog("INFO", "Send %s", to_string(p->GetType()));
+
 			delete p;
 			Client.m_qPacket.pop();
 		}
-
 	}
 	return NULL;
 }
@@ -148,8 +160,7 @@ void CClient::InputKey()
 //recv 스레드
 DWORD WINAPI CClient::RecvThread(LPVOID socket)
 {
-	clog.Log("INFO", "RecvThread ON");
-	std::cout << "RecvThread ON\n";
+	Client.PrintLog("INFO", "RecvThread ON");
 
 	Packet packet{};
 	while (true)
@@ -158,20 +169,19 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 
 		if (SOCKET_ERROR == Client.ClientRecv(&packet, PACKETHEADER))
 		{
-			clog.Log("ERROR", "RecvThread ClientRecv error");
-			std::cout << "RecvThread ClientRecv error\n";
+			Client.PrintLog("ERROR", "RecvThread ClientRecv error");
 			break;
 		}
 		else	//에러가 아니라면 데이터 읽기
 		{
-			clog.MakeMsg("INFO", "Recv : %s", to_string(packet.GetType()));
-			std::cout << "Recv : " << to_string(packet.GetType()) << "\n";
+			Client.PrintLog("INFO", "Recv : %s", to_string(packet.GetType()));
 
 			if (PACKETHEADER != packet.GetSize())
 			{
 				ResumeThread(Client.m_hSend);
 				if (SOCKET_ERROR == Client.ReadAddData(packet))
 				{
+					Client.PrintLog("ERROR", "RecvThread ReadAddData SOCKET_ERROR");
 					break;
 				}
 			}
@@ -183,31 +193,26 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 //추가 데이터 recv 시
 int CClient::ReadAddData(Packet& packet)
 {
-	int retval{ 0 };
-
 	unsigned int recvsize{ packet.GetSize() - PACKETHEADER };
 	char* recvdata = (char*)malloc(recvsize);
-	if (SOCKET_ERROR == Client.ClientRecv(recvdata, recvsize))
-	{
-		clog.Log("ERROR", "ReadAddData ClientRecv SOCKET_ERROR");
-		std::cout << "ReadAddData ClientRecv SOCKET_ERROR\n";
-	}
-	else
+	int retval{ Client.ClientRecv(recvdata, recvsize) };
+	
+	if (SOCKET_ERROR != retval)
 	{
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
 			Client.SetBallPlace(recvdata);
-			clog.MakeMsg("INFO", "BallPalce : %s", to_string(Client.GetBallPlace()));
-			std::cout << "BallPlace : " << Client.GetBallPlace() << "\n";
+
+			Client.PrintLog("INFO", "BallPalce : %s", to_string(Client.GetBallPlace()));
 
 			Client.SendPacket<Packet>(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
 			Client.SetShotData(recvdata);
+
 			ShotData sd = Client.GetShotData();
-			std::cout << "ShotData : " << sd << "\n";
-			clog.MakeMsg("INFO", "[phase %d] : ballspeed[%f], launchangle[%f], "
+			Client.PrintLog("INFO", "[phase %d] : ballspeed[%f], launchangle[%f], "
 				"launchdirection[%f], headspeed[%f], backspin[%d], sidespin[%d]",
 				sd.phase, sd.ballspeed, sd.launchangle, sd.launchdirection,
 				sd.headspeed, sd.backspin, sd.sidespin);
@@ -217,15 +222,14 @@ int CClient::ReadAddData(Packet& packet)
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
 			Client.SetActiveState(recvdata);
-			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Client.GetActiveState()));
-			std::cout << "ActiveState : " << Client.GetActiveState() << "\n";
+
+			Client.PrintLog("INFO", "ActiveState : %s", to_string(Client.GetActiveState()));
 
 			Client.SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{
-			clog.Log("WARNING", "ReadAddData Recv unknown type");
-			std::cout << "ReadAddData Recv unknown type\n";
+			Client.PrintLog("WARNING", "ReadAddData Recv unknown type");
 		}
 	}
 	free(recvdata);
