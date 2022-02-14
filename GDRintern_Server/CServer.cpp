@@ -105,7 +105,16 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	{
 		time(&Server.m_tNowTime);
 
-		Server.InputKey();
+		Server.InputKey();		//테스트용 키입력 함수
+
+		//대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
+		if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
+		{
+			Server.SendNoneAddData(PACKETTYPE::PT_ConnectCheck);
+			Server.m_tBeforeTime = Server.m_tNowTime;				//BeforeTime 갱신
+			++Server.m_iWaitingCount;								//count 누적
+		}
+
 		if (true != Server.m_qPacket.empty())
 		{
 			for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
@@ -122,23 +131,11 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 				delete p;
 				Server.m_qPacket.pop();
 			}
-			//서버가 동작했다면 대기시간 초기화
-			Server.m_tBeforeTime = Server.m_tNowTime;
-			Server.m_iWaitingCount = 0;
 		}
 
-
-
-		//대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
-		if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
+		if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
 		{
-			Server.SendNoneAddData(PACKETTYPE::PT_ConnectCheck);
-			Server.m_tBeforeTime = Server.m_tNowTime;				//BeforeTime 갱신
-			++Server.m_iWaitingCount;								//count 누적
-			if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
-			{
-				SuspendThread(Server.m_hSend);						//스레드 일시정지
-			}
+			SuspendThread(Server.m_hSend);						//스레드 일시정지
 		}
 	}
 	return NULL;
@@ -148,17 +145,17 @@ template <class PACKET, class PACKETDATA>
 void CServer::SendAddData(PACKETDATA data)
 {
 	m_qPacket.push(new PACKET(data));
-
-	//패킷과 데이터로 로그 추가하기
+	
+	clog.MakeMsg("INFO", "Packet Push : [%s]", to_string(m_qPacket.back()->GetType()));
+	std::cout << "Packet Push : " << to_string(m_qPacket.back()->GetType()) << "\n";
 }
 
 void CServer::SendNoneAddData(PACKETTYPE type)
 {
 	m_qPacket.push(new Packet(type));
-
-	//타입관련 입출력 추가 필요
-	//clog.Log("INFO", "Send PT_ActiveState");
-	//std::cout << "Send PT_ActiveState\n";
+	
+	clog.MakeMsg("INFO", "Packet Push : [%s]", to_string(m_qPacket.back()->GetType()));
+	std::cout << "Packet Push : " << to_string(m_qPacket.back()->GetType()) << "\n";
 }
 
 //테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
@@ -201,9 +198,10 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 		}
 		else    //에러가 아니라면 데이터 읽기
 		{
-			//무언가 입력을 받은 경우 대기 시간 초기화
+			//무언가 입력을 받은 경우 대기 카운트 초기화
 			Server.m_iWaitingCount = 0;
 			ResumeThread(Server.m_hSend);	//SendThread resume
+			Server.m_tBeforeTime = Server.m_tNowTime;		//대기시간 갱신
 
 			if (PACKETHEADER == packet.GetSize())
 			{
@@ -213,10 +211,12 @@ DWORD WINAPI CServer::RecvThread(LPVOID socket)
 			{
 				if (SOCKET_ERROR == Server.ReadAddData(packet))
 				{
+					clog.Log("ERROR", "ReadAddData ServerRecv SOCKET_ERROR");
+					std::cout << "ReadAddData ServerRecv SOCKET_ERROR\n";
 					break;
 				}
 			}
-			Server.m_tBeforeTime = Server.m_tNowTime;		//대기시간 갱신
+			
 		}
 	}
 	return NULL;
@@ -258,8 +258,6 @@ int CServer::ReadAddData(Packet& packet)
 
 	if (SOCKET_ERROR == retval)
 	{
-		clog.Log("ERROR", "ReadAddData ServerRecv SOCKET_ERROR");
-		std::cout << "ReadAddData ServerRecv SOCKET_ERROR\n";
 		return SOCKET_ERROR;
 	}
 	else
