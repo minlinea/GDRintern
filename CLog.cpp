@@ -42,7 +42,7 @@ void CLog::Log(const char * logtype, const char* logmsg)
 	}
 }
 
-void CLog::MakeMsg(const char* logmsg, ...)
+void CLog::MakeMsg(const char* logtype, const char* logmsg, ...)
 {
 	va_list args;
 
@@ -53,5 +53,5 @@ void CLog::MakeMsg(const char* logmsg, ...)
 
 	va_end(args);
 
-	this->Log("INFO", msg);
+	this->Log(logtype, msg);
 }

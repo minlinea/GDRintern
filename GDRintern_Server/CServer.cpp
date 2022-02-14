@@ -117,6 +117,7 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 					std::cout << "SendThread ClientSend SOCKET_ERROR\n";
 					break;
 				}
+				clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
 				delete p;
 				Server.m_qPacket.pop();
 			}
@@ -137,8 +138,6 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 				SuspendThread(Server.m_hSend);						//스레드 일시정지
 			}
 		}
-
-
 	}
 	return NULL;
 }
@@ -165,15 +164,15 @@ void CServer::InputKey(const char input)
 {
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		Server.SendAddData<Packet_BallPlace>(Server.GetBallPlace());
+		Server.SendAddData<PacketBallPlace>(Server.GetBallPlace());
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		Server.SendAddData<Packet_ShotData>(Server.GetShotData());
+		Server.SendAddData<PacketShotData>(Server.GetShotData());
 	}
 	else if ('r' == input)		//샷 이후 activestate false 전달
 	{
-		Server.SendAddData<Packet_ActiveState>(Server.GetActiveState());
+		Server.SendAddData<PacketActiveState>(Server.GetActiveState());
 	}
 }
 
@@ -263,6 +262,7 @@ int CServer::ReadAddData(Packet& packet)
 		{
 			clog.Log("INFO", "Recv PT_ClubSetting");
 			Server.SetClubSetting(recvdata);
+			clog.MakeMsg("INFO", "ClubSetting : %s", to_string(Server.GetClubSetting()));
 			std::cout << "Recv PT_ClubSetting // " << Server.GetClubSetting() << "\n";
 			
 			Server.SendNoneAddData(PACKETTYPE::PT_ClubSettingRecv);
@@ -272,6 +272,7 @@ int CServer::ReadAddData(Packet& packet)
 			clog.Log("INFO", "Recv PT_TeeSetting");
 			Server.SetTeeSetting(recvdata);
 			std::cout << "Recv PT_TeeSetting // " << Server.GetTeeSetting() << "\n";
+			clog.MakeMsg("INFO", "TeeSetting : %s", to_string(Server.GetTeeSetting()));
 
 			Server.SendNoneAddData(PACKETTYPE::PT_TeeSettingRecv);
 		}
@@ -280,6 +281,7 @@ int CServer::ReadAddData(Packet& packet)
 			clog.Log("INFO", "Recv PT_ActiveState");
 			Server.SetActiveState(recvdata);
 			std::cout << "Recv PT_ActiveState // " << Server.GetActiveState() << "\n";
+			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Server.GetActiveState()));
 
 			Server.SendNoneAddData(PACKETTYPE::PT_ActiveStateRecv);
 		}

@@ -102,10 +102,10 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 					std::cout << "SendThread ClientSend SOCKET_ERROR\n";
 					break;
 				}
+				clog.MakeMsg("INFO", "Send %s", to_string(p->GetType()));
 				delete p;
 				Client.m_qPacket.pop();
 			}
-
 		}
 		
 	}
@@ -134,21 +134,21 @@ void CClient::InputKey(const char input)
 {
 	if ('q' == input)		//Club 세팅 전송
 	{
-		Client.SendAddData<Packet_ClubSetting>(Client.GetClubSetting());
+		Client.SendAddData<PacketClubSetting>(Client.GetClubSetting());
 	}
 	else if ('w' == input)		//Tee 세팅 전송
 	{
-		Client.SendAddData<Packet_TeeSetting>(Client.GetTeeSetting());
+		Client.SendAddData<PacketTeeSetting>(Client.GetTeeSetting());
 	}
 	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
 	{
 		Client.SetActiveState(true);
-		Client.SendAddData<Packet_ActiveState>(Client.GetActiveState());
+		Client.SendAddData<PacketActiveState>(Client.GetActiveState());
 	}
 	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
 	{
 		Client.SetActiveState(false);
-		Client.SendAddData<Packet_ActiveState>(Client.GetActiveState());
+		Client.SendAddData<PacketActiveState>(Client.GetActiveState());
 	}
 }
 
@@ -240,7 +240,7 @@ int CClient::ReadAddData(Packet& packet)
 			clog.Log("INFO", "Recv PT_BallPlace");
 
 			Client.SetBallPlace(recvdata);
-			clog.Log("INFO", to_string(Client.GetBallPlace()));
+			clog.MakeMsg("INFO", "BallPalce : %s", to_string(Client.GetBallPlace()));
 			std::cout << "Recv PT_BallPlace // " << Client.GetBallPlace() << "\n";
 
 			Client.SendNoneAddData(PACKETTYPE::PT_BallPlaceRecv);
@@ -252,8 +252,8 @@ int CClient::ReadAddData(Packet& packet)
 			Client.SetShotData(recvdata);
 			ShotData sd = Client.GetShotData();
 			std::cout << "Recv PT_ShotData // " << sd << "\n";
-			clog.MakeMsg("[phase%d] : ballspeed[%f], launchangle[%f]"
-				"launchdirection[%f] headspeed[%f] backspin[%d] sidespin[%d]",
+			clog.MakeMsg("INFO", "[phase %d] : ballspeed[%f], launchangle[%f], "
+				"launchdirection[%f], headspeed[%f], backspin[%d], sidespin[%d]",
 				sd.phase, sd.ballspeed, sd.launchangle, sd.launchdirection,
 				sd.headspeed, sd.backspin, sd.sidespin);
 
@@ -264,6 +264,7 @@ int CClient::ReadAddData(Packet& packet)
 			clog.Log("INFO", "Recv PT_ActiveState");
 
 			Client.SetActiveState(recvdata);
+			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Client.GetActiveState()));
 			std::cout << "Recv PT_ActiveState  // " << Client.GetActiveState() << "\n";
 
 			Client.SendNoneAddData(PACKETTYPE::PT_ActiveStateRecv);

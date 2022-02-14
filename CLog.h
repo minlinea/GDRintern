@@ -17,7 +17,7 @@ public:
 
 	void SetPathFile();
 	void Log(const char* logtype, const char * logmsg);
-	void MakeMsg(const char* logmsg, ...);
+	void MakeMsg(const char* logtype, const char* logmsg, ...);
 private:
 	char m_caPathName[MAX_PATHNAME_LEN];
 };
