@@ -420,3 +420,18 @@
 [10:51:08.512][INFO]	Send PT_ClubSetting
 [10:51:20.468][ERROR]	RecvThread ClientRecv error
 [10:51:20.469][END]	==============================================
+[10:56:23.184][START]	==============================================
+[10:56:23.189][INFO]	RecvThread ON
+[10:56:31.241][INFO]	Recv PT_TeeSettingRecv
+[10:56:31.242][INFO]	Recv PT_TeeSettingRecv
+[10:56:31.243][INFO]	Recv PT_ActiveStateRecv
+[10:56:31.244][INFO]	Recv PT_ActiveStateRecv
+[10:56:31.245][INFO]	Recv PT_ActiveStateRecv
+[10:56:31.246][INFO]	Recv PT_TeeSettingRecv
+[10:56:31.247][INFO]	Recv PT_BallPlace
+[10:56:31.248][INFO]	OB
+[10:56:33.529][INFO]	Recv PT_ShotData
+[10:56:33.535][INFO]	[phase0] : ballspeed[1.000000], launchangle[2.000000]launchdirection[3.000000] headspeed[4.000000] backspin[5] sidespin[6]
+[10:56:34.144][INFO]	Recv PT_ActiveState
+[10:56:36.242][ERROR]	RecvThread ClientRecv error
+[10:56:36.243][END]	==============================================

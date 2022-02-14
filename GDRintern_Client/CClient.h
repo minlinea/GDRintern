@@ -36,9 +36,8 @@ public:
 	void InputKey(const char input);
 
 	//실제 동작용 함수
-	void SendClubSetting();
-	void SendTeeSetting();
-	void SendActiveState();
+	template <class PACKET, class PACKETDATA>
+	void SendAddData(PACKETDATA data);
 	void SendNoneAddData(PACKETTYPE type);
 
 	//packet*가 들어오면 안에서 조립해서 보내보기

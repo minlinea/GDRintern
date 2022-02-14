@@ -51,6 +51,7 @@ public:
 	//w(공위치), e(샷정보), r(ballstate false)
 	void InputKey(const char input);
 
+	//데이터 전송 관련
 	template <class PACKET, class PACKETDATA>
 	void SendAddData(PACKETDATA data);
 	void SendNoneAddData(PACKETTYPE type);

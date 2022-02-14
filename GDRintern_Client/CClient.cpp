@@ -112,31 +112,12 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	return NULL;
 }
 
-//Club 세팅 전송
-void CClient::SendClubSetting()
+template <class PACKET, class PACKETDATA>
+void CClient::SendAddData(PACKETDATA data)
 {
-	m_qPacket.push(new Packet_ClubSetting(Client.GetClubSetting()));
+	m_qPacket.push(new PACKET(data));
 
-	clog.Log("INFO", "Send PT_ClubSetting");
-	std::cout << "Send PT_ClubSetting\n";
-}
-
-//Tee 세팅 전송
-void CClient::SendTeeSetting()
-{
-	m_qPacket.push(new Packet_TeeSetting(Client.GetTeeSetting()));
-
-	clog.Log("INFO", "Send PT_TeeSetting");
-	std::cout << "Send PT_TeeSetting\n";
-}
-
-//샷 가능 여부 전송 (샷 이후 센서 inactive 상황)
-void CClient::SendActiveState()
-{
-	m_qPacket.push(new Packet_ActiveState(Client.GetActiveState()));
-
-	clog.Log("INFO", "Send PT_ActiveState");
-	std::cout << "Send PT_ActiveState\n";
+	//패킷과 데이터로 로그 추가하기
 }
 
 void CClient::SendNoneAddData(PACKETTYPE type)
@@ -153,21 +134,21 @@ void CClient::InputKey(const char input)
 {
 	if ('q' == input)		//Club 세팅 전송
 	{
-		Client.SendClubSetting();
+		Client.SendAddData<Packet_ClubSetting>(Client.GetClubSetting());
 	}
 	else if ('w' == input)		//Tee 세팅 전송
 	{
-		Client.SendTeeSetting();
+		Client.SendAddData<Packet_TeeSetting>(Client.GetTeeSetting());
 	}
 	else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
 	{
 		Client.SetActiveState(true);
-		Client.SendActiveState();
+		Client.SendAddData<Packet_ActiveState>(Client.GetActiveState());
 	}
 	else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
 	{
 		Client.SetActiveState(false);
-		Client.SendActiveState();
+		Client.SendAddData<Packet_ActiveState>(Client.GetActiveState());
 	}
 }
 

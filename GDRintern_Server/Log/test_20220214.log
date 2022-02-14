@@ -273,3 +273,16 @@
 [10:51:08.520][INFO]	Recv PT_BallPlaceRecv
 [10:51:08.520][INFO]	Recv PT_BallPlaceRecv
 [10:51:08.521][INFO]	Recv PT_ClubSetting
+[10:56:15.366][START]	==============================================
+[10:56:23.189][LOGIN]	192.168.206.126
+[10:56:23.191][INFO]	RecvThread ON
+[10:56:26.728][INFO]	Recv PT_TeeSetting
+[10:56:27.063][INFO]	Recv PT_TeeSetting
+[10:56:28.286][INFO]	Recv PT_ActiveState
+[10:56:29.109][INFO]	Recv PT_ActiveState
+[10:56:30.110][INFO]	Recv PT_ActiveState
+[10:56:30.239][INFO]	Recv PT_TeeSetting
+[10:56:34.958][INFO]	Recv PT_BallPlaceRecv
+[10:56:34.959][INFO]	Recv PT_ShotDataRecv
+[10:56:34.959][INFO]	Recv PT_ActiveStateRecv
+[10:56:34.960][INFO]	Recv PT_ActiveState

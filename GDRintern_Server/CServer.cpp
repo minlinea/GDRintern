@@ -111,9 +111,6 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 			for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
 			{
 				p = Server.m_qPacket.front();
-
-				std::cout << p->GetSize() << "\t" << (unsigned int)p->GetType() << "\n";
-
 				if (SOCKET_ERROR == Server.ServerSend(p))
 				{
 					clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
