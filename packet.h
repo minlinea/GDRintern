@@ -126,6 +126,8 @@ inline std::ostream& operator << (std::ostream& os, const PACKETTYPE& t)
 	else if (PACKETTYPE::PT_TeeSetting == t)		std::cout << "PT_TeeSetting";
 	else if (PACKETTYPE::PT_TeeSettingRecv == t)	std::cout << "PT_TeeSettingRecv";
 	else if (PACKETTYPE::PT_None == t)				std::cout << "PT_None";
+	else											std::cout << "None Type Message";
+
 	return os;
 }
 inline const char* to_string(const PACKETTYPE& t);
@@ -144,7 +146,7 @@ inline const char* to_string(const PACKETTYPE& t)
 	else if (PACKETTYPE::PT_TeeSetting == t)		return "PT_TeeSetting";
 	else if (PACKETTYPE::PT_TeeSettingRecv == t)	return "PT_TeeSettingRecv";
 	else if (PACKETTYPE::PT_None == t)				return "PT_None";
-	return "NONE";
+	else											return "None Type Message";
 }
 
 //////////////////////////////////////////////////////////////////////////////////

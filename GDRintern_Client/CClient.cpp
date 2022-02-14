@@ -113,7 +113,7 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 //class P : 전송하고자 하는 Packet 또는 Packet하위클래스
 //PACKETDATA : Packet인 경우 PACKETTYPE // Packet하위클래스인 경우 전송하고자 하는 데이터
 template <class P, class PACKETDATA>
-void CClient::SendData(PACKETDATA data)
+void CClient::SendPacket(PACKETDATA data)
 {
 	m_qPacket.push(new P(data));
 }
@@ -126,21 +126,21 @@ void CClient::InputKey()
 		char input = _getch();
 		if ('q' == input)		//Club 세팅 전송
 		{
-			Client.SendData<PacketClubSetting>(Client.GetClubSetting());
+			Client.SendPacket<PacketClubSetting>(Client.GetClubSetting());
 		}
 		else if ('w' == input)		//Tee 세팅 전송
 		{
-			Client.SendData<PacketTeeSetting>(Client.GetTeeSetting());
+			Client.SendPacket<PacketTeeSetting>(Client.GetTeeSetting());
 		}
 		else if ('e' == input)		//Active 상태 (모바일->PC 샷 가능 상태 전달)
 		{
 			Client.SetActiveState(true);
-			Client.SendData<PacketActiveState>(Client.GetActiveState());
+			Client.SendPacket<PacketActiveState>(Client.GetActiveState());
 		}
 		else if ('r' == input)		//Inactive 상태 (모바일->PC 샷 불가능 상태 전달)
 		{
 			Client.SetActiveState(false);
-			Client.SendData<PacketActiveState>(Client.GetActiveState());
+			Client.SendPacket<PacketActiveState>(Client.GetActiveState());
 		}
 	}
 }
@@ -164,54 +164,20 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		}
 		else	//에러가 아니라면 데이터 읽기
 		{
-			if (PACKETHEADER == packet.GetSize())
-			{
-				Client.ReadHeader(packet.GetType());
-			}
-			else
+			clog.MakeMsg("INFO", "Recv : %s", to_string(packet.GetType()));
+			std::cout << "Recv : " << to_string(packet.GetType()) << "\n";
+
+			if (PACKETHEADER != packet.GetSize())
 			{
 				ResumeThread(Client.m_hSend);
 				if (SOCKET_ERROR == Client.ReadAddData(packet))
 				{
 					break;
 				}
-				else
-				{
-				}
 			}
 		}
 	}
 	return NULL;
-}
-
-//추가 데이터 없이 header만 받는 경우
-void CClient::ReadHeader(const PACKETTYPE& type)
-{
-	if (PACKETTYPE::PT_ClubSettingRecv == type)
-	{
-		clog.Log("INFO", "Recv PT_ClubSettingRecv");
-		std::cout << "Recv PT_ClubSettingRecv\n";
-	}
-	else if (PACKETTYPE::PT_TeeSettingRecv == type)
-	{
-		clog.Log("INFO", "Recv PT_TeeSettingRecv");
-		std::cout << "Recv PT_TeeSettingRecv\n";
-	}
-	else if (PACKETTYPE::PT_ActiveStateRecv == type)
-	{
-		clog.Log("INFO", "Recv PT_ActiveStateRecv");
-		std::cout << "Recv PT_ActiveStateRecv\n";
-	}
-	else if (PACKETTYPE::PT_ConnectCheck == type)
-	{
-		clog.Log("INFO", "Recv PT_ConnectCheck");
-		std::cout << "Recv PT_ConnectCheck\n";
-	}
-	else
-	{
-		clog.Log("WARNING", "ReadHeader Recv unknown type");
-		std::cout << "ReadHeader Recv unknown type\n";
-	}
 }
 
 //추가 데이터 recv 시
@@ -230,37 +196,31 @@ int CClient::ReadAddData(Packet& packet)
 	{
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
-			clog.Log("INFO", "Recv PT_BallPlace");
-
 			Client.SetBallPlace(recvdata);
 			clog.MakeMsg("INFO", "BallPalce : %s", to_string(Client.GetBallPlace()));
-			std::cout << "Recv PT_BallPlace // " << Client.GetBallPlace() << "\n";
+			std::cout << "BallPlace : " << Client.GetBallPlace() << "\n";
 
-			Client.SendData<Packet>(PACKETTYPE::PT_BallPlaceRecv);
+			Client.SendPacket<Packet>(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
-			clog.Log("INFO", "Recv PT_ShotData");
-
 			Client.SetShotData(recvdata);
 			ShotData sd = Client.GetShotData();
-			std::cout << "Recv PT_ShotData // " << sd << "\n";
+			std::cout << "ShotData : " << sd << "\n";
 			clog.MakeMsg("INFO", "[phase %d] : ballspeed[%f], launchangle[%f], "
 				"launchdirection[%f], headspeed[%f], backspin[%d], sidespin[%d]",
 				sd.phase, sd.ballspeed, sd.launchangle, sd.launchdirection,
 				sd.headspeed, sd.backspin, sd.sidespin);
 
-			Client.SendData<Packet>(PACKETTYPE::PT_ShotDataRecv);
+			Client.SendPacket<Packet>(PACKETTYPE::PT_ShotDataRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
-			clog.Log("INFO", "Recv PT_ActiveState");
-
 			Client.SetActiveState(recvdata);
 			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Client.GetActiveState()));
-			std::cout << "Recv PT_ActiveState  // " << Client.GetActiveState() << "\n";
+			std::cout << "ActiveState : " << Client.GetActiveState() << "\n";
 
-			Client.SendData<Packet>(PACKETTYPE::PT_ActiveStateRecv);
+			Client.SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{

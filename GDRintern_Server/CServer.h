@@ -41,9 +41,6 @@ public:
 	bool ServerInit();
 	void ServerAccept();
 
-	//recv 후 패킷 type에 따른 정보 파악
-	void ReadHeader(const PACKETTYPE& type);
-
 	//recv 후 추가 data recv
 	int ReadAddData(Packet& type);
 
@@ -55,7 +52,7 @@ public:
 	//class P : 전송하고자 하는 Packet 또는 Packet하위클래스
 	//PACKETDATA : Packet인 경우 PACKETTYPE // Packet하위클래스인 경우 전송하고자 하는 데이터
 	template <class P, class PACKETDATA>
-	void SendData(PACKETDATA data);
+	void SendPacket(PACKETDATA data);
 
 	//packet*가 들어오면 안에서 조립해서 보내보기
 	int ServerSend(Packet* packet);
