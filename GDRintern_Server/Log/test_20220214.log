@@ -260,3 +260,16 @@
 [10:41:18.311][INFO]	Recv PT_ActiveState
 [10:41:19.105][INFO]	Send PT_BallPlace
 [10:41:19.162][INFO]	Send PT_ShotData
+[10:50:56.562][START]	==============================================
+[10:51:02.280][LOGIN]	192.168.206.126
+[10:51:02.281][INFO]	RecvThread ON
+[10:51:08.514][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.515][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.515][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.516][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.517][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.518][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.519][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.520][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.520][INFO]	Recv PT_BallPlaceRecv
+[10:51:08.521][INFO]	Recv PT_ClubSetting

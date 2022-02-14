@@ -96,9 +96,6 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 			for (auto p = Client.m_qPacket.front(); true != Client.m_qPacket.empty(); )
 			{
 				p = Client.m_qPacket.front();
-
-				std::cout << p->GetSize() << "\t" << (unsigned int)p->GetType() << "\n";
-
 				if (SOCKET_ERROR == Client.ClientSend(p))
 				{
 					clog.Log("ERROR", "SendThread ClientSend SOCKET_ERROR");
@@ -279,7 +276,7 @@ int CClient::ReadAddData(Packet& packet)
 				sd.phase, sd.ballspeed, sd.launchangle, sd.launchdirection,
 				sd.headspeed, sd.backspin, sd.sidespin);
 
-			Client.SendNoneAddData(PACKETTYPE::PT_BallPlaceRecv);
+			Client.SendNoneAddData(PACKETTYPE::PT_ShotDataRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
@@ -288,7 +285,7 @@ int CClient::ReadAddData(Packet& packet)
 			Client.SetActiveState(recvdata);
 			std::cout << "Recv PT_ActiveState  // " << Client.GetActiveState() << "\n";
 
-			Client.SendNoneAddData(PACKETTYPE::PT_BallPlaceRecv);
+			Client.SendNoneAddData(PACKETTYPE::PT_ActiveStateRecv);
 		}
 		else
 		{

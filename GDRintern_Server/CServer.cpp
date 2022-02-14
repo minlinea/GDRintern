@@ -146,31 +146,12 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	return NULL;
 }
 
-//공 위치 전송
-void CServer::SendBallPlace()
+template <class PACKET, class PACKETDATA>
+void CServer::SendAddData(PACKETDATA data)
 {
-	m_qPacket.push(new Packet_BallPlace(Server.GetBallPlace()));
+	m_qPacket.push(new PACKET(data));
 
-	clog.Log("INFO", "Send PT_BallPlace");
-	std::cout << "Send PT_BallPlace\n";
-}
-
-//ShotData 전송
-void CServer::SendShotData()
-{
-	m_qPacket.push(new Packet_ShotData(Server.GetShotData()));
-
-	clog.Log("INFO", "Send PT_ShotData");
-	std::cout << "Send PT_ShotData\n";
-}
-
-//샷 가능 여부 전송 (샷 이후 센서 inactive 상황 시)
-void CServer::SendActiveState()
-{
-	m_qPacket.push(new Packet_ActiveState(Server.GetActiveState()));
-
-	clog.Log("INFO", "Send PT_ActiveState");
-	std::cout << "Send PT_ActiveState\n";
+	//패킷과 데이터로 로그 추가하기
 }
 
 void CServer::SendNoneAddData(PACKETTYPE type)
@@ -187,15 +168,15 @@ void CServer::InputKey(const char input)
 {
 	if ('w' == input)		//공위치 전달(enum)
 	{
-		Server.SendBallPlace();
+		Server.SendAddData<Packet_BallPlace>(Server.GetBallPlace());
 	}
 	else if ('e' == input)		//샷정보 전달
 	{
-		Server.SendShotData();
+		Server.SendAddData<Packet_ShotData>(Server.GetShotData());
 	}
 	else if ('r' == input)		//샷 이후 activestate false 전달
 	{
-		Server.SendActiveState();
+		Server.SendAddData<Packet_ActiveState>(Server.GetActiveState());
 	}
 }
 
