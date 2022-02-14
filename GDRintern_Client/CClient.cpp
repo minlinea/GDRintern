@@ -142,6 +142,15 @@ void CClient::SendActiveState()
 	std::cout << "Send PT_ActiveState\n";
 }
 
+void CClient::SendNoneAddData(PACKETTYPE type)
+{
+	m_qPacket.push(new Packet(type));
+
+	//타입관련 입출력 추가 필요
+	//clog.Log("INFO", "Send PT_ActiveState");
+	//std::cout << "Send PT_ActiveState\n";
+}
+
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))
 void CClient::InputKey(const char input)
 {
@@ -237,11 +246,11 @@ void CClient::ReadHeader(const PACKETTYPE& type)
 //추가 데이터 recv 시
 int CClient::ReadAddData(Packet& packet)
 {
-	Packet recvpt{};
 	int retval{ 0 };
 
-	char* recvdata = (char*)malloc(packet.GetSize());
-	if (SOCKET_ERROR == Client.ClientRecv(recvdata, packet.GetSize()))
+	unsigned int recvsize{ packet.GetSize() - PACKETHEADER };
+	char* recvdata = (char*)malloc(recvsize);
+	if (SOCKET_ERROR == Client.ClientRecv(recvdata, recvsize))
 	{
 		clog.Log("ERROR", "ReadAddData ClientRecv SOCKET_ERROR");
 		std::cout << "ReadAddData ClientRecv SOCKET_ERROR\n";
@@ -256,7 +265,7 @@ int CClient::ReadAddData(Packet& packet)
 			clog.Log("INFO", to_string(Client.GetBallPlace()));
 			std::cout << "Recv PT_BallPlace // " << Client.GetBallPlace() << "\n";
 
-			recvpt.SetType(PACKETTYPE::PT_BallPlaceRecv);
+			Client.SendNoneAddData(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
@@ -270,7 +279,7 @@ int CClient::ReadAddData(Packet& packet)
 				sd.phase, sd.ballspeed, sd.launchangle, sd.launchdirection,
 				sd.headspeed, sd.backspin, sd.sidespin);
 
-			recvpt.SetType(PACKETTYPE::PT_ShotDataRecv);
+			Client.SendNoneAddData(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
@@ -279,7 +288,7 @@ int CClient::ReadAddData(Packet& packet)
 			Client.SetActiveState(recvdata);
 			std::cout << "Recv PT_ActiveState  // " << Client.GetActiveState() << "\n";
 
-			recvpt.SetType(PACKETTYPE::PT_ActiveStateRecv);
+			Client.SendNoneAddData(PACKETTYPE::PT_BallPlaceRecv);
 		}
 		else
 		{
@@ -287,18 +296,6 @@ int CClient::ReadAddData(Packet& packet)
 			std::cout << "ReadAddData Recv unknown type\n";
 		}
 	}
-
-	//정상적인 데이터 recv 시 응답 send 진행
-	if (PACKETTYPE::PT_None != recvpt.GetType())
-	{
-		retval = Client.ClientSend(&recvpt);
-		if (retval == SOCKET_ERROR)
-		{
-			clog.Log("ERROR", "ReadAddData ClientSend error");
-			std::cout << "ReadAddData ClientSend error\n";
-		}
-	}
-	
 	free(recvdata);
 
 	return retval;

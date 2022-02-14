@@ -39,6 +39,7 @@ public:
 	void SendClubSetting();
 	void SendTeeSetting();
 	void SendActiveState();
+	void SendNoneAddData(PACKETTYPE type);
 
 	//packet*가 들어오면 안에서 조립해서 보내보기
 	int ClientSend(Packet* packet);

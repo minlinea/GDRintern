@@ -49,12 +49,13 @@ public:
 
 	//pc-pc 통신용 키입력 시 해당 키에 따른 상황 통신(테스트 코드)
 	//w(공위치), e(샷정보), r(ballstate false)
-	int InputKey(const char input);
+	void InputKey(const char input);
 
 	//실제 동작용 함수
-	int SendShotData();
-	int SendBallPlace();
-	int SendActiveState();
+	void SendShotData();
+	void SendBallPlace();
+	void SendActiveState();
+	void SendNoneAddData(PACKETTYPE type);
 
 	//packet*가 들어오면 안에서 조립해서 보내보기
 	int ServerSend(Packet* packet);
