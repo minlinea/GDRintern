@@ -36,7 +36,7 @@ public:
 	void InputKey();
 
 	//실제 동작용 함수
-	template <class PACKET, class PACKETDATA>
+	template <class P, class PACKETDATA>
 	void SendAddData(PACKETDATA data);
 	void SendNoneAddData(PACKETTYPE type);
 

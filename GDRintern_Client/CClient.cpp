@@ -113,21 +113,15 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 	return NULL;
 }
 
-template <class PACKET, class PACKETDATA>
+template <class P, class PACKETDATA>
 void CClient::SendAddData(PACKETDATA data)
 {
-	m_qPacket.push(new PACKET(data));
-
-	//패킷과 데이터로 로그 추가하기
+	m_qPacket.push(new P(data));
 }
 
 void CClient::SendNoneAddData(PACKETTYPE type)
 {
 	m_qPacket.push(new Packet(type));
-
-	//타입관련 입출력 추가 필요
-	//clog.Log("INFO", "Send PT_ActiveState");
-	//std::cout << "Send PT_ActiveState\n";
 }
 
 //테스트 동작용 키입력(q:ClubSetting, w:TeeSetting, e:active(true), r:active(false))

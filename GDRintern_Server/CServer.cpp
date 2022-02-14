@@ -141,21 +141,15 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 	return NULL;
 }
 
-template <class PACKET, class PACKETDATA>
+template <class P, class PACKETDATA>
 void CServer::SendAddData(PACKETDATA data)
 {
-	m_qPacket.push(new PACKET(data));
-	
-	clog.MakeMsg("INFO", "Packet Push : [%s]", to_string(m_qPacket.back()->GetType()));
-	std::cout << "Packet Push : " << to_string(m_qPacket.back()->GetType()) << "\n";
+	m_qPacket.push(new P(data));
 }
 
 void CServer::SendNoneAddData(PACKETTYPE type)
 {
 	m_qPacket.push(new Packet(type));
-	
-	clog.MakeMsg("INFO", "Packet Push : [%s]", to_string(m_qPacket.back()->GetType()));
-	std::cout << "Packet Push : " << to_string(m_qPacket.back()->GetType()) << "\n";
 }
 
 //테스트 동작용 키입력(w:ballplace, e:shotdata, r:active(false)
@@ -266,6 +260,7 @@ int CServer::ReadAddData(Packet& packet)
 		{
 			clog.Log("INFO", "Recv PT_ClubSetting");
 			Server.SetClubSetting(recvdata);
+
 			clog.MakeMsg("INFO", "ClubSetting : %s", to_string(Server.GetClubSetting()));
 			std::cout << "Recv PT_ClubSetting // " << Server.GetClubSetting() << "\n";
 			
@@ -275,6 +270,7 @@ int CServer::ReadAddData(Packet& packet)
 		{
 			clog.Log("INFO", "Recv PT_TeeSetting");
 			Server.SetTeeSetting(recvdata);
+
 			std::cout << "Recv PT_TeeSetting // " << Server.GetTeeSetting() << "\n";
 			clog.MakeMsg("INFO", "TeeSetting : %s", to_string(Server.GetTeeSetting()));
 
@@ -284,6 +280,7 @@ int CServer::ReadAddData(Packet& packet)
 		{
 			clog.Log("INFO", "Recv PT_ActiveState");
 			Server.SetActiveState(recvdata);
+
 			std::cout << "Recv PT_ActiveState // " << Server.GetActiveState() << "\n";
 			clog.MakeMsg("INFO", "ActiveState : %s", to_string(Server.GetActiveState()));
 

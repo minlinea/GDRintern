@@ -52,7 +52,7 @@ public:
 	void InputKey();
 
 	//데이터 전송 관련
-	template <class PACKET, class PACKETDATA>
+	template <class P, class PACKETDATA>
 	void SendAddData(PACKETDATA data);
 	void SendNoneAddData(PACKETTYPE type);
 
