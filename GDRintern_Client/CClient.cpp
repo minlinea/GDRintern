@@ -21,7 +21,7 @@ CClient::~CClient()
 //데이터 초기화
 void CClient::DataInit()
 {
-	this->m_eTee = TEESETTING::T40;
+	this->m_eTee = TEESETTING::T30;
 
 	this->m_eClub = CLUBSETTING::WOOD;
 
@@ -59,7 +59,6 @@ bool CClient::ClientInit()
 //서버연결
 void CClient::ClientConnect()
 {
-
 	int retval{ connect(Client.m_hSock, (SOCKADDR*)&Client.m_tAddr, sizeof(Client.m_tAddr)) };
 	if (retval == SOCKET_ERROR)
 	{
