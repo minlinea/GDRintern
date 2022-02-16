@@ -68,21 +68,13 @@ void CClient::ClientConnect()
 	{
 		DWORD dwSendThreadID, dwRecvThreadID;
 
-		std::cout << "MainThread 시작\n";
+		Client.PrintLog("START", "MainThread 시작");
 
 		Client.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Client.SendThread, (LPVOID)Client.m_hSock, 0, &dwSendThreadID);
 		Client.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Client.RecvThread, (LPVOID)Client.m_hSock, 0, &dwRecvThreadID);
 
 		WaitForSingleObject(Client.m_hRecv, INFINITE);
-
-		Client.m_bConnect = false;
-
-		TerminateThread(Client.m_hSend, 0);
-		TerminateThread(Client.m_hRecv, 0);
-
 	}
-	closesocket(Client.m_hSock);
-
 	return;
 }
 
@@ -98,7 +90,7 @@ void CClient::PrintLog(const char* logtype, const char* logmsg, ...)
 
 	va_end(args);
 
-	std::cout << msg << "\n";
+	//std::cout << msg << "\n";
 
 	clog.Log(logtype, msg);
 }
@@ -107,9 +99,8 @@ void CClient::PrintLog(const char* logtype, const char* logmsg, ...)
 DWORD WINAPI CClient::SendThread(LPVOID socket)
 {
 	Client.PrintLog("INFO", "SendThread ON");
-	bool connect{ true };
 
-	while (connect)
+	while (true == Client.m_bConnect)
 	{
 		Client.InputKey();
 
@@ -121,7 +112,8 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 				if (SOCKET_ERROR == Client.ClientSend(p))
 				{
 					Client.PrintLog("ERROR", "SendThread ClientSend SOCKET_ERROR");
-					connect = false;
+					Client.m_bConnect = false;
+					delete p;
 					break;
 				}
 				Client.PrintLog("INFO", "Send %s", to_string(p->GetType()));
@@ -175,14 +167,14 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 	Client.PrintLog("INFO", "RecvThread ON");
 
 	Packet packet{};
-	while (true)
+	while (true == Client.m_bConnect)
 	{
 		ZeroMemory(&packet, sizeof(Packet));
 
 		if (SOCKET_ERROR == Client.ClientRecv(&packet, PACKETHEADER))
 		{
 			Client.PrintLog("ERROR", "RecvThread ClientRecv error");
-			break;
+			Client.m_bConnect = false;
 		}
 		else	//에러가 아니라면 데이터 읽기
 		{
@@ -194,7 +186,7 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 				if (SOCKET_ERROR == Client.ReadAddData(packet))
 				{
 					Client.PrintLog("ERROR", "RecvThread ReadAddData SOCKET_ERROR");
-					break;
+					Client.m_bConnect = false;
 				}
 			}
 		}

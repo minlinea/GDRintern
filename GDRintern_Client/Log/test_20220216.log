@@ -1,0 +1,39 @@
+[09:02:01.474][START]	==============================================
+[09:02:01.482][START]	MainThread 시작
+[09:02:01.484][END]	==============================================
+[09:12:03.409][START]	==============================================
+[09:12:03.412][START]	MainThread 시작
+[09:12:03.413][INFO]	SendThread ON
+[09:12:07.999][INFO]	Recv : PT_ConnectCheck
+[09:12:12.999][INFO]	Recv : PT_ConnectCheck
+[09:12:18.000][INFO]	Recv : PT_ConnectCheck
+[09:12:20.799][ERROR]	RecvThread ClientRecv error
+[09:12:20.800][END]	==============================================
+[09:13:08.075][START]	==============================================
+[09:13:08.078][START]	MainThread 시작
+[09:13:08.079][INFO]	SendThread ON
+[09:13:09.799][INFO]	Send PT_TeeSetting
+[09:13:09.800][INFO]	Recv : PT_TeeSettingRecv
+[09:13:11.046][INFO]	Send PT_ActiveState
+[09:13:11.047][INFO]	Recv : PT_ActiveStateRecv
+[09:13:11.846][INFO]	Send PT_ActiveState
+[09:13:11.847][INFO]	Recv : PT_ActiveStateRecv
+[09:13:12.254][INFO]	Send PT_ClubSetting
+[09:13:12.255][INFO]	Recv : PT_ClubSettingRecv
+[09:13:13.398][INFO]	Recv : PT_BallPlace
+[09:13:13.398][INFO]	BallPalce : PAIRWAY
+[09:13:13.399][INFO]	Send PT_BallPlaceRecv
+[09:13:14.118][INFO]	Recv : PT_ShotData
+[09:13:14.118][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[09:13:14.119][INFO]	Send PT_ShotDataRecv
+[09:13:14.462][INFO]	Recv : PT_ActiveState
+[09:13:14.462][INFO]	ActiveState : FALSE
+[09:13:14.463][INFO]	Send PT_ActiveStateRecv
+[09:13:14.773][INFO]	Recv : PT_BallPlace
+[09:13:14.774][INFO]	BallPalce : PAIRWAY
+[09:13:14.774][INFO]	Send PT_BallPlaceRecv
+[09:13:14.846][INFO]	Recv : PT_ShotData
+[09:13:14.846][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[09:13:14.847][INFO]	Send PT_ShotDataRecv
+[09:13:15.751][ERROR]	RecvThread ClientRecv error
+[09:13:15.752][END]	==============================================

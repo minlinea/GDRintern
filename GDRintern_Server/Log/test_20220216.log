@@ -1,0 +1,38 @@
+[09:01:48.518][START]	==============================================
+[09:02:01.482][LOGIN]	login : 192.168.206.126
+[09:02:01.485][INFO]	SendThread ON
+[09:02:01.486][INFO]	RecvThread ON
+[09:02:01.486][INFO]	Recv : PT_ActiveState
+[09:02:01.489][ERROR]	RecvThread ReadAddData SOCKET_ERROR
+[09:02:01.490][LOGOUT]	logout : 192.168.206.126
+[09:11:56.618][START]	==============================================
+[09:12:03.413][LOGIN]	login : 192.168.206.126
+[09:12:03.413][INFO]	SendThread ON
+[09:12:07.999][INFO]	Send : PT_ConnectCheck
+[09:12:13.000][INFO]	Send : PT_ConnectCheck
+[09:12:18.000][INFO]	Send : PT_ConnectCheck
+[09:13:02.676][START]	==============================================
+[09:13:08.079][LOGIN]	login : 192.168.206.126
+[09:13:08.081][INFO]	RecvThread ON
+[09:13:09.799][INFO]	Recv : PT_TeeSetting
+[09:13:09.799][INFO]	TeeSetting : T30
+[09:13:09.800][INFO]	Send : PT_TeeSettingRecv
+[09:13:11.046][INFO]	Recv : PT_ActiveState
+[09:13:11.046][INFO]	ActiveState : TRUE
+[09:13:11.047][INFO]	Send : PT_ActiveStateRecv
+[09:13:11.846][INFO]	Recv : PT_ActiveState
+[09:13:11.846][INFO]	ActiveState : FALSE
+[09:13:11.847][INFO]	Send : PT_ActiveStateRecv
+[09:13:12.254][INFO]	Recv : PT_ClubSetting
+[09:13:12.254][INFO]	ClubSetting : WOOD
+[09:13:12.255][INFO]	Send : PT_ClubSettingRecv
+[09:13:13.398][INFO]	Send : PT_BallPlace
+[09:13:13.399][INFO]	Recv : PT_BallPlaceRecv
+[09:13:14.118][INFO]	Send : PT_ShotData
+[09:13:14.119][INFO]	Recv : PT_ShotDataRecv
+[09:13:14.462][INFO]	Send : PT_ActiveState
+[09:13:14.463][INFO]	Recv : PT_ActiveStateRecv
+[09:13:14.774][INFO]	Send : PT_BallPlace
+[09:13:14.774][INFO]	Recv : PT_BallPlaceRecv
+[09:13:14.846][INFO]	Send : PT_ShotData
+[09:13:14.847][INFO]	Recv : PT_ShotDataRecv

@@ -25,9 +25,9 @@ void CServer::DataInit()
 
 	this->m_eClub = CLUBSETTING::DRIVER;
 	
-	this->m_eBallPlace = BALLPLACE::OB;
+	this->m_eBallPlace = BALLPLACE::PAIRWAY;
 	
-	this->m_bActiveState = false;
+	this->m_bActiveState = true;
 	
 	this->m_sdShotData = ShotData{ 0,1,2,3,4,5,6 };
 	
