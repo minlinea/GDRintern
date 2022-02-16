@@ -73,7 +73,9 @@ void CClient::ClientConnect()
 		Client.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Client.SendThread, (LPVOID)Client.m_hSock, 0, &dwSendThreadID);
 		Client.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Client.RecvThread, (LPVOID)Client.m_hSock, 0, &dwRecvThreadID);
 
-		WaitForSingleObject(Client.m_hRecv, INFINITE);
+#ifdef _CONSOLE
+		WaitForSingleObject(Client.m_hRecv, INFINITE); //언리얼 진행 시 주석처리
+#endif
 	}
 	return;
 }
@@ -90,7 +92,9 @@ void CClient::PrintLog(const char* logtype, const char* logmsg, ...)
 
 	va_end(args);
 
-	//std::cout << msg << "\n";
+#ifdef _CONSOLE
+	std::cout << msg << "\n";
+#endif
 
 	clog.Log(logtype, msg);
 }
@@ -102,7 +106,9 @@ DWORD WINAPI CClient::SendThread(LPVOID socket)
 
 	while (true == Client.m_bConnect)
 	{
+#ifdef _CONSOLE
 		Client.InputKey();
+#endif
 
 		if (true != Client.m_qPacket.empty())
 		{
@@ -179,10 +185,8 @@ DWORD WINAPI CClient::RecvThread(LPVOID socket)
 		else	//에러가 아니라면 데이터 읽기
 		{
 			Client.PrintLog("INFO", "Recv : %s", to_string(packet.GetType()));
-
 			if (PACKETHEADER != packet.GetSize())
 			{
-				ResumeThread(Client.m_hSend);
 				if (SOCKET_ERROR == Client.ReadAddData(packet))
 				{
 					Client.PrintLog("ERROR", "RecvThread ReadAddData SOCKET_ERROR");

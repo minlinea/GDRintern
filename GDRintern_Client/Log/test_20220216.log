@@ -37,3 +37,60 @@
 [09:13:14.847][INFO]	Send PT_ShotDataRecv
 [09:13:15.751][ERROR]	RecvThread ClientRecv error
 [09:13:15.752][END]	==============================================
+[13:38:59.706][START]	==============================================
+[13:38:59.713][START]	MainThread 시작
+[13:38:59.718][INFO]	RecvThread ON
+[13:39:19.333][START]	==============================================
+[13:39:19.340][START]	MainThread 시작
+[13:39:19.354][INFO]	RecvThread ON
+[13:39:19.979][INFO]	Recv : PT_BallPlace
+[13:39:19.982][INFO]	BallPalce : PAIRWAY
+[13:39:19.984][INFO]	Send PT_BallPlaceRecv
+[13:39:20.395][INFO]	Recv : PT_ShotData
+[13:39:20.402][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[13:39:20.404][INFO]	Send PT_ShotDataRecv
+[13:39:21.379][INFO]	Recv : PT_ActiveState
+[13:39:21.381][INFO]	ActiveState : TRUE
+[13:39:21.383][INFO]	Send PT_ActiveStateRecv
+[13:39:22.893][ERROR]	RecvThread ClientRecv error
+[13:39:22.908][END]	==============================================
+[13:40:03.169][START]	==============================================
+[13:40:03.176][START]	MainThread 시작
+[13:40:03.187][INFO]	RecvThread ON
+[13:40:04.030][INFO]	Recv : PT_ShotData
+[13:40:04.032][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[13:40:04.034][INFO]	Send PT_ShotDataRecv
+[13:40:04.541][INFO]	Recv : PT_BallPlace
+[13:40:04.544][INFO]	BallPalce : PAIRWAY
+[13:40:04.548][INFO]	Send PT_BallPlaceRecv
+[13:40:05.645][INFO]	Recv : PT_ActiveState
+[13:40:05.646][INFO]	ActiveState : TRUE
+[13:40:05.649][INFO]	Send PT_ActiveStateRecv
+[13:40:06.477][INFO]	Send PT_TeeSetting
+[13:40:06.481][INFO]	Recv : PT_TeeSettingRecv
+[13:40:06.732][INFO]	Send PT_ActiveState
+[13:40:06.736][INFO]	Recv : PT_ActiveStateRecv
+[13:40:07.037][INFO]	Send PT_ActiveState
+[13:40:07.042][INFO]	Recv : PT_ActiveStateRecv
+[13:40:07.774][ERROR]	RecvThread ClientRecv error
+[13:40:07.777][END]	==============================================
+[13:47:35.057][START]	==============================================
+[13:47:35.065][START]	MainThread 시작
+[13:47:35.070][INFO]	SendThread ON
+[13:47:36.275][INFO]	Recv : PT_BallPlace
+[13:47:36.275][INFO]	BallPalce : PAIRWAY
+[13:47:36.278][INFO]	Send PT_BallPlaceRecv
+[13:47:36.752][INFO]	Recv : PT_ShotData
+[13:47:36.753][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[13:47:36.755][INFO]	Send PT_ShotDataRecv
+[13:47:37.016][INFO]	Recv : PT_ActiveState
+[13:47:37.017][INFO]	ActiveState : TRUE
+[13:47:37.017][INFO]	Send PT_ActiveStateRecv
+[13:47:37.561][INFO]	Send PT_TeeSetting
+[13:47:37.562][INFO]	Recv : PT_TeeSettingRecv
+[13:47:37.616][INFO]	Send PT_ActiveState
+[13:47:37.617][INFO]	Recv : PT_ActiveStateRecv
+[13:47:37.832][INFO]	Send PT_ActiveState
+[13:47:37.834][INFO]	Recv : PT_ActiveStateRecv
+[13:47:38.297][INFO]	Send PT_ClubSetting
+[13:47:38.299][INFO]	Recv : PT_ClubSettingRecv

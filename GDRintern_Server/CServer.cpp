@@ -92,12 +92,10 @@ void CServer::ServerAccept()
 		Server.m_hRecv = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Server.RecvThread, (LPVOID)Server.m_hClient, 0, &dwRecvThreadID);
 		Server.m_hSend = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Server.SendThread, (LPVOID)Server.m_hClient, 0, &dwSendThreadID);
 
+#ifdef _CONSOLE
 		WaitForSingleObject(Server.m_hSend, INFINITE);//Send스레드 종료 대기(클라이언트와의 연결 종료 여부 확인)
-		
+#endif
 		Server.m_bConnect = false;
-
-		TerminateThread(Server.m_hRecv, 0);
-		TerminateThread(Server.m_hRecv, 0);
 
 		Server.PrintLog("LOGOUT", "logout : %s", inet_ntoa(tCIntAddr.sin_addr));
 	}
@@ -117,7 +115,9 @@ void CServer::PrintLog(const char* logtype, const char* logmsg, ...)
 
 	va_end(args);
 
+#ifdef _CONSOLE
 	std::cout << msg << "\n";
+#endif
 
 	clog.Log(logtype, msg);
 }
@@ -129,18 +129,18 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 
 	while (true == Server.m_bConnect)
 	{
-		time(&Server.m_tNowTime);
-
+#ifdef _CONSOLE
 		Server.InputKey();		//테스트용 키입력 함수
+#endif 
+		////대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
+		//if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
+		//{
+		//	Server.SendPacket<Packet>(PACKETTYPE::PT_ConnectCheck);
+		//	Server.m_tBeforeTime = Server.m_tNowTime;				//BeforeTime 갱신
+		//	++Server.m_iWaitingCount;								//count 누적
+		//}
 
-		//대기 시간이 지나도 클라이언트의 별도 입력이 없는 경우
-		if (WaitingTime <= Server.m_tNowTime - Server.m_tBeforeTime)	//ConnectCheck 전송
-		{
-			Server.SendPacket<Packet>(PACKETTYPE::PT_ConnectCheck);
-			Server.m_tBeforeTime = Server.m_tNowTime;				//BeforeTime 갱신
-			++Server.m_iWaitingCount;								//count 누적
-		}
-
+		time(&Server.m_tNowTime);
 		if (true != Server.m_qPacket.empty())
 		{
 			for (auto p = Server.m_qPacket.front(); true != Server.m_qPacket.empty(); )
@@ -155,12 +155,11 @@ DWORD WINAPI CServer::SendThread(LPVOID socket)
 				delete p;
 				Server.m_qPacket.pop();
 			}
+		}
 
-
-			if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
-			{
-				SuspendThread(Server.m_hSend);						//스레드 일시정지
-			}
+		if (MAXWaitingCount <= Server.m_iWaitingCount)			//일정 count를 넘겼다면
+		{
+			SuspendThread(Server.m_hSend);						//스레드 일시정지
 		}
 	}
 	return NULL;
