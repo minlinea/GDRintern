@@ -314,3 +314,34 @@
 [13:47:38.299][INFO]	Send : PT_ClubSettingRecv
 [13:47:39.975][ERROR]	RecvThread ServerRecv SOCKET_ERROR
 [13:47:39.976][LOGOUT]	logout : 192.168.206.126
+[14:48:16.124][START]	==============================================
+[14:48:26.490][LOGIN]	login : 192.168.206.126
+[14:48:26.495][INFO]	SendThread ON
+[14:48:26.499][INFO]	RecvThread ON
+[14:48:29.618][INFO]	Send : PT_BallPlace
+[14:48:30.360][INFO]	Send : PT_ShotData
+[14:48:30.711][INFO]	Send : PT_ActiveState
+[14:48:30.712][INFO]	Recv : PT_ActiveStateRecv
+[14:48:37.352][INFO]	Send : PT_BallPlace
+[14:48:45.232][INFO]	Send : PT_ShotData
+[14:48:45.753][INFO]	Send : PT_BallPlace
+[14:48:45.758][INFO]	Recv : PT_BallPlaceRecv
+[14:48:52.980][INFO]	Send : PT_ActiveState
+[14:49:05.756][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[14:49:05.762][LOGOUT]	logout : 192.168.206.126
+[16:27:27.767][START]	==============================================
+[16:34:41.338][LOGIN]	login : 192.168.206.126
+[16:34:41.375][INFO]	SendThread ON
+[16:34:41.382][INFO]	RecvThread ON
+[16:36:02.215][INFO]	Send : PT_BallPlace
+[16:36:02.613][INFO]	Recv : PT_ShotDataRecv
+[16:36:02.613][INFO]	Send : PT_ShotData
+[16:36:02.961][INFO]	Recv : PT_ActiveStateRecv
+[16:36:02.961][INFO]	Send : PT_ActiveState
+[16:40:42.570][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[16:40:42.585][LOGOUT]	logout : 192.168.206.126
+[17:08:50.208][START]	==============================================
+[17:10:41.438][LOGIN]	login : 192.168.206.126
+[17:10:41.439][INFO]	RecvThread ON
+[17:10:42.916][ERROR]	RecvThread ServerRecv SOCKET_ERROR
+[17:10:42.916][LOGOUT]	logout : 192.168.206.126

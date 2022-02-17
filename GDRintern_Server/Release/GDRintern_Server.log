@@ -1,8 +1,30 @@
-﻿  CServer.cpp
+﻿  CLog.cpp
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(5,4): error C2039: 'CreateDirectoryA': '`global namespace''의 멤버가 아닙니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(5,20): error C3861: 'CreateDirectoryA': 식별자를 찾을 수 없습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(17,14): error C2065: 'MAX_PATH': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(18,23): error C2065: 'MAX_PATH': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(18,2): error C3861: 'GetCurrentDirectoryA': 식별자를 찾을 수 없습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(25,2): error C2065: 'SYSTEMTIME': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(25,13): error C2146: 구문 오류: ';'이(가) 't' 식별자 앞에 없습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(25,13): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(26,16): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(26,2): error C3861: 'GetLocalTime': 식별자를 찾을 수 없습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(30,59): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(30,68): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(30,78): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(30,22): warning C4473: 'sprintf_s': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(30,22): message : 자리 표시자 및 해당 매개 변수에는 variadic 인수가 4개 필요하지만 1개가 제공되었습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(30,22): message : 누락된 variadic 인수 2이(가) 서식 문자열 '%04d'에 필요합니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,55): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,64): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,75): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,86): error C2065: 't': 선언되지 않은 식별자입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,20): warning C4477: 'fprintf_s' : 서식 문자열 '%02d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'const char *'입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,20): warning C4477: 'fprintf_s' : 서식 문자열 '%02d'에 'int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'const char *'입니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,20): warning C4473: 'fprintf_s': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,20): message : 자리 표시자 및 해당 매개 변수에는 variadic 인수가 6개 필요하지만 2개가 제공되었습니다.
+C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\CLog.cpp(35,20): message : 누락된 variadic 인수 3이(가) 서식 문자열 '%02d'에 필요합니다.
+  CServer.cpp
 C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\GDRintern_Server\CServer.cpp(86,42): warning C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
 C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\GDRintern_Server\CServer.cpp(100,44): warning C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-  코드를 생성하고 있습니다.
-  Previous IPDB and IOBJ mismatch, fall back to full compilation.
-  All 190 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  코드를 생성했습니다.
-  GDRintern_Server.vcxproj -> C:\Users\line0413\Desktop\인턴십\GDR인턴프로젝트\GDRintern\Release\GDRintern_Server.exe
+  server_main.cpp

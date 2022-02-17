@@ -170,6 +170,8 @@ inline std::ostream& operator << (std::ostream& os, const ShotData& t)
 	return os;
 }
 
+
+
 /*
 Packet
 type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분

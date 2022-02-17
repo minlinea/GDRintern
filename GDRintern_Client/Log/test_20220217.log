@@ -1,0 +1,24 @@
+[09:45:41.646][START]	==============================================
+[09:45:42.658][ERROR]	ClientConnect connect error
+[09:45:42.658][END]	==============================================
+[09:45:52.045][START]	==============================================
+[09:45:52.049][START]	MainThread 시작
+[09:45:52.050][INFO]	RecvThread ON
+[09:45:54.450][INFO]	Recv : PT_BallPlace
+[09:45:54.450][INFO]	BallPalce : PAIRWAY
+[09:45:54.451][INFO]	Send PT_BallPlaceRecv
+[09:45:54.937][INFO]	Recv : PT_ShotData
+[09:45:54.938][INFO]	[phase 0] : ballspeed[1.000000], launchangle[2.000000], launchdirection[3.000000], headspeed[4.000000], backspin[5], sidespin[6]
+[09:45:54.939][INFO]	Send PT_ShotDataRecv
+[09:45:55.352][INFO]	Recv : PT_ActiveState
+[09:45:55.353][INFO]	ActiveState : TRUE
+[09:45:55.354][INFO]	Send PT_ActiveStateRecv
+[09:45:56.826][ERROR]	RecvThread ClientRecv error
+[09:45:56.827][END]	==============================================
+[09:50:56.484][START]	==============================================
+[09:50:56.489][START]	MainThread 시작
+[09:50:56.490][INFO]	SendThread ON
+[09:50:56.490][INFO]	RecvThread ON
+[09:51:43.233][START]	==============================================
+[09:51:43.237][START]	MainThread 시작
+[09:51:43.238][INFO]	SendThread ON

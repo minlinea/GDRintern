@@ -1,11 +1,21 @@
 #pragma once
 #include <mutex>
-#include <winsock2.h>
 #include <queue>
-#include "../CLog.h"
+
+#ifdef __cplusplus
+#include "windows.h"
+#endif
+#ifndef __cplusplus
+#include "window.h"
+#endif
+
+//#include "../CLog.h"
+
 #pragma comment(lib, "Ws2_32.lib")
 
 #include "../packet.h"
+
+
 
 class CClient
 {
@@ -124,7 +134,7 @@ public:
 	}
 
 	//로그 출력용
-	void PrintLog(const char* logtype, const char* logmsg, ...);
+	//void PrintLog(const char* logtype, const char* logmsg, ...);
 
 private:
 

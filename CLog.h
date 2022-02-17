@@ -1,7 +1,12 @@
 #pragma once
 
 #include <string>
-#include <Windows.h>
+#ifdef __cplusplus
+#include "windows.h"
+#endif
+#ifndef __cplusplus
+#include "window.h"
+#endif
 
 #define MAX_PATHNAME_LEN 1024
 #define MAX_FILENAME_LEN 256
